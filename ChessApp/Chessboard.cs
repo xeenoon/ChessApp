@@ -70,7 +70,7 @@ namespace ChessApp
         {
             get
             {
-                if (Side == Side.White) 
+                if (Side == Side.Black) 
                 {
                     switch (Type)
                     {
@@ -163,7 +163,8 @@ namespace ChessApp
             FEN = fEN;
             ParseFEN();
             Bitboard B = new Bitboard(FEN);
-            var knightmoves = MoveGenerator.Moves(PieceType.Rook, Pieces.FirstOrDefault(p=>p.Type == PieceType.Queen).Position.val,B);
+            Piece piece = Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Side == Side.White);
+            var knightmoves = MoveGenerator.Moves(PieceType.Bishop, piece.Side, piece.Position.val, B);
         }
         public void ParseFEN()
         {
@@ -183,44 +184,44 @@ namespace ChessApp
                     Piece toadd = null;
                     switch (line[i])
                     {
-                        //White pieces
-                        case 'p':
-                            toadd = new Piece(PieceType.Pawn, Side.White, new Position(x, row));
-                            break;
-                        case 'r':
-                            toadd = new Piece(PieceType.Rook, Side.White, new Position(x, row));
-                            break;
-                        case 'n':
-                            toadd = new Piece(PieceType.Knight, Side.White, new Position(x, row));
-                            break;
-                        case 'b':
-                            toadd = new Piece(PieceType.Bishop, Side.White, new Position(x, row));
-                            break;
-                        case 'k':
-                            toadd = new Piece(PieceType.King, Side.White, new Position(x, row));
-                            break;
-                        case 'q':
-                            toadd = new Piece(PieceType.Queen, Side.White, new Position(x, row));
-                            break;
-
                         //Black pieces
-                        case 'P':
+                        case 'p':
                             toadd = new Piece(PieceType.Pawn, Side.Black, new Position(x, row));
                             break;
-                        case 'R':
+                        case 'r':
                             toadd = new Piece(PieceType.Rook, Side.Black, new Position(x, row));
                             break;
-                        case 'N':
+                        case 'n':
                             toadd = new Piece(PieceType.Knight, Side.Black, new Position(x, row));
                             break;
-                        case 'B':
+                        case 'b':
                             toadd = new Piece(PieceType.Bishop, Side.Black, new Position(x, row));
                             break;
-                        case 'K':
+                        case 'k':
                             toadd = new Piece(PieceType.King, Side.Black, new Position(x, row));
                             break;
-                        case 'Q':
+                        case 'q':
                             toadd = new Piece(PieceType.Queen, Side.Black, new Position(x, row));
+                            break;
+
+                        //White pieces
+                        case 'P':
+                            toadd = new Piece(PieceType.Pawn, Side.White, new Position(x, row));
+                            break;
+                        case 'R':
+                            toadd = new Piece(PieceType.Rook, Side.White, new Position(x, row));
+                            break;
+                        case 'N':
+                            toadd = new Piece(PieceType.Knight, Side.White, new Position(x, row));
+                            break;
+                        case 'B':
+                            toadd = new Piece(PieceType.Bishop, Side.White, new Position(x, row));
+                            break;
+                        case 'K':
+                            toadd = new Piece(PieceType.King, Side.White, new Position(x, row));
+                            break;
+                        case 'Q':
+                            toadd = new Piece(PieceType.Queen, Side.White, new Position(x, row));
                             break;
                     }
                     Pieces.Add(toadd);
