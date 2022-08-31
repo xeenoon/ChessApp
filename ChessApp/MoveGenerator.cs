@@ -52,14 +52,7 @@ namespace ChessApp
             ulong upBlockers = upmask & b.WhitePieces;
             upBlockers &= (~upBlockers) + 1;
             ulong upBetween = 0ul;
-            if (position >= 9)
-            {
-                upBetween = upmask & ((upBlockers - 1) ^ (((1ul << position) >> 9) - 1));
-            }
-            else
-            {
-                upBetween = upmask & ((upBlockers - 1) ^ (((1ul << (position+1)) - 1)));
-            }
+            upBetween = upmask & (upBlockers - 1);
             
             var downmask = down[position]; 
             ulong downBlockers = downmask & b.WhitePieces;
