@@ -163,19 +163,9 @@ namespace ChessApp
             FEN = fEN;
             ParseFEN();
             Bitboard B = new Bitboard(FEN);
-            Piece piece = Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Side == Side.White);
-            System.Timers.Timer t = new System.Timers.Timer(1000); //One second
-            t.Elapsed += new System.Timers.ElapsedEventHandler(Event);
-            t.Start();
-            while(true)
-            {
-                B.SetupSquareAttacks();
-                for (int i = 0; i < 16; ++i) 
-                {
-                    var knightmoves = MoveGenerator.Moves(PieceType.Rook, piece.Side, piece.Position.val, B);
-                    movescalculated += 8;
-                }
-            }
+            Node n = new Node(B, Side.White, null);
+            n.Populate(6);
+            var nodes = Node.totalnodes;
         }
         public void Event(object sender, EventArgs e)
         {

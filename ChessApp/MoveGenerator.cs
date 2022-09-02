@@ -456,7 +456,7 @@ namespace ChessApp
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this piece from the ulong of pieces
 
-                result.Add(new Move(bitpos, MoveGenerator.Moves(pieceType, s, lsb, b)));
+                result.Add(new Move(bitpos, MoveGenerator.Moves(pieceType, s, lsb, b), pieceType));
             }
             return result;
         }
@@ -465,8 +465,9 @@ namespace ChessApp
     {
         public ulong last;
         public ulong current;
+        public PieceType pieceType;
 
-        public Move(ulong last, ulong current)
+        public Move(ulong last, ulong current, PieceType pieceType)
         {
             this.last = last;
             this.current = current;

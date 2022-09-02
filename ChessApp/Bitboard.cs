@@ -216,5 +216,28 @@ namespace ChessApp
                 }
             }
         }
+        public Bitboard Copy()
+        {
+            return new Bitboard()
+            {
+                W_Pawn = W_Pawn,
+                W_Bishop = W_Bishop,
+                W_King = W_King,
+                W_Knight = W_Knight,
+                W_Queen = W_Queen,
+                W_Rook = W_Rook,
+
+                B_Pawn = B_Pawn,
+                B_Bishop = B_Bishop,
+                B_King = B_King,
+                B_Knight = B_Knight,
+                B_Queen = B_Queen,
+                B_Rook = B_Rook,
+            };
+        }
+        public Bitboard()
+        {
+
+        }
     }
 }
