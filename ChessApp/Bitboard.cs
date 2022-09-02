@@ -1,4 +1,6 @@
-﻿namespace ChessApp
+﻿using System.Collections.Generic;
+
+namespace ChessApp
 {
     internal class Bitboard
     {
@@ -16,6 +18,11 @@
         public ulong B_Queen = 0ul;  //Black Queens
         public ulong B_King = 0ul;   //Black King
 
+        public bool check = false;
+        public bool doublecheck = false;
+        public ulong squares_to_block_check = ulong.MaxValue; //Squares that pieces can move to to block checks
+        //If king is in check, pieces should only be able to move to squares that block the attack
+
         public ulong BlackPieces
         {
             get
@@ -29,6 +36,78 @@
             {
                 return W_Pawn | W_Rook | W_Knight | W_Bishop | W_King | W_Queen;
             }
+        }
+        public ulong WhiteAttackedSquares = 0ul;
+        public ulong BlackAttackedSquares = 0ul;
+        public void SetupSquareAttacks()
+        {
+            WhiteAttackedSquares = WhiteAttacks();
+            BlackAttackedSquares = BlackAttacks();
+        }
+        int checks = 0;
+        ulong WhiteAttacks()
+        {
+            checks = 0;
+
+            ulong attacks = 0ul;
+            attacks |= PieceAttacks(attacks, W_Pawn, PieceType.Pawn     , Side.White, B_King);
+            attacks |= PieceAttacks(attacks, W_Rook, PieceType.Rook     , Side.White, B_King);
+            attacks |= PieceAttacks(attacks, W_Bishop, PieceType.Bishop , Side.White, B_King);
+            attacks |= PieceAttacks(attacks, W_King, PieceType.King     , Side.White, B_King);
+            attacks |= PieceAttacks(attacks, W_Queen, PieceType.Queen   , Side.White, B_King);
+            attacks |= PieceAttacks(attacks, W_Knight, PieceType.Knight , Side.White, B_King);
+            if (checks == 1)
+            {
+                check = true;
+            }
+            if (checks >= 2)
+            {
+                doublecheck = true;
+            }
+            return attacks;
+        }
+        ulong BlackAttacks()
+        {
+            checks = 0;
+
+            ulong attacks = 0ul;
+            attacks |= PieceAttacks(attacks, B_Pawn, PieceType.Pawn     , Side.Black, W_King);
+            attacks |= PieceAttacks(attacks, B_Rook, PieceType.Rook     , Side.Black, W_King);
+            attacks |= PieceAttacks(attacks, B_Bishop, PieceType.Bishop , Side.Black, W_King);
+            attacks |= PieceAttacks(attacks, B_King, PieceType.King     , Side.Black, W_King);
+            attacks |= PieceAttacks(attacks, B_Queen, PieceType.Queen   , Side.Black, W_King);
+            attacks |= PieceAttacks(attacks, B_Knight, PieceType.Knight , Side.Black, W_King);
+            if (checks == 1)
+            {
+                check = true;
+            }
+            if (checks >= 2)
+            {
+                doublecheck = true;
+            }
+            return attacks;
+        }
+
+        private ulong PieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        {
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard)-1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
+
+                ulong[] moves = MoveGenerator.AttackRays(pieceType, s, lsb, this);
+                foreach (var attackray in moves)
+                {
+                    if ((attackray & oppositeKing) != 0) //King is in check
+                    {
+                        ++checks;
+                        squares_to_block_check = (attackray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
+                    }
+                    attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
+                }
+            }
+            return attacks;
         }
 
         public Bitboard(string FEN)
@@ -92,6 +171,21 @@
                     ++x;
                 }
             }
+        }
+    }
+    class Move
+    {
+        public byte position;
+        public ulong moves;
+        public PieceType piecetype;
+        public Side s;
+
+        public Move(byte position, ulong moves, PieceType piecetype, Side s)
+        {
+            this.position = position;
+            this.moves = moves;
+            this.piecetype = piecetype;
+            this.s = s;
         }
     }
 }

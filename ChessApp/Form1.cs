@@ -16,7 +16,7 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
-            Chessboard chessboard = new Chessboard("8/2Pbp3/p1P3k1/1p2K2p/1P6/P1p1p3/1P6/2Q5 w - 0 1");
+            Chessboard chessboard = new Chessboard("4k3/8/8/4K2q/8/8/6R1/8 w - 0 1");
             webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
         }
         public const string BLACK_PAWN   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/45px-Chess_pdt45.svg.png";

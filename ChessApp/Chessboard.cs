@@ -163,10 +163,11 @@ namespace ChessApp
             FEN = fEN;
             ParseFEN();
             Bitboard B = new Bitboard(FEN);
-            Piece piece = Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Side == Side.White);
+            B.SetupSquareAttacks();
+            Piece piece = Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Side == Side.White);
             for (int i = 0; i < 1000000; ++i)
             {
-                var knightmoves = MoveGenerator.Moves(PieceType.Pawn, piece.Side, piece.Position.val, B);
+                var knightmoves = MoveGenerator.Moves(PieceType.Rook, piece.Side, piece.Position.val, B);
             }
         }
         public void ParseFEN()
