@@ -217,19 +217,4 @@ namespace ChessApp
             }
         }
     }
-    class Move
-    {
-        public byte position;
-        public ulong moves;
-        public PieceType piecetype;
-        public Side s;
-
-        public Move(byte position, ulong moves, PieceType piecetype, Side s)
-        {
-            this.position = position;
-            this.moves = moves;
-            this.piecetype = piecetype;
-            this.s = s;
-        }
-    }
 }

@@ -412,5 +412,64 @@ namespace ChessApp
             n += 1;
             return n >> 1;
         }
+        public static List<Move> CalculateAll(Bitboard b, Side s)
+        {
+            ulong pawns;
+            ulong rooks;
+            ulong knights;
+            ulong bishops;
+            ulong queens;
+            ulong king;
+            if (s == Side.White)
+            {
+                pawns = b.W_Pawn;
+                rooks = b.W_Rook;
+                knights = b.W_Rook;
+                bishops = b.W_Bishop;
+                queens = b.W_Queen;
+                king = b.W_King;
+            }
+            else
+            {
+                pawns   = b.B_Pawn;
+                rooks   = b.B_Rook;
+                knights = b.B_Rook;
+                bishops = b.B_Bishop;
+                queens  = b.B_Queen;
+                king    = b.B_King;
+            }
+            List<Move> result = new List<Move>();
+            result.AddRange(GetMoves(b, pawns, s, PieceType.Pawn));
+            result.AddRange(GetMoves(b, knights, s, PieceType.Knight));
+            result.AddRange(GetMoves(b, bishops, s, PieceType.Bishop));
+            result.AddRange(GetMoves(b, rooks, s, PieceType.Rook));
+            result.AddRange(GetMoves(b, queens, s, PieceType.Queen));
+            result.AddRange(GetMoves(b, king, s, PieceType.King));
+            return result;
+        }
+        public static List<Move> GetMoves(Bitboard b, ulong piece_bitboard, Side s, PieceType pieceType)
+        {
+            List<Move> result = new List<Move>();
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this piece from the ulong of pieces
+
+                result.Add(new Move(bitpos, MoveGenerator.Moves(pieceType, s, lsb, b)));
+            }
+            return result;
+        }
+    }
+    public class Move
+    {
+        public ulong last;
+        public ulong current;
+
+        public Move(ulong last, ulong current)
+        {
+            this.last = last;
+            this.current = current;
+        }
     }
 }
