@@ -18,6 +18,8 @@ namespace ChessApp
         public ulong B_Queen = 0ul;  //Black Queens
         public ulong B_King = 0ul;   //Black King
 
+        public ulong pinnedPieces = 0ul;
+
         public bool check = false;
         public bool doublecheck = false;
         public ulong squares_to_block_check = ulong.MaxValue; //Squares that pieces can move to to block checks
@@ -41,9 +43,22 @@ namespace ChessApp
         public ulong BlackAttackedSquares = 0ul;
         public void SetupSquareAttacks()
         {
+            squares_to_block_check = ulong.MaxValue;
             WhiteAttackedSquares = WhiteAttacks();
             BlackAttackedSquares = BlackAttacks();
+            SetupPins();
         }
+        public void SetupPins()
+        {
+            pinnedPieces |= XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
+            pinnedPieces |= XRAY_Pins(W_Bishop, PieceType.Bishop, Side.White, B_King);
+            pinnedPieces |= XRAY_Pins(W_Queen, PieceType.Queen, Side.White, B_King);
+
+            pinnedPieces |= XRAY_Pins(B_Rook, PieceType.Rook, Side.Black, B_King);
+            pinnedPieces |= XRAY_Pins(B_Bishop, PieceType.Bishop, Side.Black, B_King);
+            pinnedPieces |= XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, B_King);
+        }
+
         int checks = 0;
         ulong WhiteAttacks()
         {
@@ -108,6 +123,35 @@ namespace ChessApp
                 }
             }
             return attacks;
+        }
+        private ulong XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        {
+            ulong result = 0ul;
+
+            var oppositeside = s == Side.White ? BlackPieces : WhitePieces;
+
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
+
+                ulong[] moves = MoveGenerator.XRAY(lsb, this, s, pieceType);
+                foreach (var attackray in moves)
+                {
+                    if ((attackray & oppositeKing) != 0) //King is in check
+                    {
+                        var pinned = attackray & oppositeside; //Find all the pinned pieces
+
+                        if ((pinned & (pinned-1)) == 0) //Only one bit set
+                        {
+                            pinnedPieces |= pinned; //Add this piece to the pinned list, it will not be able to move next turn
+                        }
+                    }
+                    result |= attackray; //Get all the attacking moves and add them to the attacks bitboard
+                }
+            }
+            return result;
         }
 
         public Bitboard(string FEN)
