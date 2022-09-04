@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -412,8 +413,11 @@ namespace ChessApp
             n += 1;
             return n >> 1;
         }
+        public static double TOTALTIME;
         public static List<Move> CalculateAll(Bitboard b, Side s)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             ulong pawns;
             ulong rooks;
             ulong knights;
@@ -445,6 +449,8 @@ namespace ChessApp
             result.AddRange(GetMoves(b, rooks, s, PieceType.Rook));
             result.AddRange(GetMoves(b, queens, s, PieceType.Queen));
             result.AddRange(GetMoves(b, king, s, PieceType.King));
+            stopwatch.Stop();
+            TOTALTIME += stopwatch.ElapsedTicks;
             return result;
         }
         public static List<Move> GetMoves(Bitboard b, ulong piece_bitboard, Side s, PieceType pieceType)

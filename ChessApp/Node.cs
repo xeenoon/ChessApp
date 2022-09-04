@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,17 +22,25 @@ namespace ChessApp
             this.parent = parent;
             ++totalnodes;
         }
+        public static double squareattacktime = 0;
+        public static double copytime = 0;
         public void Populate(int nodes)
         {
+            Stopwatch stopwatch = new Stopwatch();
+
             if (nodes == 0)
             {
                 return;
             }
             nodes--;
+            stopwatch.Start();
             b.SetupSquareAttacks();
+            stopwatch.Stop();
+            squareattacktime += stopwatch.ElapsedTicks;
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
-            Parallel.ForEach(MoveGenerator.CalculateAll(b, hasturn), move =>
+            foreach( var move in MoveGenerator.CalculateAll(b, hasturn))
             {
+                stopwatch.Restart();
                 var copy = b.Copy();
                 if (hasturn == Side.White)
                 {
@@ -95,8 +104,10 @@ namespace ChessApp
                 }
                 //Move has been simulated, now create new node
                 Node n = new Node(copy, otherturn, this);
+                stopwatch.Stop();
+                copytime += stopwatch.ElapsedTicks;
                 n.Populate(nodes);
-            });
+            }
         }
     }
 }
