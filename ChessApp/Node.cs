@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
-    internal class Node
+    public class Node
     {
         public Bitboard b;
         public Side hasturn;

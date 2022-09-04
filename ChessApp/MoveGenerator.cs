@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
-    internal class MoveGenerator
+    public class MoveGenerator
     {
         private const ulong NO_TOP_ROW    = 72057594037927935UL;
         private const ulong NO_BOTTOM_ROW = 18446744073709551360UL;

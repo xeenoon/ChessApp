@@ -2,7 +2,7 @@
 
 namespace ChessApp
 {
-    internal class Bitboard
+    public class Bitboard
     {
         public ulong W_Pawn = 0ul;   //White Pawns
         public ulong W_Rook = 0ul;   //White Rooks
