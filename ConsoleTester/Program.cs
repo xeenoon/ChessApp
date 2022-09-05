@@ -22,7 +22,7 @@ namespace EngineTester
                 Node n = new Node(B, Side.White, null);
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                n.Populate(int_depth);
+                n.BasePopulate(int_depth);
                 var nodes = Node.totalnodes;
                 var time1 = Node.squareattacktime;
                 var time2 = MoveGenerator.TOTALTIME;

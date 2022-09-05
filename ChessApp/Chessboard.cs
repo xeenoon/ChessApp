@@ -167,7 +167,7 @@ namespace ChessApp
             Node n = new Node(B, Side.White, null);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            n.Populate(4);
+            n.BasePopulate(4);
             var nodes = Node.totalnodes;
             var time1 = Node.squareattacktime;
             var time2 = MoveGenerator.TOTALTIME;
