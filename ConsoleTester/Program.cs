@@ -37,11 +37,13 @@ namespace EngineTester
                 Console.WriteLine(string.Format("   Sliding {0} ticks", Bitboard.SlidingAttack));
                 Console.WriteLine(string.Format("   Static  {0} ticks", Bitboard.StaticAttack));
                 Console.WriteLine(string.Format("   Timers  {0} ticks", time1 - (Bitboard.Pins+Bitboard.SlidingAttack + Bitboard.StaticAttack)));
+                Console.WriteLine();
                 Console.WriteLine(string.Format("CalculateAll()     {0} ticks", time2));
                 Console.WriteLine(string.Format("   Moves   {0} ticks", MoveGenerator.GetMovesTime));
                 Console.WriteLine(string.Format("               {0} calls", MoveGenerator.GetMovesCalls));
                 Console.WriteLine(string.Format("   King    {0} ticks", MoveGenerator.KingMovesTime));
                 Console.WriteLine(string.Format("               {0} calls", MoveGenerator.KingMovesCalls));
+                Console.WriteLine();
                 Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
                 Console.WriteLine("---Time Stats---");
                 Console.WriteLine();
