@@ -488,13 +488,18 @@ namespace ChessApp
             result.AddRange(GetMoves(b, bishops, s, PieceType.Bishop));
             result.AddRange(GetMoves(b, rooks, s, PieceType.Rook));
             result.AddRange(GetMoves(b, queens, s, PieceType.Queen));
-            result.AddRange(GetMoves(b, king, s, PieceType.King));
+            result.AddRange(GetKingMoves(b, king, s));
             stopwatch.Stop();
             TOTALTIME += stopwatch.ElapsedTicks;
             return result;
         }
+        public static double GetMovesTime = 0;
+        public static double GetMovesCalls = 0;
         public static List<Move> GetMoves(Bitboard b, ulong piece_bitboard, Side s, PieceType pieceType)
         {
+            ++GetMovesCalls;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             List<Move> result = new List<Move>();
             while (piece_bitboard != 0)
             {
@@ -504,6 +509,30 @@ namespace ChessApp
 
                 result.Add(new Move(bitpos, MoveGenerator.Moves(pieceType, s, lsb, b), pieceType));
             }
+            stopwatch.Stop();
+            GetMovesTime += stopwatch.ElapsedTicks;
+            return result;
+        }
+        public static double KingMovesTime = 0;
+        public static double KingMovesCalls = 0;
+        public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
+        {
+            ++KingMovesCalls;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong attackedSquares = s == Side.White ? b.BlackAttackedSquares : b.WhiteAttackedSquares;
+            ulong myside = s == Side.White ? b.WhitePieces : b.BlackPieces;
+
+            List<Move> result = new List<Move>();
+            byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+            ulong bitpos = 1ul << lsb;
+
+            var moves = king[lsb];
+            moves &= (moves ^ myside ^ attackedSquares);
+
+            result.Add(new Move(bitpos, moves, PieceType.King));
+            stopwatch.Stop();
+            KingMovesTime += stopwatch.ElapsedTicks;
             return result;
         }
     }
