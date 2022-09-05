@@ -65,29 +65,38 @@ namespace ChessApp
             }
             return moves;
         }
-        public static ulong[] AttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
+        public static ulong[] SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
+        {
+            ulong myside = side == Side.White ? b.WhitePieces : b.BlackPieces;
+            switch (pieceType)
+            {
+                case PieceType.Rook:
+                    return RookAttackRays(position, b, side);
+                case PieceType.Bishop:
+                    return BishopAttackRays(position, b, side);
+                case PieceType.Queen:
+                    return RookAttackRays(position, b, side).Concat(BishopAttackRays(position, b, side)).ToArray(); //Holy sh*t slow asf
+                
+            }
+            return null; //wot
+        }
+        public static ulong StaticAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
             ulong myside = side == Side.White ? b.WhitePieces : b.BlackPieces;
             switch (pieceType)
             {
                 case PieceType.Pawn:
-                    return new ulong[1] {PawnAttackRays(side, position)};
-                case PieceType.Rook:
-                    return RookAttackRays(position, b, side);
+                    return PawnAttackRays(side, position);
                 case PieceType.Knight:
                     var knightMoves = knight[position];
                     knightMoves &= (knightMoves ^ myside);
-                    return new ulong[1] {knightMoves};
-                case PieceType.Bishop:
-                    return BishopAttackRays(position, b, side);
-                case PieceType.Queen:
-                    return RookAttackRays(position, b, side).Concat(BishopAttackRays(position, b, side)).ToArray(); //Holy sh*t slow asf
+                    return knightMoves;
                 case PieceType.King:
                     var kingMoves = king[position];
                     kingMoves &= (kingMoves ^ myside);
-                    return new ulong[1] { kingMoves };
+                    return kingMoves;
             }
-            return null; //wot
+            return 0; //wot
         }
 
         private static ulong PawnAttackRays(Side side, byte position)

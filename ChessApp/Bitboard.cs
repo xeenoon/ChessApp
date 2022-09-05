@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ChessApp
 {
@@ -41,6 +42,11 @@ namespace ChessApp
         }
         public ulong WhiteAttackedSquares = 0ul;
         public ulong BlackAttackedSquares = 0ul;
+        
+        public static double StaticAttack = 0;
+        public static double SlidingAttack = 0;
+        public static double Pins = 0;
+        
         public void SetupSquareAttacks()
         {
             squares_to_block_check = ulong.MaxValue;
@@ -65,12 +71,12 @@ namespace ChessApp
             checks = 0;
 
             ulong attacks = 0ul;
-            attacks |= PieceAttacks(attacks, W_Pawn, PieceType.Pawn     , Side.White, B_King);
-            attacks |= PieceAttacks(attacks, W_Rook, PieceType.Rook     , Side.White, B_King);
-            attacks |= PieceAttacks(attacks, W_Bishop, PieceType.Bishop , Side.White, B_King);
-            attacks |= PieceAttacks(attacks, W_King, PieceType.King     , Side.White, B_King);
-            attacks |= PieceAttacks(attacks, W_Queen, PieceType.Queen   , Side.White, B_King);
-            attacks |= PieceAttacks(attacks, W_Knight, PieceType.Knight , Side.White, B_King);
+            attacks |= StaticPieceAttacks(attacks, W_Pawn, PieceType.Pawn     , Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Rook, PieceType.Rook     , Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Bishop, PieceType.Bishop , Side.White, B_King);
+            attacks |= StaticPieceAttacks(attacks, W_King, PieceType.King     , Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Queen, PieceType.Queen   , Side.White, B_King);
+            attacks |= StaticPieceAttacks(attacks, W_Knight, PieceType.Knight , Side.White, B_King);
             if (checks == 1)
             {
                 check = true;
@@ -86,12 +92,12 @@ namespace ChessApp
             checks = 0;
 
             ulong attacks = 0ul;
-            attacks |= PieceAttacks(attacks, B_Pawn, PieceType.Pawn     , Side.Black, W_King);
-            attacks |= PieceAttacks(attacks, B_Rook, PieceType.Rook     , Side.Black, W_King);
-            attacks |= PieceAttacks(attacks, B_Bishop, PieceType.Bishop , Side.Black, W_King);
-            attacks |= PieceAttacks(attacks, B_King, PieceType.King     , Side.Black, W_King);
-            attacks |= PieceAttacks(attacks, B_Queen, PieceType.Queen   , Side.Black, W_King);
-            attacks |= PieceAttacks(attacks, B_Knight, PieceType.Knight , Side.Black, W_King);
+            attacks |= StaticPieceAttacks(attacks, B_Pawn, PieceType.Pawn     , Side.Black, W_King);
+            attacks |= SlidingPieceAttacks(attacks, B_Rook, PieceType.Rook     , Side.Black, W_King);
+            attacks |= SlidingPieceAttacks(attacks, B_Bishop, PieceType.Bishop , Side.Black, W_King);
+            attacks |= StaticPieceAttacks(attacks, B_King, PieceType.King     , Side.Black, W_King);
+            attacks |= SlidingPieceAttacks(attacks, B_Queen, PieceType.Queen   , Side.Black, W_King);
+            attacks |= StaticPieceAttacks(attacks, B_Knight, PieceType.Knight , Side.Black, W_King);
             if (checks == 1)
             {
                 check = true;
@@ -103,15 +109,17 @@ namespace ChessApp
             return attacks;
         }
 
-        private ulong PieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        private ulong SlidingPieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             while (piece_bitboard != 0)
             {
                 byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard)-1);
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
 
-                ulong[] moves = MoveGenerator.AttackRays(pieceType, s, lsb, this);
+                ulong[] moves = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
                 foreach (var attackray in moves)
                 {
                     if ((attackray & oppositeKing) != 0) //King is in check
@@ -122,10 +130,37 @@ namespace ChessApp
                     attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
+            stopwatch.Stop();
+            SlidingAttack += stopwatch.ElapsedTicks;
             return attacks;
         }
+        private ulong StaticPieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
+
+                ulong attackray = MoveGenerator.StaticAttackRays(pieceType, s, lsb, this);
+                if ((attackray & oppositeKing) != 0) //King is in check
+                {
+                    ++checks;
+                    squares_to_block_check = bitpos; //Piece must be taken to block
+                }
+                attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
+            }
+            stopwatch.Stop();
+            StaticAttack += stopwatch.ElapsedTicks;
+            return attacks;
+        }
+
         private ulong XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             ulong result = 0ul;
 
             var oppositeside = s == Side.White ? BlackPieces : WhitePieces;
@@ -151,6 +186,8 @@ namespace ChessApp
                     result |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
+            stopwatch.Stop();
+            Pins += stopwatch.ElapsedTicks;
             return result;
         }
 
