@@ -5,6 +5,7 @@ namespace EngineTester
 {
     public class Program
     {
+        static System.Timers.Timer timer;
         static void Main(string[] args)
         {
             while (true)
@@ -22,6 +23,10 @@ namespace EngineTester
                 Node n = new Node(B, Side.White, null);
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
+                timer = new System.Timers.Timer();
+                timer.Interval = 100;
+                timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerTick);
+                timer.Start();
                 n.BasePopulate(int_depth);
                 var nodes = Node.totalnodes;
                 var time1 = Node.squareattacktime;
@@ -29,7 +34,7 @@ namespace EngineTester
                 var time3 = Node.copytime;
                 stopwatch.Stop();
                 var total = stopwatch.ElapsedTicks;
-
+                timer.Stop();
                 Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, depth));
                 Console.WriteLine("---Time Stats---");
                 Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
@@ -52,6 +57,22 @@ namespace EngineTester
                 Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
                 Console.WriteLine("Nodes per second: " + 1000*(nodes / stopwatch.ElapsedMilliseconds));
             }
+        }
+        static int lastthreads = 0;
+        static int lastlines = 0;
+        public static void TimerTick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (lastthreads != Node.threads_running)
+            {
+                Console.WriteLine(String.Format("Tasked {0} more threads. Now running {1} threads",Node.threads_running - lastthreads , Node.threads_running));
+                lastthreads = Node.threads_running;
+            }
+            if (lastlines != Node.linescalculated)
+            {
+                Console.WriteLine(String.Format("Calculated {0} more lines", Node.linescalculated - lastlines));
+                lastlines = Node.linescalculated;
+            }
+            timer.Start();
         }
     }
 }

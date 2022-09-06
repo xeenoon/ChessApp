@@ -276,7 +276,7 @@ namespace ChessApp
             {
                 attackMoves = whitePawnAttack[position] & b.BlackPieces; //Get all attacking moves where they intersect with black pieces
 
-                passiveMoves = whitePawnNoAttack[position] ^ (b.BlackPieces | b.WhitePieces); //Get all moves where no pieces intersect
+                passiveMoves = whitePawnNoAttack[position] ^ (whitePawnNoAttack[position] & (b.BlackPieces | b.WhitePieces)); //Get all moves where no pieces intersect
 
                 //On the second row, there will be 2 moves upwards, if a piece is one above, the 2nd move up SHOULD NOT be returned
 
@@ -290,7 +290,7 @@ namespace ChessApp
             {
                 attackMoves = blackPawnAttack[position] & b.WhitePieces; //Get all attacking moves where they intersect with white pieces
 
-                passiveMoves = blackPawnNoAttack[position] ^ (b.BlackPieces | b.WhitePieces); //Get all moves where no pieces intersect
+                passiveMoves = blackPawnNoAttack[position] ^ (blackPawnNoAttack[position] & (b.BlackPieces | b.WhitePieces)); //Get all moves where no pieces intersect
 
                 //On the seventh row, there will be 2 moves fowards(down, >>8), if a piece is one above(below), the 2nd move up SHOULD NOT be returned
 

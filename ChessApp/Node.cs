@@ -109,6 +109,8 @@ namespace ChessApp
                 n.Populate(nodes);
             }
         }
+        public static int linescalculated = 0;
+        public static int threads_running = 0;
         public void BasePopulate(int nodes)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -123,8 +125,11 @@ namespace ChessApp
             stopwatch.Stop();
             squareattacktime += stopwatch.ElapsedTicks;
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
-            Parallel.ForEach(MoveGenerator.CalculateAll(b, hasturn), move =>
+            var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
+            List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
+            Parallel.ForEach(source, options , move =>
             {
+                ++threads_running;
                 stopwatch.Restart();
                 var copy = b.Copy();
                 if (hasturn == Side.White)
@@ -192,6 +197,8 @@ namespace ChessApp
                 stopwatch.Stop();
                 copytime += stopwatch.ElapsedTicks;
                 n.Populate(nodes);
+                ++linescalculated;
+                --threads_running;
             });
         }
     }
