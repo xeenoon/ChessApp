@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChessApp
@@ -24,7 +25,7 @@ namespace ChessApp
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
-        private void Populate(int nodes)
+        private void Populate(int nodes, bool first = false)
         {
             Stopwatch stopwatch = new Stopwatch();
 
@@ -33,6 +34,10 @@ namespace ChessApp
                 return;
             }
             nodes--;
+            if (first)
+            {
+                ++threads_running;
+            }
             stopwatch.Start();
             b.SetupSquareAttacks();
             stopwatch.Stop();
@@ -40,7 +45,6 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                
                 var resultpos = move.current;
                 while (resultpos != 0ul)
                 {
@@ -111,6 +115,7 @@ namespace ChessApp
                                 break;
                         }
                     }
+                    
                     Node n = new Node(copy, otherturn, this);
                     stopwatch.Stop();
 
@@ -119,6 +124,10 @@ namespace ChessApp
 
                     copytime += stopwatch.ElapsedTicks;
                 }
+            }
+            if (first)
+            {
+                --threads_running;
             }
         }
         public static int linescalculated = 0;
@@ -139,9 +148,8 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
-            Parallel.ForEach(source, options , move =>
-            {
-                ++threads_running;
+            foreach (var move in source) 
+            { 
                 var resultpos = move.current;
                 while (resultpos != 0ul)
                 {
@@ -214,14 +222,20 @@ namespace ChessApp
                         }
                     }
                     Node n = new Node(copy, otherturn, this);
-                    n.Populate(nodes);
+             
+                    var t = new Thread(() =>
+                    {
+                        n.Populate(nodes, true);
+                    });
 
+                    t.Start();
                     stopwatch.Stop();
                     copytime += stopwatch.ElapsedTicks;
                 }
                 ++linescalculated;
-                --threads_running;
-            });
+            }
         }
+
+
     }
 }
