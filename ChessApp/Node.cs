@@ -19,7 +19,7 @@ namespace ChessApp
         {
             this.b = b;
             this.hasturn = hasturn;
-            this.parent = parent;
+            //this.parent = parent;
             ++totalnodes;
         }
         public static double squareattacktime = 0;

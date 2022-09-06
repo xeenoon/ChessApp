@@ -62,6 +62,18 @@ namespace EngineTester
                 Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
                 Console.WriteLine("Nodes per second: " + 1000 * (nodes / stopwatch.ElapsedMilliseconds));
                 Console.WriteLine("Nodes searched: " + nodes);
+
+                Bitboard.Pins = 0;
+                Bitboard.SlidingAttack = 0;
+                Bitboard.StaticAttack = 0;
+                Node.squareattacktime = 0;
+                Node.totalnodes = 0;
+                MoveGenerator.TOTALTIME = 0;
+                MoveGenerator.KingMovesCalls = 0;
+                MoveGenerator.KingMovesTime = 0;
+                MoveGenerator.GetMovesCalls = 0;
+                MoveGenerator.GetMovesTime = 0;
+                Node.copytime = 0;
             }
         }
         static int lastthreads = 0;
