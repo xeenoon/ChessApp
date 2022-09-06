@@ -50,10 +50,10 @@ namespace EngineTester
             Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, depth));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
-            Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
-            Console.WriteLine(string.Format("   Sliding {0} ticks", Bitboard.SlidingAttack));
-            Console.WriteLine(string.Format("   Static  {0} ticks", Bitboard.StaticAttack));
-            Console.WriteLine(string.Format("   Timers  {0} ticks", time1 - (Bitboard.Pins + Bitboard.SlidingAttack + Bitboard.StaticAttack)));
+            //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
+            //Console.WriteLine(string.Format("   Sliding {0} ticks", Bitboard.SlidingAttack));
+            //Console.WriteLine(string.Format("   Static  {0} ticks", Bitboard.StaticAttack));
+            //Console.WriteLine(string.Format("   Timers  {0} ticks", time1 - (Bitboard.Pins + Bitboard.SlidingAttack + Bitboard.StaticAttack)));
             Console.WriteLine();
             Console.WriteLine(string.Format("CalculateAll()     {0} ticks", time2));
             Console.WriteLine(string.Format("   Moves   {0} ticks", MoveGenerator.GetMovesTime));

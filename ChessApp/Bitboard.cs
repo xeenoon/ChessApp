@@ -111,8 +111,8 @@ namespace ChessApp
 
         private ulong SlidingPieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
             
             while (piece_bitboard != 0)
             {
@@ -131,14 +131,14 @@ namespace ChessApp
                     attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            stopwatch.Stop();
-            SlidingAttack += stopwatch.ElapsedTicks;
+            //stopwatch.Stop();
+            //SlidingAttack += stopwatch.ElapsedTicks;
             return attacks;
         }
         private ulong StaticPieceAttacks(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
             ulong result = 0ul;
             byte lsb;
             switch (pieceType)
@@ -165,15 +165,15 @@ namespace ChessApp
                     result |= knightattacks;
                     break;
             }
-            stopwatch.Stop();
-            StaticAttack += stopwatch.ElapsedTicks;
+            //stopwatch.Stop();
+            //StaticAttack += stopwatch.ElapsedTicks;
             return result;
         }
 
         private ulong XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
             ulong result = 0ul;
 
             var oppositeside = s == Side.White ? BlackPieces : WhitePieces;
@@ -199,8 +199,8 @@ namespace ChessApp
                     result |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            stopwatch.Stop();
-            Pins += stopwatch.ElapsedTicks;
+            //stopwatch.Stop();
+            //Pins += stopwatch.ElapsedTicks;
             return result;
         }
 
