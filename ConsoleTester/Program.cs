@@ -8,16 +8,21 @@ namespace EngineTester
         static System.Timers.Timer timer;
         static bool iswaiting;
         static Stopwatch stopwatch = new Stopwatch();
-        static string depth;
+        static string input;
         static void Main(string[] args)
         {
             Console.Write("Search depth: ");
 
             while (true)
             {
-                depth = Console.ReadLine();
+                input = Console.ReadLine();
+                if (input == "nodes")
+                {
+                    Console.WriteLine(Node.totalnodes);
+                    continue;
+                }
                 int int_depth;
-                if (!int.TryParse(depth, out int_depth))
+                if (!int.TryParse(input, out int_depth))
                 {
                     continue;
                 }
@@ -47,7 +52,7 @@ namespace EngineTester
             timer.Stop();
             lastthreads = 0;
             lastlines = 0;
-            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, depth));
+            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, input));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
             //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
