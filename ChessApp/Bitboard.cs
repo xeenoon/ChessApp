@@ -26,6 +26,8 @@ namespace ChessApp
         public ulong squares_to_block_check = ulong.MaxValue; //Squares that pieces can move to to block checks
         //If king is in check, pieces should only be able to move to squares that block the attack
 
+        public int enpassent = -2;
+
         public ulong BlackPieces
         {
             get
@@ -283,6 +285,8 @@ namespace ChessApp
                 B_Knight = B_Knight,
                 B_Queen = B_Queen,
                 B_Rook = B_Rook,
+
+                enpassent = enpassent,
             };
         }
         public Bitboard()

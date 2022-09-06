@@ -115,8 +115,16 @@ namespace ChessApp
                                 break;
                         }
                     }
-                    
+
                     Node n = new Node(copy, otherturn, this);
+                    if (move.pieceType == PieceType.Pawn && (move.last << 16 == bitpos || move.last >> 16 == bitpos)) //Just moved foward two?
+                    {
+                        copy.enpassent = lsb % 8;
+                    }
+                    else
+                    {
+                        copy.enpassent = -2;
+                    }
                     stopwatch.Stop();
 
                     n.Populate(nodes);
@@ -222,13 +230,20 @@ namespace ChessApp
                         }
                     }
                     Node n = new Node(copy, otherturn, this);
-             
-                    var t = new Thread(() =>
+                    if (move.pieceType == PieceType.Pawn && (move.last << 16 == bitpos || move.last >> 16 == bitpos)) //Just moved foward two?
                     {
+                        copy.enpassent = lsb%8;
+                    }
+                    else
+                    {
+                        copy.enpassent = -2;
+                    }
+                    //var t = new Thread(() =>
+                   // {
                         n.Populate(nodes, true);
-                    });
+                   // });
 
-                    t.Start();
+                   // t.Start();
                     stopwatch.Stop();
                     copytime += stopwatch.ElapsedTicks;
                 }

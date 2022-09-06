@@ -384,7 +384,7 @@ namespace ChessApp
 
             return new ulong[8] { rightBetween, leftBetween, upBetween, downBetween, uprightBetween, upleftBetween, leftdownBetween, rightdownBetween};
         }
-
+        public static ulong enpassantes = 0;
         private static ulong PawnMoves(Side side, byte position, Bitboard b) //TODO enpassant
         {
             ulong passiveMoves = 0ul;
@@ -402,6 +402,19 @@ namespace ChessApp
                 {
                     passiveMoves = 0ul; //There shouldn't be any moves here
                 }
+                if (position / 8 == 5) //Are we on the 6th rank? 
+                {
+                    if (b.enpassent == (position % 8) + 1) //Left enpassante
+                    {
+                        attackMoves |= (1ul << position + 7);
+                        ++enpassantes;
+                    }
+                    else if (b.enpassent == (position % 8) - 1)
+                    {
+                        attackMoves |= (1ul << position + 9);
+                        ++enpassantes;
+                    }
+                }
             }
             else
             {
@@ -417,6 +430,19 @@ namespace ChessApp
                     passiveMoves = 0ul; //There shouldn't be any moves here
                 }
 
+                if (position / 8 == 2) //Are we on the 2nd rank? 
+                {
+                    if (b.enpassent == (position % 8) + 1) //Left enpassante
+                    {
+                        attackMoves |= ((1ul << position) >> 7);
+                        ++enpassantes;
+                    }
+                    else if (b.enpassent == (position % 8) - 1)
+                    {
+                        attackMoves |= ((1ul << position) >> 9);
+                        ++enpassantes;
+                    }
+                }
             }
             return attackMoves | passiveMoves;
         }

@@ -73,7 +73,9 @@ namespace EngineTester
             Console.WriteLine("Total elapsed ticks: " + total);
             Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
             Console.WriteLine("Nodes per second: " + 1000 * (nodes / stopwatch.ElapsedMilliseconds));
-            Console.WriteLine("Nodes searched: " + nodes);
+            Console.WriteLine();
+            Console.WriteLine("---Node Data---");
+            Console.WriteLine("Enpassantes: " + MoveGenerator.enpassantes);
 
             Bitboard.Pins = 0;
             Bitboard.SlidingAttack = 0;
