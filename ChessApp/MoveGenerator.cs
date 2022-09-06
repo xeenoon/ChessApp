@@ -75,7 +75,7 @@ namespace ChessApp
                 case PieceType.Bishop:
                     return BishopAttackRays(position, b, side);
                 case PieceType.Queen:
-                    return RookAttackRays(position, b, side).Concat(BishopAttackRays(position, b, side)).ToArray(); //Holy sh*t slow asf
+                    return QueenAttackRays(position, b, side);
                 
             }
             return null; //wot
@@ -203,13 +203,13 @@ namespace ChessApp
             ulong uprightBlockers = (rightupmask & mypieces);
             uprightBlockers |= ((theirpieces & rightupmask) & NO_TOP_ROW) << 9;
             uprightBlockers &= (~uprightBlockers) + 1;
-            ulong rightBetween = (uprightBlockers - 1) & rightupmask;
+            ulong rightupBetween = (uprightBlockers - 1) & rightupmask;
 
             var leftupmask = upLeft[position];
-            ulong leftBlockers = (leftupmask & mypieces);
-            leftBlockers |= ((theirpieces & leftupmask) & NO_TOP_ROW) << 7;
-            leftBlockers &= (~leftBlockers) + 1;
-            ulong leftBetween = (leftBlockers - 1) & leftupmask;
+            ulong upleftBlockers = (leftupmask & mypieces);
+            upleftBlockers |= ((theirpieces & leftupmask) & NO_TOP_ROW) << 7;
+            upleftBlockers &= (~upleftBlockers) + 1;
+            ulong leftupBetween = (upleftBlockers - 1) & leftupmask;
 
             var rightdownmask = downRight[position];
             ulong downrightBlockers = (rightdownmask & mypieces);
@@ -223,7 +223,74 @@ namespace ChessApp
             downleftBlockers = HSB(downleftBlockers);
             ulong leftdownBetween = (FULL ^ (downleftBlockers - 1)) & leftdownmask;
 
-            return new ulong[4] {rightBetween, leftBetween, rightdownBetween, leftdownBetween};
+            return new ulong[4] {rightupBetween, leftupBetween, rightdownBetween, leftdownBetween};
+        }
+        public static ulong[] QueenAttackRays(byte position, Bitboard b, Side s)
+        {
+            ulong theirpieces;
+            ulong mypieces;
+            if (s == Side.White)
+            {
+                mypieces = b.WhitePieces;
+                theirpieces = b.BlackPieces;
+            }
+            else
+            {
+                mypieces = b.BlackPieces;
+                theirpieces = b.WhitePieces;
+            }
+
+            var rightmask = right[position];
+            ulong rightBlockers = rightmask & mypieces;
+            rightBlockers |= ((theirpieces & rightmask) & NO_RIGHT_COLLUMN) << 1;
+            rightBlockers &= (~rightBlockers) + 1;
+            ulong rightBetween = (rightBlockers - 1) & rightmask;
+
+            var leftmask = left[position];
+            ulong leftBlockers = leftmask & mypieces;
+            leftBlockers |= ((theirpieces & leftmask) & NO_LEFT_COLLUMN) >> 1;
+            leftBlockers = HSB(leftBlockers);
+            ulong leftBetween = (((1ul << position) - 1) ^ ((leftBlockers << 1) - 1)) & leftmask;
+
+            var upmask = up[position];
+            ulong upBlockers = upmask & mypieces;
+            upBlockers |= ((theirpieces & upmask) & NO_TOP_ROW) << 8;
+            upBlockers &= (~upBlockers) + 1;
+            ulong upBetween = upmask & (upBlockers - 1);
+
+            var downmask = down[position];
+            ulong downBlockers = downmask & mypieces;
+            downBlockers |= ((theirpieces & downmask) & NO_BOTTOM_ROW) >> 8;
+            downBlockers = HSB(downBlockers);
+            ulong downBetween = downmask ^ (downmask & ((downBlockers << 1) - 1));
+
+            //Bishop
+            var rightupmask = upRight[position];
+            ulong uprightBlockers = (rightupmask & mypieces);
+            uprightBlockers |= ((theirpieces & rightupmask) & NO_TOP_ROW) << 9;
+            uprightBlockers &= (~uprightBlockers) + 1;
+            ulong rightupBetween = (uprightBlockers - 1) & rightupmask;
+
+            var leftupmask = upLeft[position];
+            ulong upleftBlockers = (leftupmask & mypieces);
+            upleftBlockers |= ((theirpieces & leftupmask) & NO_TOP_ROW) << 7;
+            upleftBlockers &= (~upleftBlockers) + 1;
+            ulong leftupBetween = (upleftBlockers - 1) & leftupmask;
+
+            var rightdownmask = downRight[position];
+            ulong downrightBlockers = (rightdownmask & mypieces);
+            downrightBlockers |= ((theirpieces & rightdownmask) & NO_BOTTOM_ROW) >> 9;
+            downrightBlockers = HSB(downrightBlockers);
+            ulong rightdownBetween = (FULL ^ (downrightBlockers - 1)) & rightdownmask;
+
+            var leftdownmask = downLeft[position];
+            ulong downleftBlockers = (leftdownmask & mypieces);
+            downleftBlockers |= ((theirpieces & leftdownmask) & NO_BOTTOM_ROW) >> 7;
+            downleftBlockers = HSB(downleftBlockers);
+            ulong leftdownBetween = (FULL ^ (downleftBlockers - 1)) & leftdownmask;
+
+
+            return new ulong[8] { rightBetween, leftBetween, upBetween, downBetween, rightupBetween, leftupBetween, rightdownBetween, leftdownBetween};
         }
 
         private static ulong[] Bishop_XRAY(byte position, Bitboard b, Side s)

@@ -112,10 +112,11 @@ namespace ChessApp
                         }
                     }
                     Node n = new Node(copy, otherturn, this);
+                    stopwatch.Stop();
+
                     n.Populate(nodes);
                     resultpos ^= bitpos; //remove this piece from the ulong of pieces
 
-                    stopwatch.Stop();
                     copytime += stopwatch.ElapsedTicks;
                 }
             }
