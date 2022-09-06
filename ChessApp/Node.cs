@@ -40,73 +40,84 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                stopwatch.Restart();
-                var copy = b.Copy();
-                if (hasturn == Side.White)
+                
+                var resultpos = move.current;
+                while (resultpos != 0ul)
                 {
-                    switch (move.pieceType)
+                    stopwatch.Restart();
+
+                    var copy = b.Copy();
+                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
+                    ulong bitpos = 1ul << lsb;
+                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
+
+                    //Simulating move
+                    if (hasturn == Side.White)
                     {
-                        case PieceType.Pawn:
-                            copy.W_Pawn ^= move.last;
-                            copy.W_Pawn ^= move.current;
-                            break;
-                        case PieceType.Rook:
-                            copy.W_Rook ^= move.last;
-                            copy.W_Rook ^= move.current;
-                            break;
-                        case PieceType.Knight:
-                            copy.W_Knight ^= move.last;
-                            copy.W_Knight ^= move.current;
-                            break;
-                        case PieceType.Bishop:
-                            copy.W_Bishop ^= move.last;
-                            copy.W_Bishop ^= move.current;
-                            break;
-                        case PieceType.Queen:
-                            copy.W_Queen ^= move.last;
-                            copy.W_Queen ^= move.current;
-                            break;
-                        case PieceType.King:
-                            copy.W_King ^= move.last;
-                            copy.W_King ^= move.current;
-                            break;
+                        switch (move.pieceType)
+                        {
+                            case PieceType.Pawn:
+                                copy.W_Pawn ^= move.last;
+                                copy.W_Pawn ^= resultpos;
+                                break;
+                            case PieceType.Rook:
+                                copy.W_Rook ^= move.last;
+                                copy.W_Rook ^= resultpos;
+                                break;
+                            case PieceType.Knight:
+                                copy.W_Knight ^= move.last;
+                                copy.W_Knight ^= resultpos;
+                                break;
+                            case PieceType.Bishop:
+                                copy.W_Bishop ^= move.last;
+                                copy.W_Bishop ^= resultpos;
+                                break;
+                            case PieceType.Queen:
+                                copy.W_Queen ^= move.last;
+                                copy.W_Queen ^= resultpos;
+                                break;
+                            case PieceType.King:
+                                copy.W_King ^= move.last;
+                                copy.W_King ^= resultpos;
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    switch (move.pieceType)
+                    else
                     {
-                        case PieceType.Pawn:
-                            copy.B_Pawn ^= move.last;
-                            copy.B_Pawn ^= move.current;
-                            break;
-                        case PieceType.Rook:
-                            copy.B_Rook ^= move.last;
-                            copy.B_Rook ^= move.current;
-                            break;
-                        case PieceType.Knight:
-                            copy.B_Knight ^= move.last;
-                            copy.B_Knight ^= move.current;
-                            break;
-                        case PieceType.Bishop:
-                            copy.B_Bishop ^= move.last;
-                            copy.B_Bishop ^= move.current;
-                            break;
-                        case PieceType.Queen:
-                            copy.B_Queen ^= move.last;
-                            copy.B_Queen ^= move.current;
-                            break;
-                        case PieceType.King:
-                            copy.B_King ^= move.last;
-                            copy.B_King ^= move.current;
-                            break;
+                        switch (move.pieceType)
+                        {
+                            case PieceType.Pawn:
+                                copy.B_Pawn ^= move.last;
+                                copy.B_Pawn ^= resultpos;
+                                break;
+                            case PieceType.Rook:
+                                copy.B_Rook ^= move.last;
+                                copy.B_Rook ^= resultpos;
+                                break;
+                            case PieceType.Knight:
+                                copy.B_Knight ^= move.last;
+                                copy.B_Knight ^= resultpos;
+                                break;
+                            case PieceType.Bishop:
+                                copy.B_Bishop ^= move.last;
+                                copy.B_Bishop ^= resultpos;
+                                break;
+                            case PieceType.Queen:
+                                copy.B_Queen ^= move.last;
+                                copy.B_Queen ^= resultpos;
+                                break;
+                            case PieceType.King:
+                                copy.B_King ^= move.last;
+                                copy.B_King ^= resultpos;
+                                break;
+                        }
                     }
+                    Node n = new Node(copy, otherturn, this);
+                    n.Populate(nodes);
+
+                    stopwatch.Stop();
+                    copytime += stopwatch.ElapsedTicks;
                 }
-                //Move has been simulated, now create new node
-                Node n = new Node(copy, otherturn, this);
-                stopwatch.Stop();
-                copytime += stopwatch.ElapsedTicks;
-                n.Populate(nodes);
             }
         }
         public static int linescalculated = 0;
@@ -130,73 +141,83 @@ namespace ChessApp
             Parallel.ForEach(source, options , move =>
             {
                 ++threads_running;
-                stopwatch.Restart();
-                var copy = b.Copy();
-                if (hasturn == Side.White)
+                var resultpos = move.current;
+                while (resultpos != 0ul)
                 {
-                    switch (move.pieceType)
+                    stopwatch.Restart();
+
+                    var copy = b.Copy();
+                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
+                    ulong bitpos = 1ul << lsb;
+                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
+
+                    //Simulating move
+                    if (hasturn == Side.White)
                     {
-                        case PieceType.Pawn:
-                            copy.W_Pawn ^= move.last;
-                            copy.W_Pawn ^= move.current;
-                            break;
-                        case PieceType.Rook:
-                            copy.W_Rook ^= move.last;
-                            copy.W_Rook ^= move.current;
-                            break;
-                        case PieceType.Knight:
-                            copy.W_Knight ^= move.last;
-                            copy.W_Knight ^= move.current;
-                            break;
-                        case PieceType.Bishop:
-                            copy.W_Bishop ^= move.last;
-                            copy.W_Bishop ^= move.current;
-                            break;
-                        case PieceType.Queen:
-                            copy.W_Queen ^= move.last;
-                            copy.W_Queen ^= move.current;
-                            break;
-                        case PieceType.King:
-                            copy.W_King ^= move.last;
-                            copy.W_King ^= move.current;
-                            break;
+                        switch (move.pieceType)
+                        {
+                            case PieceType.Pawn:
+                                copy.W_Pawn ^= move.last;
+                                copy.W_Pawn ^= resultpos;
+                                break;
+                            case PieceType.Rook:
+                                copy.W_Rook ^= move.last;
+                                copy.W_Rook ^= resultpos;
+                                break;
+                            case PieceType.Knight:
+                                copy.W_Knight ^= move.last;
+                                copy.W_Knight ^= resultpos;
+                                break;
+                            case PieceType.Bishop:
+                                copy.W_Bishop ^= move.last;
+                                copy.W_Bishop ^= resultpos;
+                                break;
+                            case PieceType.Queen:
+                                copy.W_Queen ^= move.last;
+                                copy.W_Queen ^= resultpos;
+                                break;
+                            case PieceType.King:
+                                copy.W_King ^= move.last;
+                                copy.W_King ^= resultpos;
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    switch (move.pieceType)
+                    else
                     {
-                        case PieceType.Pawn:
-                            copy.B_Pawn ^= move.last;
-                            copy.B_Pawn ^= move.current;
-                            break;
-                        case PieceType.Rook:
-                            copy.B_Rook ^= move.last;
-                            copy.B_Rook ^= move.current;
-                            break;
-                        case PieceType.Knight:
-                            copy.B_Knight ^= move.last;
-                            copy.B_Knight ^= move.current;
-                            break;
-                        case PieceType.Bishop:
-                            copy.B_Bishop ^= move.last;
-                            copy.B_Bishop ^= move.current;
-                            break;
-                        case PieceType.Queen:
-                            copy.B_Queen ^= move.last;
-                            copy.B_Queen ^= move.current;
-                            break;
-                        case PieceType.King:
-                            copy.B_King ^= move.last;
-                            copy.B_King ^= move.current;
-                            break;
+                        switch (move.pieceType)
+                        {
+                            case PieceType.Pawn:
+                                copy.B_Pawn ^= move.last;
+                                copy.B_Pawn ^= resultpos;
+                                break;
+                            case PieceType.Rook:
+                                copy.B_Rook ^= move.last;
+                                copy.B_Rook ^= resultpos;
+                                break;
+                            case PieceType.Knight:
+                                copy.B_Knight ^= move.last;
+                                copy.B_Knight ^= resultpos;
+                                break;
+                            case PieceType.Bishop:
+                                copy.B_Bishop ^= move.last;
+                                copy.B_Bishop ^= resultpos;
+                                break;
+                            case PieceType.Queen:
+                                copy.B_Queen ^= move.last;
+                                copy.B_Queen ^= resultpos;
+                                break;
+                            case PieceType.King:
+                                copy.B_King ^= move.last;
+                                copy.B_King ^= resultpos;
+                                break;
+                        }
                     }
+                    Node n = new Node(copy, otherturn, this);
+                    n.Populate(nodes);
+
+                    stopwatch.Stop();
+                    copytime += stopwatch.ElapsedTicks;
                 }
-                //Move has been simulated, now create new node
-                Node n = new Node(copy, otherturn, this);
-                stopwatch.Stop();
-                copytime += stopwatch.ElapsedTicks;
-                n.Populate(nodes);
                 ++linescalculated;
                 --threads_running;
             });

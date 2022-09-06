@@ -546,6 +546,7 @@ namespace ChessApp
         {
             this.last = last;
             this.current = current;
+            this.pieceType = pieceType;
         }
     }
 }

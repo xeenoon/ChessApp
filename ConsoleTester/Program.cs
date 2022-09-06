@@ -55,7 +55,8 @@ namespace EngineTester
                 Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
                 Console.WriteLine("Total elapsed ticks: " + total);
                 Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
-                Console.WriteLine("Nodes per second: " + 1000*(nodes / stopwatch.ElapsedMilliseconds));
+                Console.WriteLine("Nodes per second: " + 1000 * (nodes / stopwatch.ElapsedMilliseconds));
+                Console.WriteLine("Nodes searched: " + nodes);
             }
         }
         static int lastthreads = 0;
