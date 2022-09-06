@@ -468,7 +468,7 @@ namespace ChessApp
             {
                 pawns = b.W_Pawn;
                 rooks = b.W_Rook;
-                knights = b.W_Rook;
+                knights = b.W_Knight;
                 bishops = b.W_Bishop;
                 queens = b.W_Queen;
                 king = b.W_King;
@@ -477,7 +477,7 @@ namespace ChessApp
             {
                 pawns   = b.B_Pawn;
                 rooks   = b.B_Rook;
-                knights = b.B_Rook;
+                knights = b.B_Knight;
                 bishops = b.B_Bishop;
                 queens  = b.B_Queen;
                 king    = b.B_King;

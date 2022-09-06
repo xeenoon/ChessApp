@@ -6,6 +6,7 @@ namespace EngineTester
     public class Program
     {
         static System.Timers.Timer timer;
+        static bool iswaiting;
         static void Main(string[] args)
         {
             while (true)
@@ -27,14 +28,18 @@ namespace EngineTester
                 timer.Interval = 100;
                 timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerTick);
                 timer.Start();
+                iswaiting = false;
                 n.BasePopulate(int_depth);
                 var nodes = Node.totalnodes;
                 var time1 = Node.squareattacktime;
                 var time2 = MoveGenerator.TOTALTIME;
                 var time3 = Node.copytime;
                 stopwatch.Stop();
+                iswaiting = true;
                 var total = stopwatch.ElapsedTicks;
                 timer.Stop();
+                lastthreads = 0;
+                lastlines = 0;
                 Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, depth));
                 Console.WriteLine("---Time Stats---");
                 Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
@@ -63,6 +68,11 @@ namespace EngineTester
         static int lastlines = 0;
         public static void TimerTick(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (iswaiting)
+            {
+                return;
+            }
+
             if (lastthreads != Node.threads_running)
             {
                 Console.WriteLine(String.Format("Tasked {0} more threads. Now running {1} threads",Node.threads_running - lastthreads , Node.threads_running));
