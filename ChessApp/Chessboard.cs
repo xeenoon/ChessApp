@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -164,16 +165,6 @@ namespace ChessApp
             FEN = fEN;
             ParseFEN();
             Bitboard B = new Bitboard(FEN);
-            Node n = new Node(B, Side.White, null);
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            n.BasePopulate(4);
-            var nodes = Node.totalnodes;
-            var time1 = Node.squareattacktime;
-            var time2 = MoveGenerator.TOTALTIME;
-            var time3 = Node.copytime;
-            stopwatch.Stop();
-            var total = stopwatch.ElapsedTicks;
         }
         public void Event(object sender, EventArgs e)
         {
@@ -296,9 +287,10 @@ namespace ChessApp
                         path = atpos.IMG;
                     }
 
-                    img = "<img src =\"" + path + "\" style=\"width:100%; height:100%; display:block; padding = 0px; margin = 0px;\">";
+                    int exactposition = (((7 - row) * 8) + col);
+                    img = String.Format("<img id = \"SQUARE:{0}\"src =\"{1}\" style=\"width:100%; height:100%; display:block; padding = 0px; margin = 0px;\">", exactposition, path);
 
-                    html += string.Format("<td class=\"{0}\">{1}</td>", (8 - row + col) % 2 == 0 ? "Light" : "dark", img);
+                    html += string.Format("<td class=\"{0}\" id=\"SQUARE:{2}\">{1}</td>", (8 - row + col) % 2 == 0 ? "Light" : "dark", img, exactposition);
                 }
                 html += "</tr>";
             }
@@ -321,6 +313,22 @@ namespace ChessApp
             html += "</body>";
             html += "</html>";
             return html;
+        }
+
+        public void Click(int location, HtmlElement htmlElement)
+        {
+            var clicked_piece = Pieces.Where(p => p.Position.val == location).FirstOrDefault();
+            if (clicked_piece == null)
+            {
+                return;
+            }
+            if (clicked_piece.Side == hasturn)
+            {
+                var parent = htmlElement.Parent;
+                var outerhtml = parent.OuterHtml;
+                outerhtml = Regex.Replace(outerhtml, "class=Light", "class=highlight_light");
+                parent.OuterHtml = outerhtml;
+            }
         }
     }
 }

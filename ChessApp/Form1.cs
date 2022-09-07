@@ -13,10 +13,11 @@ namespace ChessApp
 {
     public partial class Form1 : Form
     {
+        Chessboard chessboard;
         public Form1()
         {
             InitializeComponent();
-            Chessboard chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1");
+            chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1");
             webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
         }
         public const string BLACK_PAWN   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/45px-Chess_pdt45.svg.png";
@@ -54,10 +55,32 @@ namespace ChessApp
                     var chessboard = child.FirstChild;
                 }
             }
+
+            this.webBrowser1.Document.Body.MouseDown += new HtmlElementEventHandler(Body_MouseDown);
+        }
+        void Body_MouseDown(Object sender, HtmlElementEventArgs e)
+        {
+            if (e.MouseButtonsPressed == MouseButtons.Left)
+            {
+                HtmlElement element = this.webBrowser1.Document.GetElementFromPoint(e.ClientMousePosition);
+                try
+                {
+                    if (element.Id == null)
+                    {
+                        return;
+                    }
+                    var location = int.Parse(element.Id.Split(new[] { ":" }, StringSplitOptions.None)[1]);
+                    chessboard.Click(location, element);
+                }
+                catch
+                {
+
+                }
+            }
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            Chessboard chessboard = new Chessboard(textBox1.Text);
+            chessboard = new Chessboard(textBox1.Text);
             webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
         }
     }
