@@ -120,7 +120,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel1.Location = new System.Drawing.Point(15, 55);
@@ -137,7 +137,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSize = true;
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);
             this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel2.Location = new System.Drawing.Point(60, 55);
@@ -154,7 +154,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.AutoSize = true;
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel3.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel3.Location = new System.Drawing.Point(105, 55);
@@ -171,7 +171,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.AutoSize = true;
-            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);
             this.panel4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel4.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel4.Location = new System.Drawing.Point(150, 55);
@@ -188,7 +188,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel6.AutoSize = true;
-            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel6.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel6.Location = new System.Drawing.Point(285, 55);
@@ -205,7 +205,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel7.AutoSize = true;
-            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel7.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel7.Location = new System.Drawing.Point(240, 55);
@@ -222,7 +222,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel8.AutoSize = true;
-            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel8.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel8.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel8.Location = new System.Drawing.Point(195, 55);
@@ -239,7 +239,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel5.AutoSize = true;
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel5.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel5.Location = new System.Drawing.Point(330, 55);
@@ -256,7 +256,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel10.AutoSize = true;
-            this.panel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel10.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel10.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel10.Location = new System.Drawing.Point(330, 100);
@@ -273,7 +273,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel11.AutoSize = true;
-            this.panel11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel11.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel11.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel11.Location = new System.Drawing.Point(195, 100);
@@ -290,7 +290,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel12.AutoSize = true;
-            this.panel12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel12.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel12.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel12.Location = new System.Drawing.Point(285, 100);
@@ -307,7 +307,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel13.AutoSize = true;
-            this.panel13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel13.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel13.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel13.Location = new System.Drawing.Point(150, 100);
@@ -324,7 +324,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel14.AutoSize = true;
-            this.panel14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel14.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel14.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel14.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel14.Location = new System.Drawing.Point(240, 100);
@@ -341,7 +341,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel15.AutoSize = true;
-            this.panel15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel15.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel15.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel15.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel15.Location = new System.Drawing.Point(105, 100);
@@ -358,7 +358,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel16.AutoSize = true;
-            this.panel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel16.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel16.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel16.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel16.Location = new System.Drawing.Point(60, 100);
@@ -375,7 +375,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel9.AutoSize = true;
-            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel9.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel9.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel9.Location = new System.Drawing.Point(15, 100);
@@ -392,7 +392,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel17.AutoSize = true;
-            this.panel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel17.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel17.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel17.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel17.Location = new System.Drawing.Point(15, 190);
@@ -409,7 +409,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel18.AutoSize = true;
-            this.panel18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel18.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel18.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel18.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel18.Location = new System.Drawing.Point(330, 190);
@@ -426,7 +426,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel19.AutoSize = true;
-            this.panel19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel19.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel19.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel19.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel19.Location = new System.Drawing.Point(195, 190);
@@ -443,7 +443,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel20.AutoSize = true;
-            this.panel20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel20.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel20.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel20.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel20.Location = new System.Drawing.Point(285, 190);
@@ -460,7 +460,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel21.AutoSize = true;
-            this.panel21.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel21.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel21.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel21.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel21.Location = new System.Drawing.Point(150, 190);
@@ -477,7 +477,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel22.AutoSize = true;
-            this.panel22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel22.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel22.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel22.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel22.Location = new System.Drawing.Point(240, 190);
@@ -494,7 +494,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel23.AutoSize = true;
-            this.panel23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel23.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel23.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel23.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel23.Location = new System.Drawing.Point(105, 190);
@@ -511,7 +511,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel24.AutoSize = true;
-            this.panel24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel24.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel24.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel24.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel24.Location = new System.Drawing.Point(60, 190);
@@ -528,7 +528,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel25.AutoSize = true;
-            this.panel25.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel25.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel25.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel25.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel25.Location = new System.Drawing.Point(330, 145);
@@ -545,7 +545,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel26.AutoSize = true;
-            this.panel26.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel26.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel26.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel26.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel26.Location = new System.Drawing.Point(285, 145);
@@ -562,7 +562,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel27.AutoSize = true;
-            this.panel27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel27.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel27.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel27.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel27.Location = new System.Drawing.Point(150, 145);
@@ -579,7 +579,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel28.AutoSize = true;
-            this.panel28.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel28.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel28.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel28.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel28.Location = new System.Drawing.Point(240, 145);
@@ -596,7 +596,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel29.AutoSize = true;
-            this.panel29.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel29.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel29.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel29.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel29.Location = new System.Drawing.Point(105, 145);
@@ -613,7 +613,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel30.AutoSize = true;
-            this.panel30.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel30.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel30.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel30.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel30.Location = new System.Drawing.Point(195, 145);
@@ -630,7 +630,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel31.AutoSize = true;
-            this.panel31.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel31.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel31.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel31.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel31.Location = new System.Drawing.Point(60, 145);
@@ -647,7 +647,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel32.AutoSize = true;
-            this.panel32.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel32.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel32.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel32.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel32.Location = new System.Drawing.Point(15, 145);
@@ -664,7 +664,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel33.AutoSize = true;
-            this.panel33.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel33.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel33.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel33.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel33.Location = new System.Drawing.Point(15, 370);
@@ -681,7 +681,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel34.AutoSize = true;
-            this.panel34.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel34.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel34.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel34.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel34.Location = new System.Drawing.Point(330, 370);
@@ -698,7 +698,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel35.AutoSize = true;
-            this.panel35.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel35.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel35.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel35.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel35.Location = new System.Drawing.Point(195, 370);
@@ -715,7 +715,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel36.AutoSize = true;
-            this.panel36.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel36.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel36.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel36.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel36.Location = new System.Drawing.Point(285, 370);
@@ -732,7 +732,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel37.AutoSize = true;
-            this.panel37.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel37.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel37.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel37.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel37.Location = new System.Drawing.Point(150, 370);
@@ -749,7 +749,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel38.AutoSize = true;
-            this.panel38.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel38.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel38.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel38.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel38.Location = new System.Drawing.Point(240, 370);
@@ -766,7 +766,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel39.AutoSize = true;
-            this.panel39.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel39.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel39.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel39.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel39.Location = new System.Drawing.Point(105, 370);
@@ -783,7 +783,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel40.AutoSize = true;
-            this.panel40.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel40.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel40.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel40.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel40.Location = new System.Drawing.Point(60, 370);
@@ -800,7 +800,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel41.AutoSize = true;
-            this.panel41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel41.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel41.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel41.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel41.Location = new System.Drawing.Point(330, 325);
@@ -817,7 +817,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel42.AutoSize = true;
-            this.panel42.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel42.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel42.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel42.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel42.Location = new System.Drawing.Point(285, 325);
@@ -834,7 +834,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel43.AutoSize = true;
-            this.panel43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel43.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel43.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel43.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel43.Location = new System.Drawing.Point(150, 325);
@@ -851,7 +851,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel44.AutoSize = true;
-            this.panel44.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel44.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel44.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel44.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel44.Location = new System.Drawing.Point(240, 325);
@@ -868,7 +868,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel45.AutoSize = true;
-            this.panel45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel45.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel45.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel45.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel45.Location = new System.Drawing.Point(105, 325);
@@ -885,7 +885,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel46.AutoSize = true;
-            this.panel46.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel46.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel46.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel46.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel46.Location = new System.Drawing.Point(195, 325);
@@ -902,7 +902,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel47.AutoSize = true;
-            this.panel47.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel47.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel47.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel47.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel47.Location = new System.Drawing.Point(60, 325);
@@ -919,7 +919,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel48.AutoSize = true;
-            this.panel48.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel48.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel48.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel48.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel48.Location = new System.Drawing.Point(15, 325);
@@ -936,7 +936,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel49.AutoSize = true;
-            this.panel49.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel49.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel49.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel49.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel49.Location = new System.Drawing.Point(15, 280);
@@ -953,7 +953,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel50.AutoSize = true;
-            this.panel50.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel50.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel50.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel50.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel50.Location = new System.Drawing.Point(330, 280);
@@ -970,7 +970,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel51.AutoSize = true;
-            this.panel51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel51.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel51.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel51.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel51.Location = new System.Drawing.Point(195, 280);
@@ -987,7 +987,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel52.AutoSize = true;
-            this.panel52.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel52.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel52.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel52.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel52.Location = new System.Drawing.Point(285, 280);
@@ -1004,7 +1004,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel53.AutoSize = true;
-            this.panel53.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel53.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel53.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel53.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel53.Location = new System.Drawing.Point(150, 280);
@@ -1021,7 +1021,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel54.AutoSize = true;
-            this.panel54.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel54.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel54.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel54.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel54.Location = new System.Drawing.Point(240, 280);
@@ -1038,7 +1038,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel55.AutoSize = true;
-            this.panel55.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel55.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel55.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel55.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel55.Location = new System.Drawing.Point(105, 280);
@@ -1055,7 +1055,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel56.AutoSize = true;
-            this.panel56.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel56.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel56.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel56.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel56.Location = new System.Drawing.Point(60, 280);
@@ -1072,7 +1072,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel57.AutoSize = true;
-            this.panel57.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel57.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel57.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel57.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel57.Location = new System.Drawing.Point(330, 235);
@@ -1089,7 +1089,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel58.AutoSize = true;
-            this.panel58.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel58.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel58.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel58.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel58.Location = new System.Drawing.Point(285, 235);
@@ -1106,7 +1106,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel59.AutoSize = true;
-            this.panel59.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel59.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel59.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel59.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel59.Location = new System.Drawing.Point(150, 235);
@@ -1123,7 +1123,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel60.AutoSize = true;
-            this.panel60.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel60.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel60.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel60.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel60.Location = new System.Drawing.Point(240, 235);
@@ -1140,7 +1140,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel61.AutoSize = true;
-            this.panel61.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel61.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel61.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel61.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel61.Location = new System.Drawing.Point(105, 235);
@@ -1157,7 +1157,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel62.AutoSize = true;
-            this.panel62.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel62.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel62.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel62.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel62.Location = new System.Drawing.Point(195, 235);
@@ -1174,7 +1174,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel63.AutoSize = true;
-            this.panel63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(139)))), ((int)(((byte)(71)))));
+            this.panel63.BackColor = System.Drawing.Color.FromArgb(75, 115, 153);;
             this.panel63.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel63.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel63.Location = new System.Drawing.Point(60, 235);
@@ -1191,7 +1191,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel64.AutoSize = true;
-            this.panel64.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(206)))), ((int)(((byte)(158)))));
+            this.panel64.BackColor = System.Drawing.Color.FromArgb(234, 233, 210);
             this.panel64.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel64.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.panel64.Location = new System.Drawing.Point(15, 235);
