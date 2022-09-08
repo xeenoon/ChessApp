@@ -14,10 +14,13 @@ namespace ChessApp
     public partial class Form1 : Form
     {
         Chessboard chessboard;
+        Squares squares;
+
         public Form1()
         {
             InitializeComponent();
             chessboard = new Chessboard("2bQKb2/nppppppn/r6r/p2pp2p/P2PP2P/R6R/NPPPPPPN/2BqkB2 w - 0 1");
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -88,6 +91,23 @@ namespace ChessApp
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 e.Graphics.DrawEllipse(new Pen(Color.DarkBlue, 2), 1f, 1f, SQUARESIZE - 3f, SQUARESIZE - 3f);
             }
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if (squares == null)
+            {
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics);
+            }
+            else
+            {
+                squares.Paint(e.Graphics);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

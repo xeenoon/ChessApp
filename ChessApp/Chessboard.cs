@@ -261,5 +261,11 @@ namespace ChessApp
                 blackCastles.Queenside = true;
             }
         }
+
+        internal Piece PieceAt(int i)
+        {
+            var piece = Pieces.Where(p=>p.position.val == i).FirstOrDefault();
+            return piece;
+        }
     }
 }
