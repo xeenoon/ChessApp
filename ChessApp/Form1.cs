@@ -23,6 +23,10 @@ namespace ChessApp
         private void button1_Click(object sender, EventArgs e)
         {
             chessboard = new Chessboard(textBox1.Text);
+            foreach (var control in Controls)
+            {
+                ((Control)control).Invalidate();
+            }
         }
 
         Point lastclick = new Point(-1,-1);
