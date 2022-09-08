@@ -18,7 +18,6 @@ namespace ChessApp
         {
             InitializeComponent();
             chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1");
-            webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
         }
         public const string BLACK_PAWN   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/45px-Chess_pdt45.svg.png";
         public const string BLACK_ROOK   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Chess_rdt45.svg/45px-Chess_rdt45.svg.png";
@@ -34,54 +33,9 @@ namespace ChessApp
         public const string WHITE_KING   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Chess_klt45.svg/45px-Chess_klt45.svg.png";
         public const string WHITE_QUEEN  = @"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chess_qlt45.svg/45px-Chess_qlt45.svg.png";
 
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            HtmlElementCollection children = webBrowser1.Document.All;
-
-            foreach (HtmlElement child in children)
-            {
-                if (child.Id == "tablecontainer")
-                {
-                    var height = (webBrowser1.Height-10).ToString() + "px";
-
-                    var currentStyle = child.Style;
-                    child.Style = String.Format("height: {0}; width: {0}; max-height: {0}, max-width: {0}", height) + currentStyle;
-                    
-
-                    var size = child.ClientRectangle;
-
-                    //Adding pieces
-                    var chessboard = child.FirstChild;
-                }
-            }
-
-            this.webBrowser1.Document.Body.MouseDown += new HtmlElementEventHandler(Body_MouseDown);
-        }
-        void Body_MouseDown(Object sender, HtmlElementEventArgs e)
-        {
-            if (e.MouseButtonsPressed == MouseButtons.Left)
-            {
-                HtmlElement element = this.webBrowser1.Document.GetElementFromPoint(e.ClientMousePosition);
-                try
-                {
-                    if (element.Id == null)
-                    {
-                        return;
-                    }
-                    var location = int.Parse(element.Id.Split(new[] { ":" }, StringSplitOptions.None)[1]);
-                    chessboard.Click(location, element);
-                }
-                catch
-                {
-
-                }
-            }
-        }
         private void button1_Click(object sender, EventArgs e)
         {
             chessboard = new Chessboard(textBox1.Text);
-            webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
         }
     }
 }
