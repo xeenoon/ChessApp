@@ -26,10 +26,8 @@ namespace ChessApp
         private void button1_Click(object sender, EventArgs e)
         {
             chessboard = new Chessboard(textBox1.Text);
-            foreach (var control in Controls)
-            {
-                ((Control)control).Invalidate();
-            }
+            squares = null;
+            Invalidate();
         }
 
         const int SQUARESIZE = 45;

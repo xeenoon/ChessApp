@@ -134,10 +134,10 @@ namespace ChessApp
             {
                 squares.highlight = this;
             }
-           if (piece != null) //Displaying moves?
+           if (piece != null && squares.board.hasturn == piece.side) //Displaying moves?
            {
                var board = squares.board.bitboard.Copy();
-               //board.SetupSquareAttacks();
+               board.SetupSquareAttacks();
         
                var moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
                while (moves != 0ul)
@@ -152,10 +152,12 @@ namespace ChessApp
         private void Move(int location)
         {
             squares.board.Pieces.Remove(squares.board.PieceAt(location));
-            piece.position = new Position(location % 8, location/8 + 1);
+            piece.position = location;
             squares[location].piece = piece;
 
             squares.board.bitboard = new Bitboard(squares.board);
+
+            squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
 
             piece = null;
         }

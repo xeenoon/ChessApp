@@ -58,13 +58,13 @@ namespace ChessApp
         }
         public void SetupPins()
         {
-            pinnedPieces |= XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
-            pinnedPieces |= XRAY_Pins(W_Bishop, PieceType.Bishop, Side.White, B_King);
-            pinnedPieces |= XRAY_Pins(W_Queen, PieceType.Queen, Side.White, B_King);
-
-            pinnedPieces |= XRAY_Pins(B_Rook, PieceType.Rook, Side.Black, B_King);
-            pinnedPieces |= XRAY_Pins(B_Bishop, PieceType.Bishop, Side.Black, B_King);
-            pinnedPieces |= XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, B_King);
+            SET_XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
+            SET_XRAY_Pins(W_Bishop, PieceType.Bishop, Side.White, B_King);
+            SET_XRAY_Pins(W_Queen, PieceType.Queen, Side.White, B_King);
+            
+            SET_XRAY_Pins(B_Rook, PieceType.Rook, Side.Black, W_King);
+            SET_XRAY_Pins(B_Bishop, PieceType.Bishop, Side.Black, W_King);
+            SET_XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, W_King);
         }
 
         int checks = 0;
@@ -172,12 +172,8 @@ namespace ChessApp
             return result;
         }
 
-        private ulong XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        private void SET_XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            ulong result = 0ul;
-
             var oppositeside = s == Side.White ? BlackPieces : WhitePieces;
 
             while (piece_bitboard != 0)
@@ -198,12 +194,8 @@ namespace ChessApp
                             pinnedPieces |= pinned; //Add this piece to the pinned list, it will not be able to move next turn
                         }
                     }
-                    result |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            //stopwatch.Stop();
-            //Pins += stopwatch.ElapsedTicks;
-            return result;
         }
 
         public Bitboard(string FEN)
@@ -298,22 +290,22 @@ namespace ChessApp
                     switch (piece.pieceType)
                     {
                         case PieceType.Pawn:
-                            W_Pawn |= 1ul << piece.position.val;
+                            W_Pawn |= 1ul << piece.position;
                             break;
                         case PieceType.Rook:
-                            W_Rook |= 1ul << piece.position.val;
+                            W_Rook |= 1ul << piece.position;
                             break;
                         case PieceType.Knight:
-                            W_Knight |= 1ul << piece.position.val;
+                            W_Knight |= 1ul << piece.position;
                             break;
                         case PieceType.Bishop:
-                            W_Bishop |= 1ul << piece.position.val;
+                            W_Bishop |= 1ul << piece.position;
                             break;
                         case PieceType.Queen:
-                            W_Queen |= 1ul << piece.position.val;
+                            W_Queen |= 1ul << piece.position;
                             break;
                         case PieceType.King:
-                            W_King |= 1ul << piece.position.val;
+                            W_King |= 1ul << piece.position;
                             break;
                     }
                 }
@@ -322,22 +314,22 @@ namespace ChessApp
                     switch (piece.pieceType)
                     {
                         case PieceType.Pawn:
-                            B_Pawn |= 1ul << piece.position.val;
+                            B_Pawn |= 1ul << piece.position;
                             break;
                         case PieceType.Rook:
-                            B_Rook |= 1ul << piece.position.val;
+                            B_Rook |= 1ul << piece.position;
                             break;
                         case PieceType.Knight:
-                            B_Knight |= 1ul << piece.position.val;
+                            B_Knight |= 1ul << piece.position;
                             break;
                         case PieceType.Bishop:
-                            B_Bishop |= 1ul << piece.position.val;
+                            B_Bishop |= 1ul << piece.position;
                             break;
                         case PieceType.Queen:
-                            B_Queen |= 1ul << piece.position.val;
+                            B_Queen |= 1ul << piece.position;
                             break;
                         case PieceType.King:
-                            B_King |= 1ul << piece.position.val;
+                            B_King |= 1ul << piece.position;
                             break;
                     }
                 }

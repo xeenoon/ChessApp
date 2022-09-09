@@ -25,43 +25,6 @@ namespace ChessApp
         White,
         Black
     }
-    public struct Position
-    {
-        public int x;
-        public int y;
-
-        public Position(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public byte val
-        {
-            get
-            {
-                return (byte)(((7 - y) * 8) + x);
-            }
-        }
-
-        public static bool operator ==(Position a, Position b)
-        {
-            return a.x == b.x && a.y== b.y;
-        }
-        public static bool operator !=(Position a, Position b)
-        { 
-            return a.x != b.x || a.y != b.y;
-        }
-
-        public static bool operator ==(Position a, System.Drawing.Point b)
-        {
-            return a.x == b.X && a.y == b.Y;
-        }
-        public static bool operator !=(Position a, System.Drawing.Point b)
-        {
-            return a.x != b.X || a.y != b.Y;
-        }
-    }
     public class Piece
     {
         public static readonly Bitmap img_BLACK_PAWN   = Properties.Resources.BlackPawn;
@@ -123,9 +86,9 @@ namespace ChessApp
         }
         public PieceType pieceType;
         public Side side;
-        public Position position;
+        public int position;
 
-        public Piece(PieceType type, Side side, Position position)
+        public Piece(PieceType type, Side side, int position)
         {
             this.pieceType = type;
             this.side = side;
@@ -148,7 +111,7 @@ namespace ChessApp
     public class Chessboard
     {
         public List<Piece> Pieces = new List<Piece>();
-        Side hasturn;
+        public Side hasturn = Side.White;
         CastleOptions blackCastles;
         CastleOptions whiteCastles;
 
@@ -182,46 +145,47 @@ namespace ChessApp
                         continue;
                     }
                     Piece toadd = null;
+                    int position = x + (7 - row) * 8;
                     switch (line[i])
                     {
                         //Black pieces
                         case 'p':
-                            toadd = new Piece(PieceType.Pawn, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.Pawn, Side.Black, position);
                             break;
                         case 'r':
-                            toadd = new Piece(PieceType.Rook, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.Rook, Side.Black, position);
                             break;
                         case 'n':
-                            toadd = new Piece(PieceType.Knight, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.Knight, Side.Black, position);
                             break;
                         case 'b':
-                            toadd = new Piece(PieceType.Bishop, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.Bishop, Side.Black, position);
                             break;
                         case 'k':
-                            toadd = new Piece(PieceType.King, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.King, Side.Black, position);
                             break;
                         case 'q':
-                            toadd = new Piece(PieceType.Queen, Side.Black, new Position(x, row));
+                            toadd = new Piece(PieceType.Queen, Side.Black, position);
                             break;
 
                         //White pieces
                         case 'P':
-                            toadd = new Piece(PieceType.Pawn, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.Pawn, Side.White, position);
                             break;
                         case 'R':
-                            toadd = new Piece(PieceType.Rook, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.Rook, Side.White, position);
                             break;
                         case 'N':
-                            toadd = new Piece(PieceType.Knight, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.Knight, Side.White, position);
                             break;
                         case 'B':
-                            toadd = new Piece(PieceType.Bishop, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.Bishop, Side.White, position);
                             break;
                         case 'K':
-                            toadd = new Piece(PieceType.King, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.King, Side.White, position);
                             break;
                         case 'Q':
-                            toadd = new Piece(PieceType.Queen, Side.White, new Position(x, row));
+                            toadd = new Piece(PieceType.Queen, Side.White, position);
                             break;
                     }
                     Pieces.Add(toadd);
@@ -265,7 +229,7 @@ namespace ChessApp
 
         internal Piece PieceAt(int i)
         {
-            var piece = Pieces.Where(p=>p.position.val == i).FirstOrDefault();
+            var piece = Pieces.Where(p=>p.position == i).FirstOrDefault();
             return piece;
         }
     }
