@@ -19,7 +19,7 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
-            chessboard = new Chessboard("2bQKb2/nppppppn/r6r/p2pp2p/P2PP2P/R6R/NPPPPPPN/2BqkB2 w - 0 1");
+            chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1");
 
         }
 
@@ -32,67 +32,7 @@ namespace ChessApp
             }
         }
 
-        Point lastclick = new Point(-1,-1);
-        Panel tohighlight = null;
         const int SQUARESIZE = 45;
-        private void SquareClick(object sender, EventArgs e)
-        {
-            Panel square = ((Panel)sender);
-            var location = square.Location;
-            location.X = location.X - 15;
-            location.Y = location.Y - 55;
-
-            location.X /= SQUARESIZE;
-            location.Y /= SQUARESIZE;
-            location.Y = 7 - location.Y;
-
-            bool light = (location.X + location.Y) % 2 != 0;
-            if (lastclick != location)
-            {
-                tohighlight = square;
-                square.Refresh();
-
-                if (lastclick.X != -1)
-                {
-                    Point last = new Point((lastclick.X * SQUARESIZE)+15, ((7-lastclick.Y) * SQUARESIZE) + 55);
-                    var panels = Controls.Cast<Control>().Where(p=>p.GetType() == square.GetType());
-                    var panel = ((Panel)panels.Where(p => p.Location == last).FirstOrDefault());
-                    tohighlight = null;
-                    panel.Refresh();
-                }
-                lastclick = location;
-            }
-            else
-            {
-                tohighlight = null;
-                square.Refresh();
-                lastclick = new Point(-1,-1);
-            }
-        }
-
-        private void SquarePaint(object sender, PaintEventArgs e)
-        {
-            Panel _panel = (Panel)(sender);
-
-            var location = _panel.Location;
-            location.X = location.X - 15;
-            location.Y = location.Y - 55;
-
-            location.X /= SQUARESIZE;
-            location.Y /= SQUARESIZE;
-
-            Piece piece = chessboard.Pieces.Where(p => p.position == location).FirstOrDefault();
-            if (piece != null)
-            {
-                e.Graphics.DrawImage(piece.IMG, new Rectangle(0,0,SQUARESIZE, SQUARESIZE));
-            }
-            if (tohighlight == _panel)
-            {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                e.Graphics.DrawEllipse(new Pen(Color.DarkBlue, 2), 1f, 1f, SQUARESIZE - 3f, SQUARESIZE - 3f);
-            }
-        }
-
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (squares == null)
@@ -108,6 +48,21 @@ namespace ChessApp
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs mouse = (MouseEventArgs)(e);
+            MouseButtons button = mouse.Button;
+            if (button == MouseButtons.Left)
+            {
+                Square clicked = squares.SquareAt(mouse.Location);
+                if (clicked != null)
+                {
+                    clicked.QueueHighlight(Color.DarkGreen);
+                    Invalidate();
+                }
+            }
         }
     }
 }
