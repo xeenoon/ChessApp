@@ -136,6 +136,7 @@ namespace ChessApp
             }
            if (piece != null && squares.board.hasturn == piece.side) //Displaying moves?
            {
+
                var board = squares.board.bitboard.Copy();
                board.SetupSquareAttacks();
         
@@ -152,11 +153,38 @@ namespace ChessApp
         private void Move(int location)
         {
             squares.board.Pieces.Remove(squares.board.PieceAt(location));
+
+            if (piece.pieceType == PieceType.Pawn && Math.Abs(location - this.location) % 8 != 0 && squares.board.PieceAt(location) == null) //En passante?
+            {
+                if (piece.side == Side.White)
+                {
+                    squares.board.Pieces.Remove(squares.board.PieceAt(location - 8));
+                    squares[location - 8].piece = null;
+                }
+                else
+                {
+                    squares.board.Pieces.Remove(squares.board.PieceAt(location + 8));
+                    squares[location + 8].piece = null;
+                }
+            }
+
             piece.position = location;
             squares[location].piece = piece;
-
             squares.board.bitboard = new Bitboard(squares.board);
 
+
+            if (piece.pieceType == PieceType.Pawn && ((location == (this.location-16)) || (location == (this.location+16)))) //Just moved foward two?
+            {
+                squares.board.bitboard.enpassent = this.location % 8;
+            }
+            else
+            {
+                squares.board.bitboard.enpassent = -2;
+            }
+
+
+
+            
             squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
 
             piece = null;

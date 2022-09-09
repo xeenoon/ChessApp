@@ -483,16 +483,16 @@ namespace ChessApp
                 {
                     passiveMoves = 0ul; //There shouldn't be any moves here
                 }
-                if (position / 8 == 5) //Are we on the 6th rank? 
+                if (position / 8 == 4) //Are we on the 5th rank? 
                 {
                     if (b.enpassent == (position % 8) + 1) //Left enpassante
                     {
-                        attackMoves |= (1ul << position + 7);
+                        attackMoves |= (1ul << position + 9);
                         ++enpassantes;
                     }
                     else if (b.enpassent == (position % 8) - 1)
                     {
-                        attackMoves |= (1ul << position + 9);
+                        attackMoves |= (1ul << position + 7);
                         ++enpassantes;
                     }
                 }
@@ -511,7 +511,7 @@ namespace ChessApp
                     passiveMoves = 0ul; //There shouldn't be any moves here
                 }
 
-                if (position / 8 == 2) //Are we on the 2nd rank? 
+                if (position / 8 == 3) //Are we on the 4th rank? 
                 {
                     if (b.enpassent == (position % 8) + 1) //Left enpassante
                     {
@@ -520,7 +520,7 @@ namespace ChessApp
                     }
                     else if (b.enpassent == (position % 8) - 1)
                     {
-                        attackMoves |= ((1ul << position) >> 9);
+                        attackMoves |= ((1ul<<position) >> 9);
                         ++enpassantes;
                     }
                 }
