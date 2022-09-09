@@ -152,7 +152,7 @@ namespace ChessApp
         private void Move(int location)
         {
             squares.board.Pieces.Remove(squares.board.PieceAt(location));
-            piece.position = new Position(location%8, location/8);
+            piece.position = new Position(location % 8, location/8 + 1);
             squares[location].piece = piece;
 
             squares.board.bitboard = new Bitboard(squares.board);
