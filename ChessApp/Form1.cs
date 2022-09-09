@@ -37,7 +37,7 @@ namespace ChessApp
         {
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics);
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
             }
             else
             {
@@ -59,7 +59,7 @@ namespace ChessApp
                 Square clicked = squares.SquareAt(mouse.Location);
                 if (clicked != null)
                 {
-                    clicked.QueueHighlight(Color.DarkGreen);
+                    clicked.Click();
                     Invalidate();
                 }
             }

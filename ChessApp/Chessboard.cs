@@ -155,11 +155,12 @@ namespace ChessApp
         string FEN = "";
 
         public static double totalticks = 0;
+        public Bitboard bitboard;
         public Chessboard(string fEN)
         {
             FEN = fEN;
             ParseFEN();
-            Bitboard B = new Bitboard(FEN);
+            bitboard = new Bitboard(FEN);
         }
         public void Event(object sender, EventArgs e)
         {

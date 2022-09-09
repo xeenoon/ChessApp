@@ -254,7 +254,7 @@ namespace ChessApp
                         case 'N':
                             W_Knight |= position; 
                             break;
-                        case 'W':
+                        case 'B':
                             W_Bishop |= position; 
                             break;
                         case 'K':
@@ -288,6 +288,60 @@ namespace ChessApp
 
                 enpassent = enpassent,
             };
+        }
+        public Bitboard(Chessboard board)
+        {
+            foreach (var piece in board.Pieces)
+            {
+                if (piece.side == Side.White)
+                {
+                    switch (piece.pieceType)
+                    {
+                        case PieceType.Pawn:
+                            W_Pawn |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Rook:
+                            W_Rook |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Knight:
+                            W_Knight |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Bishop:
+                            W_Bishop |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Queen:
+                            W_Queen |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.King:
+                            W_King |= 1ul << piece.position.val;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (piece.pieceType)
+                    {
+                        case PieceType.Pawn:
+                            B_Pawn |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Rook:
+                            B_Rook |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Knight:
+                            B_Knight |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Bishop:
+                            B_Bishop |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.Queen:
+                            B_Queen |= 1ul << piece.position.val;
+                            break;
+                        case PieceType.King:
+                            B_King |= 1ul << piece.position.val;
+                            break;
+                    }
+                }
+            }
         }
         public Bitboard()
         {
