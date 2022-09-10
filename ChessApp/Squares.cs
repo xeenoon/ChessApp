@@ -115,6 +115,7 @@ namespace ChessApp
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.FillEllipse(new Pen(movecolor).Brush, realworld.X + 5, realworld.Y + 5, realworld.Width - 10, realworld.Height - 10);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
         }
 
