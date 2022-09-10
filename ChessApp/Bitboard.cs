@@ -150,6 +150,32 @@ namespace ChessApp
                     if ((pawnattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
+                        if (s == Side.White) //<<7 <<9 to attack
+                        {
+                            if (((oppositeKing >> 9) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and left?
+                                squares_to_block_check = oppositeKing >> 9; //We can only take this pawn
+                            }
+                            if (((oppositeKing >> 7) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and right?
+                                squares_to_block_check = oppositeKing >> 9; //We can only take this pawn
+                            }
+                        }
+                        else //>>7 and  >>9 to attack
+                        {
+                            if (((oppositeKing << 9) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and left?
+                                squares_to_block_check = oppositeKing << 9; //We can only take this pawn
+                            }
+                            if (((oppositeKing << 7) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and right?
+                                squares_to_block_check = oppositeKing << 9; //We can only take this pawn
+                            }
+                        }
                     }
                     result |= pawnattacks;
                     break;

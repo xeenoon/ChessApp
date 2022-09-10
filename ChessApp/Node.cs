@@ -238,12 +238,12 @@ namespace ChessApp
                     {
                         copy.enpassent = -2;
                     }
-                    //var t = new Thread(() =>
-                   // {
+                    var t = new Thread(() =>
+                    {
                         n.Populate(nodes, true);
-                   // });
+                    });
 
-                   // t.Start();
+                    t.Start();
                     stopwatch.Stop();
                     copytime += stopwatch.ElapsedTicks;
                 }
