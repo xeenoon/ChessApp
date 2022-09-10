@@ -37,10 +37,7 @@ namespace ChessApp
             {
                 return 0ul; //Double check means that king must move
             }
-            if ((b.pinnedPieces & (1ul<<position)) != 0 && pieceType != PieceType.King) //Are we pinned
-            {
-                return 0ul;
-            }
+            ulong result = 0ul;
 
             ulong myside = side == Side.White ? b.WhitePieces : b.BlackPieces;
             ulong attackedSquares = side == Side.White ? b.BlackAttackedSquares : b.WhiteAttackedSquares;
@@ -50,21 +47,27 @@ namespace ChessApp
             {
                 case PieceType.Knight:
                     moves = knight[position];
-                    return ((moves ^ myside) & moves) & b.squares_to_block_check;
+                    result = ((moves ^ myside) & moves) & b.squares_to_block_check;
+                    break;
                 case PieceType.Rook:
-                    return RookMoves(position, b, side);
+                    result = RookMoves(position, b, side);
+                    break;
                 case PieceType.King:
                     moves = king[position];
                     ulong legal_no_takes = moves & (FULL ^ myside);
                     return (legal_no_takes & (FULL ^ attackedSquares));
                 case PieceType.Pawn:
-                    return PawnMoves(side, position, b) & b.squares_to_block_check;
+                    result = PawnMoves(side, position, b) & b.squares_to_block_check;
+                    break;
                 case PieceType.Bishop:
-                    return BishopMoves(position, b, side);
+                    result = BishopMoves(position, b, side);
+                    break;
                 case PieceType.Queen:
-                    return RookMoves(position, b, side) | BishopMoves(position, b, side);
+                    result = RookMoves(position, b, side) | BishopMoves(position, b, side);
+                    break;
             }
-            return moves;
+            result = result & b.pinnedPieces[position];
+            return result;
         }
         public static ulong[] SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
@@ -390,21 +393,37 @@ namespace ChessApp
             ulong uprightBlockers = (rightupmask & mypieces);
             uprightBlockers &= (~uprightBlockers) + 1;
             ulong uprightBetween = (uprightBlockers - 1) & rightupmask;
+            if (uprightBlockers == 0)
+            {
+                uprightBetween = upRight[position];
+            }
 
             var leftupmask = upLeft[position];
             ulong upleftBlockers = (leftupmask & mypieces);
             upleftBlockers &= (~upleftBlockers) + 1;
             ulong upleftBetween = (upleftBlockers - 1) & leftupmask;
+            if (upleftBlockers == 0)
+            {
+                upleftBetween = upLeft[position];
+            }
 
             var rightdownmask = downRight[position];
             ulong downrightBlockers = (rightdownmask & mypieces);
             downrightBlockers = HSB(downrightBlockers);
             ulong rightdownBetween = (FULL ^ (downrightBlockers - 1)) & rightdownmask;
+            if (downrightBlockers == 0)
+            {
+                rightdownBetween = downRight[position];
+            }
 
             var leftdownmask = downLeft[position];
             ulong downleftBlockers = (leftdownmask & mypieces);
             downleftBlockers = HSB(downleftBlockers);
             ulong leftdownBetween = (FULL ^ (downleftBlockers - 1)) & leftdownmask;
+            if (downleftBlockers == 0)
+            {
+                leftdownBetween = downLeft[position];
+            }
 
             return new ulong[4] { uprightBetween, upleftBetween, rightdownBetween, leftdownBetween };
         }
@@ -426,42 +445,74 @@ namespace ChessApp
             ulong rightBlockers = rightmask & mypieces;
             rightBlockers &= (~rightBlockers) + 1;
             ulong rightBetween = (rightBlockers - 1) & rightmask;
+            if (rightBlockers == 0)
+            {
+                rightBetween = right[position];
+            }
 
             var leftmask = left[position];
             ulong leftBlockers = leftmask & mypieces;
             leftBlockers = HSB(leftBlockers);
             ulong leftBetween = (((1ul << position) - 1) ^ ((leftBlockers << 1) - 1)) & leftmask;
+            if (leftBlockers == 0)
+            {
+                leftBetween = left[position];
+            }
 
             var upmask = up[position];
             ulong upBlockers = upmask & mypieces;
             upBlockers &= (~upBlockers) + 1;
             ulong upBetween = upmask & (upBlockers - 1);
+            if (upBlockers == 0)
+            {
+                upBetween = up[position];
+            }
 
             var downmask = down[position];
             ulong downBlockers = downmask & mypieces;
             downBlockers = HSB(downBlockers);
             ulong downBetween = downmask ^ (downmask & ((downBlockers << 1) - 1));
+            if (downBlockers == 0)
+            {
+                downBetween = down[position];
+            }
 
             //Bishop
             var rightupmask = upRight[position];
             ulong uprightBlockers = (rightupmask & mypieces);
             uprightBlockers &= (~uprightBlockers) + 1;
             ulong uprightBetween = (uprightBlockers - 1) & rightupmask;
+            if (uprightBlockers == 0)
+            {
+                uprightBetween = upRight[position];
+            }
 
             var leftupmask = upLeft[position];
             ulong upleftBlockers = (leftupmask & mypieces);
             upleftBlockers &= (~upleftBlockers) + 1;
             ulong upleftBetween = (upleftBlockers - 1) & leftupmask;
+            if (upleftBlockers == 0)
+            {
+                upleftBetween = upLeft[position];
+            }
 
             var rightdownmask = downRight[position];
             ulong downrightBlockers = (rightdownmask & mypieces);
             downrightBlockers = HSB(downrightBlockers);
             ulong rightdownBetween = (FULL ^ (downrightBlockers - 1)) & rightdownmask;
+            if (downrightBlockers == 0)
+            {
+                rightdownBetween = downRight[position];
+            }
 
             var leftdownmask = downLeft[position];
             ulong downleftBlockers = (leftdownmask & mypieces);
             downleftBlockers = HSB(downleftBlockers);
             ulong leftdownBetween = (FULL ^ (downleftBlockers - 1)) & leftdownmask;
+            if (downleftBlockers == 0)
+            {
+                leftdownBetween = downLeft[position];
+            }
 
             return new ulong[8] { rightBetween, leftBetween, upBetween, downBetween, uprightBetween, upleftBetween, leftdownBetween, rightdownBetween};
         }
@@ -667,21 +718,37 @@ namespace ChessApp
             ulong rightBlockers = rightmask & mypieces;
             rightBlockers &= (~rightBlockers) + 1;
             ulong rightBetween = (rightBlockers - 1) & rightmask;
+            if (rightBlockers == 0)
+            {
+                rightBetween = right[position];
+            }
 
             var leftmask = left[position];
             ulong leftBlockers = leftmask & mypieces;
             leftBlockers = HSB(leftBlockers);
             ulong leftBetween = (((1ul << position) - 1) ^ ((leftBlockers << 1) - 1)) & leftmask;
+            if (leftBlockers == 0)
+            {
+                leftBetween = left[position];
+            }
 
             var upmask = up[position];
             ulong upBlockers = upmask & mypieces;
             upBlockers &= (~upBlockers) + 1;
             ulong upBetween = upmask & (upBlockers - 1);
+            if (upBlockers == 0)
+            {
+                upBetween = up[position];
+            }
 
             var downmask = down[position];
             ulong downBlockers = downmask & mypieces;
             downBlockers = HSB(downBlockers);
             ulong downBetween = downmask ^ (downmask & ((downBlockers << 1) - 1));
+            if (downBlockers == 0)
+            {
+                downBetween = down[position];
+            }
 
             return new ulong[4] { rightBetween, leftBetween, upBetween, downBetween };
         }

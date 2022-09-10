@@ -19,7 +19,9 @@ namespace ChessApp
         public ulong B_Queen = 0ul;  //Black Queens
         public ulong B_King = 0ul;   //Black King
 
-        public ulong pinnedPieces = 0ul;
+        public ulong[] pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue }; 
+        //Legal moves allowed because of pins for every place on the board
+        //Default is everything
 
         public bool check = false;
         public bool doublecheck = false;
@@ -210,11 +212,12 @@ namespace ChessApp
                 {
                     if ((attackray & oppositeKing) != 0) //King is in check
                     {
-                        var pinned = attackray & oppositeside; //Find all the pinned pieces
+                        var pinned = attackray & oppositeside ^ oppositeKing; //Find all the pinned pieces
 
-                        if ((pinned & (pinned-1)) == 0) //Only one bit set
+                        if ((pinned & (pinned-1)) == 0 && pinned != 0) //Only one bit set
                         {
-                            pinnedPieces |= pinned; //Add this piece to the pinned list, it will not be able to move next turn
+                            int v = BitOperations.TrailingZeros(pinned) - 1;
+                            pinnedPieces[v] = attackray | bitpos; //Add this piece to the pinned list, it will not be able to move next turn
                         }
                     }
                 }
