@@ -201,9 +201,6 @@ namespace ChessApp
                 squares.board.bitboard.enpassent = -2;
             }
 
-
-
-            
             squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
 
             piece = null;

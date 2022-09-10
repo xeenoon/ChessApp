@@ -323,5 +323,226 @@ namespace ChessApp
         {
 
         }
+        public ulong PieceBB(Side side, PieceType pieceType)
+        {
+            if (side == Side.White)
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return W_Pawn;
+                    case PieceType.Rook:
+                        return W_Rook;
+                    case PieceType.Knight:
+                        return W_Knight;
+                    case PieceType.Bishop:
+                        return W_Bishop;
+                    case PieceType.Queen:
+                        return W_Queen;
+                    case PieceType.King:
+                        return W_King;
+                }
+            }
+            else
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return B_Pawn;
+                    case PieceType.Rook:
+                        return B_Rook;
+                    case PieceType.Knight:
+                        return B_Knight;
+                    case PieceType.Bishop:
+                        return B_Bishop;
+                    case PieceType.Queen:
+                        return B_Queen;
+                    case PieceType.King:
+                        return B_King;
+                }
+            }
+            return 0ul; //wot
+        }
+        public Bitboard Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
+        {
+            Bitboard copy = Copy();
+
+            var othersidepieces = side == Side.White ? BlackPieces : WhitePieces;
+            
+            bool istaking = (endpos & othersidepieces) != 0;
+            if (istaking) //Are we taking a piece?
+            {
+                if (side == Side.White) //Taking piece will be black
+                {
+                    if ((B_Pawn & endpos) != 0) //Taking a pawn?
+                    {
+                        B_Pawn ^= endpos;
+                    }
+                    else if ((B_Rook & endpos) != 0) //Taking a Rook?
+                    {
+                        B_Rook ^= endpos;
+                    }
+                    else if ((B_Knight & endpos) != 0) //Taking a knight?
+                    {
+                        B_Knight ^= endpos;
+                    }
+                    else if ((B_Bishop & endpos) != 0) //Taking a Bishop?
+                    {
+                        B_Bishop ^= endpos;
+                    }
+                    else if ((B_Queen & endpos) != 0) //Taking a Queen?
+                    {
+                        B_Queen ^= endpos;
+                    }
+                }
+                else
+                {
+                    if ((W_Pawn & endpos) != 0) //Taking a pawn?
+                    {
+                        W_Pawn ^= endpos;
+                    }
+                    else if ((W_Rook & endpos) != 0) //Taking a Rook?
+                    {
+                        W_Rook ^= endpos;
+                    }
+                    else if ((W_Knight & endpos) != 0) //Taking a knight?
+                    {
+                        W_Knight ^= endpos;
+                    }
+                    else if ((W_Bishop & endpos) != 0) //Taking a Bishop?
+                    {
+                        W_Bishop ^= endpos;
+                    }
+                    else if ((W_Queen & endpos) != 0) //Taking a Queen?
+                    {
+                        W_Queen ^= endpos;
+                    }
+                }
+            }
+
+            if (pieceType == PieceType.Pawn && !istaking) //En passante?
+            {
+                if (side == Side.White && startpos << 8 != endpos && startlocation / 8 == 4 && enpassent == endlocation % 8)
+                {
+                    copy.B_Pawn ^= endpos >> 8;
+                }
+                else if (startpos >> 8 != endpos && startlocation / 8 == 3 && enpassent == endlocation % 8)
+                {
+                    copy.W_Pawn ^= endpos << 8;
+                }
+            }
+            if (pieceType == PieceType.King && (endlocation - startlocation) == 2) //Kingside castle?
+            {
+                if (side == Side.White)
+                {
+                    copy.W_Rook ^= (1ul << 7);
+                    copy.W_Rook ^= (1ul << 5);
+                }
+                else
+                {
+                    copy.B_Rook ^= (1ul << 63);
+                    copy.B_Rook ^= (1ul << 61);
+                }
+            }
+            if (pieceType == PieceType.King && (endlocation - startlocation) == -2) //Queenside castle?
+            {
+                if (side == Side.White)
+                {
+                    copy.W_Rook ^= (1ul << 0);
+                    copy.W_Rook ^= (1ul << 3);
+                }
+                else
+                {
+                    copy.B_Rook ^= (1ul << 56);
+                    copy.B_Rook ^= (1ul << 50);
+                }
+            }
+            if (pieceType == PieceType.Pawn && (endlocation / 8 == 7 || endlocation / 8 == 0))
+            {
+                pieceType = PieceType.Queen;
+                if (side == Side.White)
+                {
+                    copy.W_Pawn  ^= endlocation;
+                    copy.W_Queen ^= endlocation;
+                }
+                else
+                {
+                    copy.B_Pawn ^= endlocation;
+                    copy.B_Queen ^= endlocation;
+                }
+            }
+
+            if (pieceType == PieceType.Pawn && ((endlocation == (startlocation - 16)) || (endlocation == (startlocation + 16)))) //Just moved foward two?
+            {
+                copy.enpassent = startlocation % 8;
+            }
+            else
+            {
+                copy.enpassent = -2;
+            }
+
+            if (side == Side.White)
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        copy.W_Pawn ^= startlocation;
+                        copy.W_Pawn ^= endlocation;
+                        break;
+                    case PieceType.Rook:
+                        copy.W_Rook ^= startlocation;
+                        copy.W_Rook ^= endlocation;
+                        break;
+                    case PieceType.Knight:
+                        copy.W_Knight ^= startlocation;
+                        copy.W_Knight ^= endlocation;
+                        break;
+                    case PieceType.Bishop:
+                        copy.W_Bishop ^= startlocation;
+                        copy.W_Bishop ^= endlocation;
+                        break;
+                    case PieceType.Queen:
+                        copy.W_Queen ^= startlocation;
+                        copy.W_Queen ^= endlocation;
+                        break;
+                    case PieceType.King:
+                        copy.W_King ^= startlocation;
+                        copy.W_King ^= endlocation;
+                        break;
+                }
+            }
+            else
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        copy.B_Pawn ^= startlocation;
+                        copy.B_Pawn ^= endlocation;
+                        break;
+                    case PieceType.Rook:
+                        copy.B_Rook ^= startlocation;
+                        copy.B_Rook ^= endlocation;
+                        break;
+                    case PieceType.Knight:
+                        copy.B_Knight ^= startlocation;
+                        copy.B_Knight ^= endlocation;
+                        break;
+                    case PieceType.Bishop:
+                        copy.B_Bishop ^= startlocation;
+                        copy.B_Bishop ^= endlocation;
+                        break;
+                    case PieceType.Queen:
+                        copy.B_Queen ^= startlocation;
+                        copy.B_Queen ^= endlocation;
+                        break;
+                    case PieceType.King:
+                        copy.B_King ^= startlocation;
+                        copy.B_King ^= endlocation;
+                        break;
+                }
+            }
+
+            return copy;
+        }
     }
 }
