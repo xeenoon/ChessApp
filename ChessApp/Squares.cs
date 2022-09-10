@@ -182,6 +182,9 @@ namespace ChessApp
                 squares[location + 1].piece = kingsiderook;
                 kingsiderook.position = location + 1;
             }
+
+            squares.board.bitboard = squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side);
+
             if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
             {
                 piece.pieceType = PieceType.Queen;
@@ -189,17 +192,6 @@ namespace ChessApp
 
             piece.position = location;
             squares[location].piece = piece;
-            squares.board.bitboard = new Bitboard(squares.board);
-
-
-            if (piece.pieceType == PieceType.Pawn && ((location == (this.location-16)) || (location == (this.location+16)))) //Just moved foward two?
-            {
-                squares.board.bitboard.enpassent = this.location % 8;
-            }
-            else
-            {
-                squares.board.bitboard.enpassent = -2;
-            }
 
             squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
 

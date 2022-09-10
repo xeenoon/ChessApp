@@ -376,46 +376,46 @@ namespace ChessApp
                 {
                     if ((B_Pawn & endpos) != 0) //Taking a pawn?
                     {
-                        B_Pawn ^= endpos;
+                        copy.B_Pawn ^= endpos;
                     }
                     else if ((B_Rook & endpos) != 0) //Taking a Rook?
                     {
-                        B_Rook ^= endpos;
+                        copy.B_Rook ^= endpos;
                     }
                     else if ((B_Knight & endpos) != 0) //Taking a knight?
                     {
-                        B_Knight ^= endpos;
+                        copy.B_Knight ^= endpos;
                     }
                     else if ((B_Bishop & endpos) != 0) //Taking a Bishop?
                     {
-                        B_Bishop ^= endpos;
+                        copy.B_Bishop ^= endpos;
                     }
                     else if ((B_Queen & endpos) != 0) //Taking a Queen?
                     {
-                        B_Queen ^= endpos;
+                        copy.B_Queen ^= endpos;
                     }
                 }
                 else
                 {
                     if ((W_Pawn & endpos) != 0) //Taking a pawn?
                     {
-                        W_Pawn ^= endpos;
+                        copy.W_Pawn ^= endpos;
                     }
                     else if ((W_Rook & endpos) != 0) //Taking a Rook?
                     {
-                        W_Rook ^= endpos;
+                        copy.W_Rook ^= endpos;
                     }
                     else if ((W_Knight & endpos) != 0) //Taking a knight?
                     {
-                        W_Knight ^= endpos;
+                        copy.W_Knight ^= endpos;
                     }
                     else if ((W_Bishop & endpos) != 0) //Taking a Bishop?
                     {
-                        W_Bishop ^= endpos;
+                        copy.W_Bishop ^= endpos;
                     }
                     else if ((W_Queen & endpos) != 0) //Taking a Queen?
                     {
-                        W_Queen ^= endpos;
+                        copy.W_Queen ^= endpos;
                     }
                 }
             }
@@ -457,20 +457,6 @@ namespace ChessApp
                     copy.B_Rook ^= (1ul << 50);
                 }
             }
-            if (pieceType == PieceType.Pawn && (endlocation / 8 == 7 || endlocation / 8 == 0))
-            {
-                pieceType = PieceType.Queen;
-                if (side == Side.White)
-                {
-                    copy.W_Pawn  ^= endlocation;
-                    copy.W_Queen ^= endlocation;
-                }
-                else
-                {
-                    copy.B_Pawn ^= endlocation;
-                    copy.B_Queen ^= endlocation;
-                }
-            }
 
             if (pieceType == PieceType.Pawn && ((endlocation == (startlocation - 16)) || (endlocation == (startlocation + 16)))) //Just moved foward two?
             {
@@ -480,34 +466,47 @@ namespace ChessApp
             {
                 copy.enpassent = -2;
             }
-
-            if (side == Side.White)
+            if (pieceType == PieceType.Pawn && (endlocation / 8 == 7 || endlocation / 8 == 0))
+            {
+                pieceType = PieceType.Queen;
+                if (side == Side.White)
+                {
+                    copy.W_Pawn ^= startpos;
+                    copy.W_Queen ^= endpos;
+                }
+                else
+                {
+                    copy.B_Pawn ^= startpos;
+                    copy.B_Queen ^= endpos;
+                }
+            }
+            else if (side == Side.White)
             {
                 switch (pieceType)
                 {
                     case PieceType.Pawn:
-                        copy.W_Pawn ^= startlocation;
-                        copy.W_Pawn ^= endlocation;
+                        copy.W_Pawn ^= startpos;
+                        copy.W_Pawn ^= endpos;
                         break;
                     case PieceType.Rook:
-                        copy.W_Rook ^= startlocation;
-                        copy.W_Rook ^= endlocation;
+                        copy.W_Rook ^= startpos;
+                        copy.W_Rook ^= endpos;
                         break;
                     case PieceType.Knight:
-                        copy.W_Knight ^= startlocation;
-                        copy.W_Knight ^= endlocation;
+                        copy.W_Knight ^= startpos;
+                        copy.W_Knight ^= endpos;
                         break;
                     case PieceType.Bishop:
-                        copy.W_Bishop ^= startlocation;
-                        copy.W_Bishop ^= endlocation;
+                        copy.W_Bishop ^= startpos;
+                        copy.W_Bishop ^= endpos;
                         break;
                     case PieceType.Queen:
-                        copy.W_Queen ^= startlocation;
-                        copy.W_Queen ^= endlocation;
+                        copy.W_Queen ^= startpos;
+                        copy.W_Queen ^= endpos;
                         break;
                     case PieceType.King:
-                        copy.W_King ^= startlocation;
-                        copy.W_King ^= endlocation;
+                        copy.W_King ^= startpos;
+                        copy.W_King ^= endpos;
                         break;
                 }
             }
@@ -516,28 +515,28 @@ namespace ChessApp
                 switch (pieceType)
                 {
                     case PieceType.Pawn:
-                        copy.B_Pawn ^= startlocation;
-                        copy.B_Pawn ^= endlocation;
+                        copy.B_Pawn ^= startpos;
+                        copy.B_Pawn ^= endpos;
                         break;
                     case PieceType.Rook:
-                        copy.B_Rook ^= startlocation;
-                        copy.B_Rook ^= endlocation;
+                        copy.B_Rook ^= startpos;
+                        copy.B_Rook ^= endpos;
                         break;
                     case PieceType.Knight:
-                        copy.B_Knight ^= startlocation;
-                        copy.B_Knight ^= endlocation;
+                        copy.B_Knight ^= startpos;
+                        copy.B_Knight ^= endpos;
                         break;
                     case PieceType.Bishop:
-                        copy.B_Bishop ^= startlocation;
-                        copy.B_Bishop ^= endlocation;
+                        copy.B_Bishop ^= startpos;
+                        copy.B_Bishop ^= endpos;
                         break;
                     case PieceType.Queen:
-                        copy.B_Queen ^= startlocation;
-                        copy.B_Queen ^= endlocation;
+                        copy.B_Queen ^= startpos;
+                        copy.B_Queen ^= endpos;
                         break;
                     case PieceType.King:
-                        copy.B_King ^= startlocation;
-                        copy.B_King ^= endlocation;
+                        copy.B_King ^= startpos;
+                        copy.B_King ^= endpos;
                         break;
                 }
             }

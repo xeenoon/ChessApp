@@ -289,7 +289,7 @@ namespace ChessApp
             ulong downrightBlockers = (rightdownmask & mypieces);
             downrightBlockers |= ((theirpieces & rightdownmask) & NO_BOTTOM_ROW) >> 7;
             downrightBlockers = HSB(downrightBlockers);
-            ulong rightdownBetween = (FULL ^ (downrightBlockers<<1 - 1)) & rightdownmask;
+            ulong rightdownBetween = (FULL ^ ((downrightBlockers<<1) - 1)) & rightdownmask;
 
             if (downrightBlockers == 0)
             {
@@ -300,7 +300,7 @@ namespace ChessApp
             ulong downleftBlockers = (leftdownmask & mypieces);
             downleftBlockers |= ((theirpieces & leftdownmask) & NO_BOTTOM_ROW) >> 9;
             downleftBlockers = HSB(downleftBlockers);
-            ulong leftdownBetween = (FULL ^ (downleftBlockers<<1 - 1)) & leftdownmask;
+            ulong leftdownBetween = (FULL ^ ((downleftBlockers<<1) - 1)) & leftdownmask;
 
             if (downleftBlockers == 0)
             {
@@ -395,7 +395,7 @@ namespace ChessApp
             ulong downrightBlockers = (rightdownmask & mypieces);
             downrightBlockers |= ((theirpieces & rightdownmask) & NO_BOTTOM_ROW) >> 7;
             downrightBlockers = HSB(downrightBlockers);
-            ulong rightdownBetween = (FULL ^ (downrightBlockers << 1 - 1)) & rightdownmask;
+            ulong rightdownBetween = (FULL ^ ((downrightBlockers << 1) - 1)) & rightdownmask;
 
             if (downrightBlockers == 0)
             {
@@ -406,7 +406,7 @@ namespace ChessApp
             ulong downleftBlockers = (leftdownmask & mypieces);
             downleftBlockers |= ((theirpieces & leftdownmask) & NO_BOTTOM_ROW) >> 9;
             downleftBlockers = HSB(downleftBlockers);
-            ulong leftdownBetween = (FULL ^ (downleftBlockers << 1 - 1)) & leftdownmask;
+            ulong leftdownBetween = (FULL ^ ((downleftBlockers << 1) - 1)) & leftdownmask;
 
             if (downleftBlockers == 0)
             {
