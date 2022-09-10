@@ -72,24 +72,25 @@
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Squares.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -98,12 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\html.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\jquery.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\BlackPawn.png" />
@@ -115,13 +110,85 @@
     <None Include="Resources\BlackRook.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\WhiteKing.png" />
+    <None Include="Resources\D_BlackBishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_BlackKing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_BlackKnight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_BlackPawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_BlackQueen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_BlackRook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhiteBishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhiteKing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhiteKnight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhitePawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhiteQueen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D_WhiteRook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackBishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackKing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackKnight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackPawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackQueen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_BlackRook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhiteBishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhiteKing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhiteKnight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhitePawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhiteQueen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\L_WhiteRook.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WhiteBishop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\WhiteHorse.png" />
+    <None Include="Resources\WhiteKing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WhiteKnight.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WhitePawn.png" />
@@ -136,10 +203,10 @@
     <None Include="Resources\BlackBishop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BlackHorse.png" />
+    <None Include="Resources\BlackKing.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BlackKing.png" />
+    <None Include="Resources\BlackKnight.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

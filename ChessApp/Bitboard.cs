@@ -19,7 +19,9 @@ namespace ChessApp
         public ulong B_Queen = 0ul;  //Black Queens
         public ulong B_King = 0ul;   //Black King
 
-        public ulong pinnedPieces = 0ul;
+        public ulong[] pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue }; 
+        //Legal moves allowed because of pins for every place on the board
+        //Default is everything
 
         public bool check = false;
         public bool doublecheck = false;
@@ -48,7 +50,12 @@ namespace ChessApp
         public static double StaticAttack = 0;
         public static double SlidingAttack = 0;
         public static double Pins = 0;
-        
+
+        public bool B_KingsideCastle;
+        public bool B_QueensideCastle;
+        public bool W_KingsideCastle;
+        public bool W_QueensideCastle;
+
         public void SetupSquareAttacks()
         {
             squares_to_block_check = ulong.MaxValue;
@@ -58,13 +65,13 @@ namespace ChessApp
         }
         public void SetupPins()
         {
-            pinnedPieces |= XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
-            pinnedPieces |= XRAY_Pins(W_Bishop, PieceType.Bishop, Side.White, B_King);
-            pinnedPieces |= XRAY_Pins(W_Queen, PieceType.Queen, Side.White, B_King);
-
-            pinnedPieces |= XRAY_Pins(B_Rook, PieceType.Rook, Side.Black, B_King);
-            pinnedPieces |= XRAY_Pins(B_Bishop, PieceType.Bishop, Side.Black, B_King);
-            pinnedPieces |= XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, B_King);
+            SET_XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
+            SET_XRAY_Pins(W_Bishop, PieceType.Bishop, Side.White, B_King);
+            SET_XRAY_Pins(W_Queen, PieceType.Queen, Side.White, B_King);
+            
+            SET_XRAY_Pins(B_Rook, PieceType.Rook, Side.Black, W_King);
+            SET_XRAY_Pins(B_Bishop, PieceType.Bishop, Side.Black, W_King);
+            SET_XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, W_King);
         }
 
         int checks = 0;
@@ -113,9 +120,6 @@ namespace ChessApp
 
         private ulong SlidingPieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            
             while (piece_bitboard != 0)
             {
                 byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard)-1);
@@ -133,14 +137,14 @@ namespace ChessApp
                     attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            //stopwatch.Stop();
-            //SlidingAttack += stopwatch.ElapsedTicks;
             return attacks;
         }
         private ulong StaticPieceAttacks(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            if (piece_bitboard == 0)
+            {
+                return 0ul;
+            }
             ulong result = 0ul;
             byte lsb;
             switch (pieceType)
@@ -150,6 +154,32 @@ namespace ChessApp
                     if ((pawnattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
+                        if (s == Side.White) //<<7 <<9 to attack
+                        {
+                            if (((oppositeKing >> 9) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and left?
+                                squares_to_block_check = oppositeKing >> 9; //We can only take this pawn
+                            }
+                            if (((oppositeKing >> 7) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and right?
+                                squares_to_block_check = oppositeKing >> 7; //We can only take this pawn
+                            }
+                        }
+                        else //>>7 and  >>9 to attack
+                        {
+                            if (((oppositeKing << 9) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and left?
+                                squares_to_block_check = oppositeKing << 9; //We can only take this pawn
+                            }
+                            if (((oppositeKing << 7) & piece_bitboard) != 0)
+                            {
+                                //Is a pawn attacking up and right?
+                                squares_to_block_check = oppositeKing << 7; //We can only take this pawn
+                            }
+                        }
                     }
                     result |= pawnattacks;
                     break;
@@ -163,21 +193,17 @@ namespace ChessApp
                     if ((knightattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
+                        squares_to_block_check = piece_bitboard & MoveGenerator.knight[(BitOperations.TrailingZeros(oppositeKing) - 1)];
                     }
+
                     result |= knightattacks;
                     break;
             }
-            //stopwatch.Stop();
-            //StaticAttack += stopwatch.ElapsedTicks;
             return result;
         }
 
-        private ulong XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
+        private void SET_XRAY_Pins(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            ulong result = 0ul;
-
             var oppositeside = s == Side.White ? BlackPieces : WhitePieces;
 
             while (piece_bitboard != 0)
@@ -191,82 +217,22 @@ namespace ChessApp
                 {
                     if ((attackray & oppositeKing) != 0) //King is in check
                     {
-                        var pinned = attackray & oppositeside; //Find all the pinned pieces
+                        var pinned = attackray & oppositeside ^ oppositeKing; //Find all the pinned pieces
 
-                        if ((pinned & (pinned-1)) == 0) //Only one bit set
+                        if ((pinned & (pinned-1)) == 0 && pinned != 0) //Only one bit set
                         {
-                            pinnedPieces |= pinned; //Add this piece to the pinned list, it will not be able to move next turn
+                            int v = BitOperations.TrailingZeros(pinned) - 1;
+                            pinnedPieces[v] = attackray | bitpos; //Add this piece to the pinned list, it will not be able to move next turn
                         }
                     }
-                    result |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            //stopwatch.Stop();
-            //Pins += stopwatch.ElapsedTicks;
-            return result;
         }
 
-        public Bitboard(string FEN)
+        public static Bitboard FromFEN(string FEN)
         {
-            string[] strs = FEN.Split(' ');
-            string[] lines = strs[0].Split('/');
-            for (int row = 0; row < lines.Length; ++row)
-            {
-                var line = lines[row];
-                int x = 0;
-                for (int i = 0; i < line.Length; ++i)
-                {
-                    if (char.IsDigit(line[i])) //Jumping foward?
-                    {
-                        x += int.Parse(line[i].ToString());
-                        continue;
-                    }
-                    ulong position = (1ul << (((7-row) * 8) + x));
-                    switch (line[i])
-                    {
-                        //White pieces
-                        case 'p':
-                            B_Pawn |= position;
-                            break;
-                        case 'r':
-                            B_Rook |= position;
-                            break;
-                        case 'n':
-                            B_Knight |= position;
-                            break;
-                        case 'b':
-                            B_Bishop |= position;
-                            break;
-                        case 'k':
-                            B_King |= position;
-                            break;
-                        case 'q':
-                            B_Queen |= position;
-                            break;
-
-                        //Black pieces
-                        case 'P':
-                            W_Pawn |= position;
-                            break;
-                        case 'R':
-                            W_Rook |= position; 
-                            break;
-                        case 'N':
-                            W_Knight |= position; 
-                            break;
-                        case 'W':
-                            W_Bishop |= position; 
-                            break;
-                        case 'K':
-                            W_King |= position; 
-                            break;
-                        case 'Q':
-                            W_Queen |= position;
-                            break;
-                    }
-                    ++x;
-                }
-            }
+            Chessboard board = new Chessboard(FEN);
+            return board.bitboard.Copy();
         }
         public Bitboard Copy()
         {
@@ -286,8 +252,72 @@ namespace ChessApp
                 B_Queen = B_Queen,
                 B_Rook = B_Rook,
 
+                B_KingsideCastle = B_KingsideCastle,
+                W_KingsideCastle = W_KingsideCastle,
+                B_QueensideCastle = B_QueensideCastle,
+                W_QueensideCastle = W_QueensideCastle,
+
                 enpassent = enpassent,
             };
+        }
+        public Bitboard(Chessboard board)
+        {
+            foreach (var piece in board.Pieces)
+            {
+                if (piece.side == Side.White)
+                {
+                    switch (piece.pieceType)
+                    {
+                        case PieceType.Pawn:
+                            W_Pawn |= 1ul << piece.position;
+                            break;
+                        case PieceType.Rook:
+                            W_Rook |= 1ul << piece.position;
+                            break;
+                        case PieceType.Knight:
+                            W_Knight |= 1ul << piece.position;
+                            break;
+                        case PieceType.Bishop:
+                            W_Bishop |= 1ul << piece.position;
+                            break;
+                        case PieceType.Queen:
+                            W_Queen |= 1ul << piece.position;
+                            break;
+                        case PieceType.King:
+                            W_King |= 1ul << piece.position;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (piece.pieceType)
+                    {
+                        case PieceType.Pawn:
+                            B_Pawn |= 1ul << piece.position;
+                            break;
+                        case PieceType.Rook:
+                            B_Rook |= 1ul << piece.position;
+                            break;
+                        case PieceType.Knight:
+                            B_Knight |= 1ul << piece.position;
+                            break;
+                        case PieceType.Bishop:
+                            B_Bishop |= 1ul << piece.position;
+                            break;
+                        case PieceType.Queen:
+                            B_Queen |= 1ul << piece.position;
+                            break;
+                        case PieceType.King:
+                            B_King |= 1ul << piece.position;
+                            break;
+                    }
+                }
+            }
+            B_KingsideCastle = board.blackCastles.Kingside;
+            B_QueensideCastle = board.blackCastles.Queenside;
+
+            W_KingsideCastle  = board.whiteCastles.Kingside;
+            W_QueensideCastle = board.whiteCastles.Queenside;
         }
         public Bitboard()
         {

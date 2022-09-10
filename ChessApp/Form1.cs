@@ -13,52 +13,54 @@ namespace ChessApp
 {
     public partial class Form1 : Form
     {
+        Chessboard chessboard;
+        Squares squares;
+
         public Form1()
         {
             InitializeComponent();
-            Chessboard chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1");
-            webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
+            chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
         }
-        public const string BLACK_PAWN   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/45px-Chess_pdt45.svg.png";
-        public const string BLACK_ROOK   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Chess_rdt45.svg/45px-Chess_rdt45.svg.png";
-        public const string BLACK_KNIGHT = @"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Chess_ndt45.svg/45px-Chess_ndt45.svg.png";
-        public const string BLACK_BISHOP = @"https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Chess_bdt45.svg/45px-Chess_bdt45.svg.png";
-        public const string BLACK_KING   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Chess_kdt45.svg/45px-Chess_kdt45.svg.png";
-        public const string BLACK_QUEEN  = @"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chess_qdt45.svg/45px-Chess_qdt45.svg.png";
 
-        public const string WHITE_PAWN   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/45px-Chess_plt45.svg.png";
-        public const string WHITE_ROOK   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Chess_rlt45.svg/45px-Chess_rlt45.svg.png";
-        public const string WHITE_KNIGHT = @"https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Chess_nlt45.svg/45px-Chess_nlt45.svg.png";
-        public const string WHITE_BISHOP = @"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Chess_blt45.svg/45px-Chess_blt45.svg.png";
-        public const string WHITE_KING   = @"https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Chess_klt45.svg/45px-Chess_klt45.svg.png";
-        public const string WHITE_QUEEN  = @"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chess_qlt45.svg/45px-Chess_qlt45.svg.png";
-
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            HtmlElementCollection children = webBrowser1.Document.All;
-
-            foreach (HtmlElement child in children)
-            {
-                if (child.Id == "tablecontainer")
-                {
-                    var height = (webBrowser1.Height-10).ToString() + "px";
-
-                    var currentStyle = child.Style;
-                    child.Style = String.Format("height: {0}; width: {0}; max-height: {0}, max-width: {0}", height) + currentStyle;
-                    
-
-                    var size = child.ClientRectangle;
-
-                    //Adding pieces
-                    var chessboard = child.FirstChild;
-                }
-            }
-        }
         private void button1_Click(object sender, EventArgs e)
         {
-            Chessboard chessboard = new Chessboard(textBox1.Text);
-            webBrowser1.DocumentText = Properties.Resources.html + chessboard.GetHtml();
+            chessboard = new Chessboard(textBox1.Text);
+            squares = null;
+            Invalidate();
+        }
+
+        const int SQUARESIZE = 45;
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if (squares == null)
+            {
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
+            }
+            else
+            {
+                squares.Paint(e.Graphics);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs mouse = (MouseEventArgs)(e);
+            MouseButtons button = mouse.Button;
+            if (button == MouseButtons.Left)
+            {
+                Square clicked = squares.SquareAt(mouse.Location);
+                if (clicked != null)
+                {
+                    clicked.Click();
+                    Invalidate();
+                }
+            }
         }
     }
 }
