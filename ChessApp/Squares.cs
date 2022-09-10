@@ -168,6 +168,18 @@ namespace ChessApp
                     squares[location + 8].piece = null;
                 }
             }
+            if (piece.pieceType == PieceType.King && (location - this.location) == 2) //Kingside castle?
+            {
+                var kingsiderook = squares.board.PieceAt(location + 1);
+                squares[location + 1].piece = null;
+                squares[location - 1].piece = kingsiderook;
+            }
+            if (piece.pieceType == PieceType.King && (location - this.location) == -2) //Queenside castle?
+            {
+                var kingsiderook = squares.board.PieceAt(location - 2);
+                squares[location - 2].piece = null;
+                squares[location + 1].piece = kingsiderook;
+            }
 
             piece.position = location;
             squares[location].piece = piece;

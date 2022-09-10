@@ -28,7 +28,7 @@ namespace EngineTester
                 }
 
                 var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
-                Bitboard B = new Bitboard(FEN);
+                Bitboard B = Bitboard.FromFEN(FEN);
                 Node n = new Node(B, Side.White, null);
                 stopwatch.Restart();
                 timer = new System.Timers.Timer();

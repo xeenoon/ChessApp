@@ -55,7 +55,7 @@ namespace ChessApp
                 case PieceType.King:
                     moves = king[position];
                     ulong legal_no_takes = moves & (FULL ^ myside);
-                    return (legal_no_takes & (FULL ^ attackedSquares));
+                    return (legal_no_takes & (FULL ^ attackedSquares)) | CastleMoves(side, b);
                 case PieceType.Pawn:
                     result = PawnMoves(side, position, b) & b.squares_to_block_check;
                     break;
@@ -69,6 +69,41 @@ namespace ChessApp
             result = result & b.pinnedPieces[position];
             return result;
         }
+
+        const ulong W_KINGSIDE_SQUARES = 96UL;
+        const ulong W_QUEENSIDE_SQUARES = 14UL;
+
+        const ulong B_KINGSIDE_SQUARES = 6917529027641081856UL;
+        const ulong B_QUEENSIDE_SQUARES = 1008806316530991104UL;
+        private static ulong CastleMoves(Side side, Bitboard b)
+        {
+            ulong result = 0ul;
+
+            if (side == Side.White)
+            {
+                if (b.W_KingsideCastle && (b.WhitePieces & W_KINGSIDE_SQUARES) == 0) //Can we castle, and is the space clear?
+                {
+                    result |= b.W_King << 2;
+                }
+                if (b.W_QueensideCastle && (b.WhitePieces & W_QUEENSIDE_SQUARES) == 0) //Can we castle, and is the space clear?
+                {
+                    result |= b.W_King >> 2;
+                }
+            }
+            else
+            {
+                if (b.B_KingsideCastle && (b.BlackPieces & B_KINGSIDE_SQUARES) == 0) //Can we castle, and is the space clear?
+                {
+                    result |= b.B_King << 2;
+                }
+                if (b.B_QueensideCastle && (b.BlackPieces & B_QUEENSIDE_SQUARES) == 0) //Can we castle, and is the space clear?
+                {
+                    result |= b.B_King >> 2;
+                }
+            }
+            return result;
+        }
+
         public static ulong[] SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
             ulong myside = side == Side.White ? b.WhitePieces : b.BlackPieces;

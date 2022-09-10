@@ -50,7 +50,12 @@ namespace ChessApp
         public static double StaticAttack = 0;
         public static double SlidingAttack = 0;
         public static double Pins = 0;
-        
+
+        public bool B_KingsideCastle;
+        public bool B_QueensideCastle;
+        public bool W_KingsideCastle;
+        public bool W_QueensideCastle;
+
         public void SetupSquareAttacks()
         {
             squares_to_block_check = ulong.MaxValue;
@@ -224,67 +229,10 @@ namespace ChessApp
             }
         }
 
-        public Bitboard(string FEN)
+        public static Bitboard FromFEN(string FEN)
         {
-            string[] strs = FEN.Split(' ');
-            string[] lines = strs[0].Split('/');
-            for (int row = 0; row < lines.Length; ++row)
-            {
-                var line = lines[row];
-                int x = 0;
-                for (int i = 0; i < line.Length; ++i)
-                {
-                    if (char.IsDigit(line[i])) //Jumping foward?
-                    {
-                        x += int.Parse(line[i].ToString());
-                        continue;
-                    }
-                    ulong position = (1ul << (((7-row) * 8) + x));
-                    switch (line[i])
-                    {
-                        //White pieces
-                        case 'p':
-                            B_Pawn |= position;
-                            break;
-                        case 'r':
-                            B_Rook |= position;
-                            break;
-                        case 'n':
-                            B_Knight |= position;
-                            break;
-                        case 'b':
-                            B_Bishop |= position;
-                            break;
-                        case 'k':
-                            B_King |= position;
-                            break;
-                        case 'q':
-                            B_Queen |= position;
-                            break;
-
-                        //Black pieces
-                        case 'P':
-                            W_Pawn |= position;
-                            break;
-                        case 'R':
-                            W_Rook |= position; 
-                            break;
-                        case 'N':
-                            W_Knight |= position; 
-                            break;
-                        case 'B':
-                            W_Bishop |= position; 
-                            break;
-                        case 'K':
-                            W_King |= position; 
-                            break;
-                        case 'Q':
-                            W_Queen |= position;
-                            break;
-                    }
-                    ++x;
-                }
-            }
+            Chessboard board = new Chessboard(FEN);
+            return board.bitboard.Copy();
         }
         public Bitboard Copy()
         {
@@ -303,6 +251,11 @@ namespace ChessApp
                 B_Knight = B_Knight,
                 B_Queen = B_Queen,
                 B_Rook = B_Rook,
+
+                B_KingsideCastle = B_KingsideCastle,
+                W_KingsideCastle = W_KingsideCastle,
+                B_QueensideCastle = B_QueensideCastle,
+                W_QueensideCastle = W_QueensideCastle,
 
                 enpassent = enpassent,
             };
@@ -360,6 +313,11 @@ namespace ChessApp
                     }
                 }
             }
+            B_KingsideCastle = board.blackCastles.Kingside;
+            B_QueensideCastle = board.blackCastles.Queenside;
+
+            W_KingsideCastle  = board.whiteCastles.Kingside;
+            W_QueensideCastle = board.whiteCastles.Queenside;
         }
         public Bitboard()
         {

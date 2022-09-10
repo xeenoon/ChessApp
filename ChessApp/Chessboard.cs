@@ -112,8 +112,8 @@ namespace ChessApp
     {
         public List<Piece> Pieces = new List<Piece>();
         public Side hasturn = Side.White;
-        CastleOptions blackCastles;
-        CastleOptions whiteCastles;
+        public CastleOptions blackCastles;
+        public CastleOptions whiteCastles;
 
         string FEN = "";
 
@@ -123,7 +123,7 @@ namespace ChessApp
         {
             FEN = fEN;
             ParseFEN();
-            bitboard = new Bitboard(FEN);
+            bitboard = new Bitboard(this);
         }
         public void Event(object sender, EventArgs e)
         {
