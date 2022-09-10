@@ -157,12 +157,12 @@ namespace ChessApp
 
             if (piece.pieceType == PieceType.Pawn && Math.Abs(location - this.location) % 8 != 0 && squares.board.PieceAt(location) == null) //En passante?
             {
-                if (piece.side == Side.White)
+                if (piece.side == Side.White && this.location /8 == 4 && squares.board.bitboard.enpassent == location % 8)
                 {
                     squares.board.Pieces.Remove(squares.board.PieceAt(location - 8));
                     squares[location - 8].piece = null;
                 }
-                else
+                else if(this.location / 8 == 3 && squares.board.bitboard.enpassent == location % 8)
                 {
                     squares.board.Pieces.Remove(squares.board.PieceAt(location + 8));
                     squares[location + 8].piece = null;
@@ -181,6 +181,10 @@ namespace ChessApp
                 squares[location - 2].piece = null;
                 squares[location + 1].piece = kingsiderook;
                 kingsiderook.position = location + 1;
+            }
+            if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
+            {
+                piece.pieceType = PieceType.Queen;
             }
 
             piece.position = location;
