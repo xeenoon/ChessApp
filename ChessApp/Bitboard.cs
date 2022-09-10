@@ -363,6 +363,10 @@ namespace ChessApp
             }
             return 0ul; //wot
         }
+        public static ulong captures;
+        public static ulong enpassantes;
+        public static ulong castles;
+        public static ulong promotions;
         public Bitboard Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
             Bitboard copy = Copy();
@@ -372,6 +376,7 @@ namespace ChessApp
             bool istaking = (endpos & othersidepieces) != 0;
             if (istaking) //Are we taking a piece?
             {
+                ++captures;
                 if (side == Side.White) //Taking piece will be black
                 {
                     if ((B_Pawn & endpos) != 0) //Taking a pawn?
@@ -425,14 +430,17 @@ namespace ChessApp
                 if (side == Side.White && startpos << 8 != endpos && startlocation / 8 == 4 && enpassent == endlocation % 8)
                 {
                     copy.B_Pawn ^= endpos >> 8;
+                    ++enpassantes;
                 }
                 else if (startpos >> 8 != endpos && startlocation / 8 == 3 && enpassent == endlocation % 8)
                 {
                     copy.W_Pawn ^= endpos << 8;
+                    ++enpassantes;
                 }
             }
             if (pieceType == PieceType.King && (endlocation - startlocation) == 2) //Kingside castle?
             {
+                ++castles;
                 if (side == Side.White)
                 {
                     copy.W_Rook ^= (1ul << 7);
@@ -446,6 +454,7 @@ namespace ChessApp
             }
             if (pieceType == PieceType.King && (endlocation - startlocation) == -2) //Queenside castle?
             {
+                ++castles;
                 if (side == Side.White)
                 {
                     copy.W_Rook ^= (1ul << 0);
@@ -468,7 +477,7 @@ namespace ChessApp
             }
             if (pieceType == PieceType.Pawn && (endlocation / 8 == 7 || endlocation / 8 == 0))
             {
-                pieceType = PieceType.Queen;
+                ++promotions;
                 if (side == Side.White)
                 {
                     copy.W_Pawn ^= startpos;
@@ -539,6 +548,36 @@ namespace ChessApp
                         copy.B_King ^= endpos;
                         break;
                 }
+            }
+
+            if (pieceType == PieceType.King)
+            {
+                if (side == Side.White)
+                {
+                    copy.W_KingsideCastle = false;
+                    copy.W_QueensideCastle = false;
+                }
+                else
+                {
+                    copy.B_KingsideCastle = false;
+                    copy.B_QueensideCastle = false;
+                }
+            }
+            if (pieceType == PieceType.Rook && startlocation == 0) //Queenside rook
+            {
+                copy.W_QueensideCastle = false;
+            }
+            if (pieceType == PieceType.Rook && startlocation == 7) //Kingside rook
+            {
+                copy.W_KingsideCastle = false;
+            }
+            if (pieceType == PieceType.Rook && startlocation == 56) //Queenside rook
+            {
+                copy.B_QueensideCastle = false;
+            }
+            if (pieceType == PieceType.Rook && startlocation == 63) //Queenside rook
+            {
+                copy.B_KingsideCastle = false;
             }
 
             return copy;

@@ -14,14 +14,12 @@ namespace ChessApp
         public Side hasturn;
         public Node parent;
         public List<Node> children = new List<Node>();
-        public static int totalnodes = 0;
+        public static ulong totalnodes = 0;
 
         public Node(Bitboard b, Side hasturn, Node parent)
         {
             this.b = b;
             this.hasturn = hasturn;
-            //this.parent = parent;
-            ++totalnodes;
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
@@ -31,6 +29,7 @@ namespace ChessApp
 
             if (nodes == 0)
             {
+                ++totalnodes;
                 return;
             }
             nodes--;
@@ -50,81 +49,14 @@ namespace ChessApp
                 {
                     stopwatch.Restart();
 
-                    var copy = b.Copy();
                     byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
                     ulong bitpos = 1ul << lsb;
 
                     //Simulating move
-                    if (hasturn == Side.White)
-                    {
-                        switch (move.pieceType)
-                        {
-                            case PieceType.Pawn:
-                                copy.W_Pawn ^= move.last;
-                                copy.W_Pawn ^= bitpos;
-                                break;
-                            case PieceType.Rook:
-                                copy.W_Rook ^= move.last;
-                                copy.W_Rook ^= bitpos;
-                                break;
-                            case PieceType.Knight:
-                                copy.W_Knight ^= move.last;
-                                copy.W_Knight ^= bitpos;
-                                break;
-                            case PieceType.Bishop:
-                                copy.W_Bishop ^= move.last;
-                                copy.W_Bishop ^= bitpos;
-                                break;
-                            case PieceType.Queen:
-                                copy.W_Queen ^= move.last;
-                                copy.W_Queen ^= bitpos;
-                                break;
-                            case PieceType.King:
-                                copy.W_King ^= move.last;
-                                copy.W_King ^= bitpos;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (move.pieceType)
-                        {
-                            case PieceType.Pawn:
-                                copy.B_Pawn ^= move.last;
-                                copy.B_Pawn ^= bitpos;
-                                break;
-                            case PieceType.Rook:
-                                copy.B_Rook ^= move.last;
-                                copy.B_Rook ^= bitpos;
-                                break;
-                            case PieceType.Knight:
-                                copy.B_Knight ^= move.last;
-                                copy.B_Knight ^= bitpos;
-                                break;
-                            case PieceType.Bishop:
-                                copy.B_Bishop ^= move.last;
-                                copy.B_Bishop ^= bitpos;
-                                break;
-                            case PieceType.Queen:
-                                copy.B_Queen ^= move.last;
-                                copy.B_Queen ^= bitpos;
-                                break;
-                            case PieceType.King:
-                                copy.B_King ^= move.last;
-                                copy.B_King ^= bitpos;
-                                break;
-                        }
-                    }
+                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
+
 
                     Node n = new Node(copy, otherturn, this);
-                    if (move.pieceType == PieceType.Pawn && (move.last << 16 == bitpos || move.last >> 16 == bitpos)) //Just moved foward two?
-                    {
-                        copy.enpassent = lsb % 8;
-                    }
-                    else
-                    {
-                        copy.enpassent = -2;
-                    }
                     stopwatch.Stop();
 
                     n.Populate(nodes);
@@ -163,81 +95,13 @@ namespace ChessApp
                 {
                     stopwatch.Restart();
 
-                    var copy = b.Copy();
                     byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
                     ulong bitpos = 1ul << lsb;
                     resultpos ^= bitpos; //remove this piece from the ulong of pieces
 
                     //Simulating move
-                    if (hasturn == Side.White)
-                    {
-                        switch (move.pieceType)
-                        {
-                            case PieceType.Pawn:
-                                copy.W_Pawn ^= move.last;
-                                copy.W_Pawn ^= bitpos;
-                                break;
-                            case PieceType.Rook:
-                                copy.W_Rook ^= move.last;
-                                copy.W_Rook ^= bitpos;
-                                break;
-                            case PieceType.Knight:
-                                copy.W_Knight ^= move.last;
-                                copy.W_Knight ^= bitpos;
-                                break;
-                            case PieceType.Bishop:
-                                copy.W_Bishop ^= move.last;
-                                copy.W_Bishop ^= bitpos;
-                                break;
-                            case PieceType.Queen:
-                                copy.W_Queen ^= move.last;
-                                copy.W_Queen ^= bitpos;
-                                break;
-                            case PieceType.King:
-                                copy.W_King ^= move.last;
-                                copy.W_King ^= bitpos;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (move.pieceType)
-                        {
-                            case PieceType.Pawn:
-                                copy.B_Pawn ^= move.last;
-                                copy.B_Pawn ^= bitpos;
-                                break;
-                            case PieceType.Rook:
-                                copy.B_Rook ^= move.last;
-                                copy.B_Rook ^= bitpos;
-                                break;
-                            case PieceType.Knight:
-                                copy.B_Knight ^= move.last;
-                                copy.B_Knight ^= bitpos;
-                                break;
-                            case PieceType.Bishop:
-                                copy.B_Bishop ^= move.last;
-                                copy.B_Bishop ^= bitpos;
-                                break;
-                            case PieceType.Queen:
-                                copy.B_Queen ^= move.last;
-                                copy.B_Queen ^= bitpos;
-                                break;
-                            case PieceType.King:
-                                copy.B_King ^= move.last;
-                                copy.B_King ^= bitpos;
-                                break;
-                        }
-                    }
+                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
                     Node n = new Node(copy, otherturn, this);
-                    if (move.pieceType == PieceType.Pawn && (move.last << 16 == bitpos || move.last >> 16 == bitpos)) //Just moved foward two?
-                    {
-                        copy.enpassent = lsb%8;
-                    }
-                    else
-                    {
-                        copy.enpassent = -2;
-                    }
                     var t = new Thread(() =>
                     {
                         n.Populate(nodes, true);

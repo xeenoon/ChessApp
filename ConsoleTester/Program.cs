@@ -72,10 +72,13 @@ namespace EngineTester
             Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
             Console.WriteLine("Total elapsed ticks: " + total);
             Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
-            Console.WriteLine("Nodes per second: " + 1000 * (nodes / stopwatch.ElapsedMilliseconds));
+            Console.WriteLine("Nodes per second: " + 1000 * (nodes / (ulong)stopwatch.ElapsedMilliseconds));
             Console.WriteLine();
             Console.WriteLine("---Node Data---");
-            Console.WriteLine("Enpassantes: " + MoveGenerator.enpassantes);
+            Console.WriteLine("Enpassantes: " + Bitboard.enpassantes);
+            Console.WriteLine("Captures: "    + Bitboard.captures);
+            Console.WriteLine("Castles: "     + Bitboard.castles);
+            Console.WriteLine("Promotions: "  + Bitboard.promotions);
 
             Bitboard.Pins = 0;
             Bitboard.SlidingAttack = 0;
@@ -88,6 +91,11 @@ namespace EngineTester
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
             Node.copytime = 0;
+
+            Bitboard.enpassantes = 0;
+            Bitboard.captures = 0;
+            Bitboard.castles = 0;
+            Bitboard.promotions = 0;
 
             Console.Write("Search depth: ");
         }
