@@ -113,9 +113,6 @@ namespace ChessApp
 
         private ulong SlidingPieceAttacks(ulong attacks, ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            
             while (piece_bitboard != 0)
             {
                 byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard)-1);
@@ -133,8 +130,6 @@ namespace ChessApp
                     attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
             }
-            //stopwatch.Stop();
-            //SlidingAttack += stopwatch.ElapsedTicks;
             return attacks;
         }
         private ulong StaticPieceAttacks(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
@@ -197,8 +192,6 @@ namespace ChessApp
                     result |= knightattacks;
                     break;
             }
-            //stopwatch.Stop();
-            //StaticAttack += stopwatch.ElapsedTicks;
             return result;
         }
 
