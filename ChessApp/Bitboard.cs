@@ -139,8 +139,10 @@ namespace ChessApp
         }
         private ulong StaticPieceAttacks(ulong piece_bitboard, PieceType pieceType, Side s, ulong oppositeKing)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            if (piece_bitboard == 0)
+            {
+                return 0ul;
+            }
             ulong result = 0ul;
             byte lsb;
             switch (pieceType)
@@ -160,7 +162,7 @@ namespace ChessApp
                             if (((oppositeKing >> 7) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and right?
-                                squares_to_block_check = oppositeKing >> 9; //We can only take this pawn
+                                squares_to_block_check = oppositeKing >> 7; //We can only take this pawn
                             }
                         }
                         else //>>7 and  >>9 to attack
@@ -173,7 +175,7 @@ namespace ChessApp
                             if (((oppositeKing << 7) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and right?
-                                squares_to_block_check = oppositeKing << 9; //We can only take this pawn
+                                squares_to_block_check = oppositeKing << 7; //We can only take this pawn
                             }
                         }
                     }
@@ -189,7 +191,9 @@ namespace ChessApp
                     if ((knightattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
+                        squares_to_block_check = piece_bitboard & MoveGenerator.knight[(BitOperations.TrailingZeros(oppositeKing) - 1)];
                     }
+
                     result |= knightattacks;
                     break;
             }
