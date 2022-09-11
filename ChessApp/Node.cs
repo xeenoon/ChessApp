@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
-    public class Node
+    public struct Node
     {
         public Bitboard b;
         public Side hasturn;
-        public Node parent;
-        public List<Node> children = new List<Node>();
-        public static ulong totalnodes = 0;
+        public List<Node> children;
+        public static ulong totalnodes;
 
-        public Node(Bitboard b, Side hasturn, Node parent)
+        public Node(Bitboard b, Side hasturn)
         {
             this.b = b;
             this.hasturn = hasturn;
+            children = new List<Node>();
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
@@ -56,13 +56,12 @@ namespace ChessApp
                     var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
 
 
-                    Node n = new Node(copy, otherturn, this);
+                    Node n = new Node(copy, otherturn);
                     stopwatch.Stop();
+                    copytime += stopwatch.ElapsedTicks;
 
                     n.Populate(nodes);
                     resultpos ^= bitpos; //remove this piece from the ulong of pieces
-
-                    copytime += stopwatch.ElapsedTicks;
                 }
             }
             if (first)
@@ -101,7 +100,7 @@ namespace ChessApp
 
                     //Simulating move
                     var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
-                    Node n = new Node(copy, otherturn, this);
+                    Node n = new Node(copy, otherturn);
                     var t = new Thread(() =>
                     {
                         n.Populate(nodes, true);

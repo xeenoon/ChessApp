@@ -934,7 +934,6 @@ namespace ChessApp
             if (moves != 0)
             {
                 result.Add(new Move(bitpos, moves, PieceType.King));
-
             }
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
