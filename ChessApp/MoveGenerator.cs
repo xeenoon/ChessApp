@@ -909,7 +909,7 @@ namespace ChessApp
                 {
                     continue;
                 }
-                result.Add(new Move(bitpos, lsb, moves, pieceType));
+                AddMoves(ref result, lsb, moves, pieceType);
             }
             stopwatch.Stop();
             GetMovesTime += stopwatch.ElapsedTicks;
@@ -926,31 +926,40 @@ namespace ChessApp
             ulong myside = s == Side.White ? b.WhitePieces : b.BlackPieces;
 
             List<Move> result = new List<Move>();
-            byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-            ulong bitpos = 1ul << lsb;
+            byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+            //ulong bitpos = 1ul << kingpos;
 
-            var moves = king[lsb];
+            var moves = king[kingpos];
             moves &= (moves ^ myside ^ attackedSquares);
             if (moves != 0)
             {
-                result.Add(new Move(bitpos, lsb, moves, PieceType.King));
+                AddMoves(ref result, kingpos, moves, PieceType.King);
             }
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
             return result;
         }
+
+        private static void AddMoves(ref List<Move> result, byte startpos, ulong moves, PieceType pieceType)
+        {
+            while (moves != 0ul)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                ulong bitpos = 1ul << lsb;
+                moves ^= bitpos; //remove this move from the ulong of moves
+                result.Add(new Move(startpos, lsb, pieceType));
+            }
+        }
     }
     public class Move
     {
-        public ulong last;
-        public byte lastpos;
-        public ulong current;
+        public byte last;
+        public byte current;
         public PieceType pieceType;
 
-        public Move(ulong last, byte lastpos, ulong current, PieceType pieceType)
+        public Move(byte last, byte current, PieceType pieceType)
         {
             this.last = last;
-            this.lastpos = lastpos;
             this.current = current;
             this.pieceType = pieceType;
         }

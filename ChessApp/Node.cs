@@ -22,14 +22,13 @@ namespace ChessApp
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
-        public static ulong totalnodes;
-        private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
+        private static int Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
             Stopwatch stopwatch = new Stopwatch();
-            ulong result = 1;
+            int result = 0;
             if (nodes == 0)
             {
-                return result;
+                return 1;
             }
             nodes--;
             if (first)
@@ -43,23 +42,14 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                var resultpos = move.current;
-                while (resultpos != 0ul)
-                {
-                    stopwatch.Restart();
+                stopwatch.Restart();
+                //Simulating move
+                var copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
-                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
-                    ulong bitpos = 1ul << lsb;
+                stopwatch.Stop();
+                copytime += stopwatch.ElapsedTicks;
 
-                    //Simulating move
-                    var copy = b.Move(move.lastpos, lsb, move.last, bitpos, move.pieceType, hasturn);
-
-                    stopwatch.Stop();
-                    copytime += stopwatch.ElapsedTicks;
-
-                    result += Populate(nodes, copy, otherturn);
-                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
-                }
+                result += Populate(nodes, copy, otherturn);
             }
             if (first)
             {
@@ -69,7 +59,8 @@ namespace ChessApp
         }
         public static int linescalculated = 0;
         public static int threads_running = 0;
-        public static ulong[] total_nodes;
+        public static int[] total_nodes;
+        public static List<Thread> threads = new List<Thread>();
         public void BasePopulate(int nodes)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -86,34 +77,26 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
-            total_nodes = new ulong[source.Count];
-            for (int i = 0; i < source.Count; i++) 
+            total_nodes = new int[source.Count];
+            for (int i = 0; i < source.Count; i++)
             {
                 Move move = source[i];
-                var resultpos = move.current;
-                while (resultpos != 0ul)
+
+                //Simulating move
+                var copy = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
+                var t = new Thread(() =>
                 {
-                    stopwatch.Restart();
+                    Populate(nodes, copy, otherturn);
+                    //total_nodes[i] = v;
+                });
 
-                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
-                    ulong bitpos = 1ul << lsb;
-                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
-
-                    //Simulating move
-                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
-                    var t = new Thread(() =>
-                    {
-                        Populate(nodes, copy, otherturn);
-                    });
-
-                    t.Start();
-                    stopwatch.Stop();
-                    copytime += stopwatch.ElapsedTicks;
-                }
+                t.Start();
+                threads.Add(t);
+                
+                stopwatch.Stop();
+                copytime += stopwatch.ElapsedTicks;
                 ++linescalculated;
             }
         }
-
-
     }
 }

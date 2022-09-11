@@ -16,11 +16,6 @@ namespace EngineTester
             while (true)
             {
                 input = Console.ReadLine();
-                if (input == "nodes")
-                {
-                    Console.WriteLine(Node.totalnodes);
-                    continue;
-                }
                 int int_depth;
                 if (!int.TryParse(input, out int_depth))
                 {
@@ -43,7 +38,6 @@ namespace EngineTester
 
         private static void PrintDebug()
         {
-            var nodes = Node.totalnodes;
             var time1 = Node.squareattacktime;
             var time2 = MoveGenerator.TOTALTIME;
             var time3 = Node.copytime;
@@ -53,7 +47,7 @@ namespace EngineTester
             timer.Stop();
             lastthreads = 0;
             lastlines = 0;
-            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, input));
+            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", Node.total_nodes.Sum(), input));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
             //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
@@ -80,7 +74,7 @@ namespace EngineTester
             }
             else 
             {
-                Console.WriteLine("Nodes per second: " + 1000 * (nodes / (ulong)stopwatch.ElapsedMilliseconds));
+                Console.WriteLine("Nodes per second: " + 1000 * (Node.total_nodes.Sum() / stopwatch.ElapsedMilliseconds));
             }
             Console.WriteLine();
             Console.WriteLine("---Node Data---");
@@ -95,7 +89,6 @@ namespace EngineTester
             Bitboard.SlidingAttack = 0;
             Bitboard.StaticAttack = 0;
             Node.squareattacktime = 0;
-            Node.totalnodes = 0;
             MoveGenerator.TOTALTIME = 0;
             MoveGenerator.KingMovesCalls = 0;
             MoveGenerator.KingMovesTime = 0;
@@ -129,7 +122,7 @@ namespace EngineTester
                 Console.WriteLine(String.Format("Calculated {0} more lines", Node.linescalculated - lastlines));
                 lastlines = Node.linescalculated;
             }
-            if (Node.total_nodes.All(t=>t!=0))
+            if (Node.threads.All(t=>t.ThreadState != System.Threading.ThreadState.Running))
             {
                 PrintDebug();
                 return;
