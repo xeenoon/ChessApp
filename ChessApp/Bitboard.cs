@@ -255,19 +255,19 @@ namespace ChessApp
                 W_Knight = this.W_Knight,
                 W_Queen = this.W_Queen,
                 W_Rook = this.W_Rook,
-     
+
                 B_Pawn = this.B_Pawn,
                 B_Bishop = this.B_Bishop,
                 B_King = this.B_King,
                 B_Knight = this.B_Knight,
                 B_Queen = this.B_Queen,
                 B_Rook = this.B_Rook,
-     
+
                 B_KingsideCastle = this.B_KingsideCastle,
                 W_KingsideCastle = this.W_KingsideCastle,
                 B_QueensideCastle = this.B_QueensideCastle,
                 W_QueensideCastle = this.W_QueensideCastle,
-     
+
                 enpassent = this.enpassent,
                 pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue },
             };
@@ -349,9 +349,9 @@ namespace ChessApp
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Bitboard copy = Copy();
-            stopwatch.Stop();
-            MoveTime += stopwatch.ElapsedTicks;
-            return copy;
+            //stopwatch.Stop();
+            //MoveTime += stopwatch.ElapsedTicks;
+            //return copy;
             var othersidepieces = side == Side.White ? BlackPieces : WhitePieces;
             
             bool istaking = (endpos & othersidepieces) != 0;
