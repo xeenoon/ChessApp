@@ -123,7 +123,7 @@ namespace ChessApp
         {
             FEN = fEN;
             ParseFEN();
-            bitboard = new Bitboard(this);
+            bitboard = Bitboard.FromBoard(this);
         }
         public void Event(object sender, EventArgs e)
         {
