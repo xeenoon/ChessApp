@@ -3,32 +3,32 @@ using System.Diagnostics;
 
 namespace ChessApp
 {
-    public class Bitboard
+    public struct Bitboard
     {
-        public ulong W_Pawn = 0ul;   //White Pawns
-        public ulong W_Rook = 0ul;   //White Rooks
-        public ulong W_Knight = 0ul; //White Knights
-        public ulong W_Bishop = 0ul; //White Bishops
-        public ulong W_Queen = 0ul;  //White Queens
-        public ulong W_King = 0ul;   //White King
+        public ulong W_Pawn;   //White Pawns
+        public ulong W_Rook;   //White Rooks
+        public ulong W_Knight; //White Knights
+        public ulong W_Bishop; //White Bishops
+        public ulong W_Queen;  //White Queens
+        public ulong W_King;   //White King
 
-        public ulong B_Pawn = 0ul;   //Black Pawns
-        public ulong B_Rook = 0ul;   //Black Rooks
-        public ulong B_Knight = 0ul; //Black Knights
-        public ulong B_Bishop = 0ul; //Black Bishops
-        public ulong B_Queen = 0ul;  //Black Queens
-        public ulong B_King = 0ul;   //Black King
+        public ulong B_Pawn;   //Black Pawns
+        public ulong B_Rook;   //Black Rooks
+        public ulong B_Knight; //Black Knights
+        public ulong B_Bishop; //Black Bishops
+        public ulong B_Queen;  //Black Queens
+        public ulong B_King;   //Black King
 
-        public ulong[] pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue }; 
+        public ulong[] pinnedPieces;
         //Legal moves allowed because of pins for every place on the board
         //Default is everything
 
-        public bool check = false;
-        public bool doublecheck = false;
-        public ulong squares_to_block_check = ulong.MaxValue; //Squares that pieces can move to to block checks
+        public bool check;
+        public bool doublecheck;
+        public ulong squares_to_block_check; //Squares that pieces can move to to block checks
         //If king is in check, pieces should only be able to move to squares that block the attack
 
-        public int enpassent = -2;
+        public int enpassent;
 
         public ulong BlackPieces
         {
@@ -44,8 +44,8 @@ namespace ChessApp
                 return W_Pawn | W_Rook | W_Knight | W_Bishop | W_King | W_Queen;
             }
         }
-        public ulong WhiteAttackedSquares = 0ul;
-        public ulong BlackAttackedSquares = 0ul;
+        public ulong WhiteAttackedSquares;
+        public ulong BlackAttackedSquares;
         
         public static double StaticAttack = 0;
         public static double SlidingAttack = 0;
@@ -85,7 +85,7 @@ namespace ChessApp
             SET_XRAY_Pins(B_Queen, PieceType.Queen, Side.Black, W_King);
         }
 
-        int checks = 0;
+        int checks;
         ulong WhiteAttacks()
         {
             checks = 0;
@@ -249,30 +249,33 @@ namespace ChessApp
         {
             return new Bitboard()
             {
-                W_Pawn = W_Pawn,
-                W_Bishop = W_Bishop,
-                W_King = W_King,
-                W_Knight = W_Knight,
-                W_Queen = W_Queen,
-                W_Rook = W_Rook,
-
-                B_Pawn = B_Pawn,
-                B_Bishop = B_Bishop,
-                B_King = B_King,
-                B_Knight = B_Knight,
-                B_Queen = B_Queen,
-                B_Rook = B_Rook,
-
-                B_KingsideCastle = B_KingsideCastle,
-                W_KingsideCastle = W_KingsideCastle,
-                B_QueensideCastle = B_QueensideCastle,
-                W_QueensideCastle = W_QueensideCastle,
-
-                enpassent = enpassent,
+                W_Pawn = this.W_Pawn,
+                W_Bishop = this.W_Bishop,
+                W_King = this.W_King,
+                W_Knight = this.W_Knight,
+                W_Queen = this.W_Queen,
+                W_Rook = this.W_Rook,
+     
+                B_Pawn = this.B_Pawn,
+                B_Bishop = this.B_Bishop,
+                B_King = this.B_King,
+                B_Knight = this.B_Knight,
+                B_Queen = this.B_Queen,
+                B_Rook = this.B_Rook,
+     
+                B_KingsideCastle = this.B_KingsideCastle,
+                W_KingsideCastle = this.W_KingsideCastle,
+                B_QueensideCastle = this.B_QueensideCastle,
+                W_QueensideCastle = this.W_QueensideCastle,
+     
+                enpassent = this.enpassent,
+                pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue },
             };
         }
-        public Bitboard(Chessboard board)
+        public static Bitboard FromBoard(Chessboard board)
         {
+            var bitboard = new Bitboard();
+
             foreach (var piece in board.Pieces)
             {
                 if (piece.side == Side.White)
@@ -280,22 +283,22 @@ namespace ChessApp
                     switch (piece.pieceType)
                     {
                         case PieceType.Pawn:
-                            W_Pawn |= 1ul << piece.position;
+                            bitboard.W_Pawn |= 1ul << piece.position;
                             break;
                         case PieceType.Rook:
-                            W_Rook |= 1ul << piece.position;
+                            bitboard.W_Rook |= 1ul << piece.position;
                             break;
                         case PieceType.Knight:
-                            W_Knight |= 1ul << piece.position;
+                            bitboard.W_Knight |= 1ul << piece.position;
                             break;
                         case PieceType.Bishop:
-                            W_Bishop |= 1ul << piece.position;
+                            bitboard.W_Bishop |= 1ul << piece.position;
                             break;
                         case PieceType.Queen:
-                            W_Queen |= 1ul << piece.position;
+                            bitboard.W_Queen |= 1ul << piece.position;
                             break;
                         case PieceType.King:
-                            W_King |= 1ul << piece.position;
+                            bitboard.W_King |= 1ul << piece.position;
                             break;
                     }
                 }
@@ -304,76 +307,37 @@ namespace ChessApp
                     switch (piece.pieceType)
                     {
                         case PieceType.Pawn:
-                            B_Pawn |= 1ul << piece.position;
+                            bitboard.B_Pawn |= 1ul << piece.position;
                             break;
                         case PieceType.Rook:
-                            B_Rook |= 1ul << piece.position;
+                            bitboard.B_Rook |= 1ul << piece.position;
                             break;
                         case PieceType.Knight:
-                            B_Knight |= 1ul << piece.position;
+                            bitboard.B_Knight |= 1ul << piece.position;
                             break;
                         case PieceType.Bishop:
-                            B_Bishop |= 1ul << piece.position;
+                            bitboard.B_Bishop |= 1ul << piece.position;
                             break;
                         case PieceType.Queen:
-                            B_Queen |= 1ul << piece.position;
+                            bitboard.B_Queen |= 1ul << piece.position;
                             break;
                         case PieceType.King:
-                            B_King |= 1ul << piece.position;
+                            bitboard.B_King |= 1ul << piece.position;
                             break;
                     }
                 }
             }
-            B_KingsideCastle = board.blackCastles.Kingside;
-            B_QueensideCastle = board.blackCastles.Queenside;
+            bitboard.B_KingsideCastle = board.blackCastles.Kingside;
+            bitboard.B_QueensideCastle = board.blackCastles.Queenside;
 
-            W_KingsideCastle  = board.whiteCastles.Kingside;
-            W_QueensideCastle = board.whiteCastles.Queenside;
+            bitboard.W_KingsideCastle  = board.whiteCastles.Kingside;
+            bitboard.W_QueensideCastle = board.whiteCastles.Queenside;
+            bitboard.pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue };
+            bitboard.squares_to_block_check = ulong.MaxValue;
+            bitboard.enpassent = -2;
+            return bitboard;
         }
-        public Bitboard()
-        {
 
-        }
-        public ulong PieceBB(Side side, PieceType pieceType)
-        {
-            if (side == Side.White)
-            {
-                switch (pieceType)
-                {
-                    case PieceType.Pawn:
-                        return W_Pawn;
-                    case PieceType.Rook:
-                        return W_Rook;
-                    case PieceType.Knight:
-                        return W_Knight;
-                    case PieceType.Bishop:
-                        return W_Bishop;
-                    case PieceType.Queen:
-                        return W_Queen;
-                    case PieceType.King:
-                        return W_King;
-                }
-            }
-            else
-            {
-                switch (pieceType)
-                {
-                    case PieceType.Pawn:
-                        return B_Pawn;
-                    case PieceType.Rook:
-                        return B_Rook;
-                    case PieceType.Knight:
-                        return B_Knight;
-                    case PieceType.Bishop:
-                        return B_Bishop;
-                    case PieceType.Queen:
-                        return B_Queen;
-                    case PieceType.King:
-                        return B_King;
-                }
-            }
-            return 0ul; //wot
-        }
         public static ulong captures;
         public static ulong enpassantes;
         public static ulong castles;
@@ -385,7 +349,9 @@ namespace ChessApp
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Bitboard copy = Copy();
-
+            stopwatch.Stop();
+            MoveTime += stopwatch.ElapsedTicks;
+            return copy;
             var othersidepieces = side == Side.White ? BlackPieces : WhitePieces;
             
             bool istaking = (endpos & othersidepieces) != 0;
@@ -594,6 +560,8 @@ namespace ChessApp
             {
                 copy.B_KingsideCastle = false;
             }
+
+            
             stopwatch.Stop();
             MoveTime += stopwatch.ElapsedTicks;
             return copy;

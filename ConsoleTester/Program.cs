@@ -37,6 +37,7 @@ namespace EngineTester
                 timer.Start();
                 iswaiting = false;
                 n.BasePopulate(int_depth);
+                //PrintDebug();
             }
         }
 
@@ -73,7 +74,14 @@ namespace EngineTester
             Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
             Console.WriteLine("Total elapsed ticks: " + total);
             Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
-            Console.WriteLine("Nodes per second: " + 1000 * (nodes / (ulong)stopwatch.ElapsedMilliseconds));
+            if (stopwatch.ElapsedMilliseconds == 0)
+            {
+                Console.WriteLine("Nodes per second: infinity");
+            }
+            else 
+            {
+                Console.WriteLine("Nodes per second: " + 1000 * (nodes / (ulong)stopwatch.ElapsedMilliseconds));
+            }
             Console.WriteLine();
             Console.WriteLine("---Node Data---");
             Console.WriteLine("Enpassantes: " + Bitboard.enpassantes);
