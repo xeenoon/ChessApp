@@ -13,7 +13,6 @@ namespace ChessApp
         public Bitboard b;
         public Side hasturn;
         public List<Node> children;
-        public static ulong totalnodes;
 
         public Node(Bitboard b, Side hasturn)
         {
@@ -23,14 +22,14 @@ namespace ChessApp
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
-        private void Populate(int nodes, bool first = false)
+        public static ulong totalnodes;
+        private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
             Stopwatch stopwatch = new Stopwatch();
-
+            ulong result = 1;
             if (nodes == 0)
             {
-                ++totalnodes;
-                return;
+                return result;
             }
             nodes--;
             if (first)
@@ -53,14 +52,12 @@ namespace ChessApp
                     ulong bitpos = 1ul << lsb;
 
                     //Simulating move
-                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
+                    var copy = b.Move(move.lastpos, lsb, move.last, bitpos, move.pieceType, hasturn);
 
-
-                    Node n = new Node(copy, otherturn);
                     stopwatch.Stop();
                     copytime += stopwatch.ElapsedTicks;
 
-                    n.Populate(nodes);
+                    result += Populate(nodes, copy, otherturn);
                     resultpos ^= bitpos; //remove this piece from the ulong of pieces
                 }
             }
@@ -68,9 +65,11 @@ namespace ChessApp
             {
                 --threads_running;
             }
+            return result;
         }
         public static int linescalculated = 0;
         public static int threads_running = 0;
+        public static ulong[] total_nodes;
         public void BasePopulate(int nodes)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -87,8 +86,10 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
-            foreach (var move in source) 
-            { 
+            total_nodes = new ulong[source.Count];
+            for (int i = 0; i < source.Count; i++) 
+            {
+                Move move = source[i];
                 var resultpos = move.current;
                 while (resultpos != 0ul)
                 {
@@ -100,10 +101,9 @@ namespace ChessApp
 
                     //Simulating move
                     var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
-                    Node n = new Node(copy, otherturn);
                     var t = new Thread(() =>
                     {
-                        n.Populate(nodes, true);
+                        Populate(nodes, copy, otherturn);
                     });
 
                     t.Start();

@@ -129,7 +129,7 @@ namespace EngineTester
                 Console.WriteLine(String.Format("Calculated {0} more lines", Node.linescalculated - lastlines));
                 lastlines = Node.linescalculated;
             }
-            if (lastthreads == 0)
+            if (Node.total_nodes.All(t=>t!=0))
             {
                 PrintDebug();
                 return;

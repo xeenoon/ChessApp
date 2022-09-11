@@ -909,7 +909,7 @@ namespace ChessApp
                 {
                     continue;
                 }
-                result.Add(new Move(bitpos, moves, pieceType));
+                result.Add(new Move(bitpos, lsb, moves, pieceType));
             }
             stopwatch.Stop();
             GetMovesTime += stopwatch.ElapsedTicks;
@@ -933,7 +933,7 @@ namespace ChessApp
             moves &= (moves ^ myside ^ attackedSquares);
             if (moves != 0)
             {
-                result.Add(new Move(bitpos, moves, PieceType.King));
+                result.Add(new Move(bitpos, lsb, moves, PieceType.King));
             }
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
@@ -943,12 +943,14 @@ namespace ChessApp
     public class Move
     {
         public ulong last;
+        public byte lastpos;
         public ulong current;
         public PieceType pieceType;
 
-        public Move(ulong last, ulong current, PieceType pieceType)
+        public Move(ulong last, byte lastpos, ulong current, PieceType pieceType)
         {
             this.last = last;
+            this.lastpos = lastpos;
             this.current = current;
             this.pieceType = pieceType;
         }
