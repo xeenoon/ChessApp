@@ -66,9 +66,18 @@ namespace ChessApp
                     result = RookMoves(position, b, side) | BishopMoves(position, b, side);
                     break;
             }
-            if (((1ul<<position) & b.xrays) != 0) //Are we pinned to something
+            ulong xrays = side == Side.White ? b.b_xrays : b.w_xrays;
+            ulong bitpos = (1ul << position);
+            if ((bitpos & xrays) != 0) //Are we pinned to something
             {
-                result = result & b.xrays;
+                foreach (var ray in b.xrays)
+                {
+                    if ((bitpos & ray) != 0)
+                    {
+                        result = result & ray;
+                        break;
+                    }
+                }
             }
             return result;
         }

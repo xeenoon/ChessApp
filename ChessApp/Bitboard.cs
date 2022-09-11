@@ -19,7 +19,9 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
-        public ulong xrays;
+        public ulong w_xrays;
+        public ulong b_xrays;
+        public List<ulong> xrays;
         //Legal moves allowed because of pins for every place on the board
         //Default is everything
 
@@ -232,7 +234,16 @@ namespace ChessApp
 
                         if ((pinned & (pinned-1)) == 0 && pinned != 0) //Only one bit set
                         {
-                            xrays |= attackray | bitpos; //Add this piece to the pinned list, it will not be able to move next turn
+                            ulong xray = attackray | bitpos;
+                            if (s == Side.White)
+                            {
+                                w_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
+                            }
+                            else
+                            {
+                                b_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
+                            }
+                            xrays.Add(xray);
                         }
                     }
                 }
@@ -268,7 +279,7 @@ namespace ChessApp
                 W_QueensideCastle = this.W_QueensideCastle,
 
                 enpassent = this.enpassent,
-                xrays = 0,
+                xrays = new List<ulong>(),
             };
         }
         public static Bitboard FromBoard(Chessboard board)
@@ -331,9 +342,9 @@ namespace ChessApp
 
             bitboard.W_KingsideCastle  = board.whiteCastles.Kingside;
             bitboard.W_QueensideCastle = board.whiteCastles.Queenside;
-            bitboard.xrays = 0;
             bitboard.squares_to_block_check = ulong.MaxValue;
             bitboard.enpassent = -2;
+            bitboard.xrays = new List<ulong>();
             return bitboard;
         }
 
