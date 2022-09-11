@@ -67,6 +67,7 @@ namespace EngineTester
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.KingMovesCalls));
             Console.WriteLine();
             Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
+            Console.WriteLine(string.Format("   Simulation      {0} ticks", Bitboard.MoveTime));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine();
             Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
@@ -79,6 +80,8 @@ namespace EngineTester
             Console.WriteLine("Captures: "    + Bitboard.captures);
             Console.WriteLine("Castles: "     + Bitboard.castles);
             Console.WriteLine("Promotions: "  + Bitboard.promotions);
+            Console.WriteLine("Checks: "      + Bitboard.total_checks);
+            Console.WriteLine("Double checks:"+ Bitboard.total_doublechecks);
 
             Bitboard.Pins = 0;
             Bitboard.SlidingAttack = 0;
@@ -91,6 +94,10 @@ namespace EngineTester
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
             Node.copytime = 0;
+
+            Bitboard.total_checks = 0;
+            Bitboard.total_doublechecks = 0;
+            Bitboard.MoveTime = 0;
 
             Bitboard.enpassantes = 0;
             Bitboard.captures = 0;

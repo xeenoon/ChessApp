@@ -892,7 +892,12 @@ namespace ChessApp
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this piece from the ulong of pieces
 
-                result.Add(new Move(bitpos, MoveGenerator.Moves(pieceType, s, lsb, b), pieceType));
+                ulong moves = MoveGenerator.Moves(pieceType, s, lsb, b);
+                if (moves == 0)
+                {
+                    continue;
+                }
+                result.Add(new Move(bitpos, moves, pieceType));
             }
             stopwatch.Stop();
             GetMovesTime += stopwatch.ElapsedTicks;
@@ -914,8 +919,11 @@ namespace ChessApp
 
             var moves = king[lsb];
             moves &= (moves ^ myside ^ attackedSquares);
+            if (moves != 0)
+            {
+                result.Add(new Move(bitpos, moves, PieceType.King));
 
-            result.Add(new Move(bitpos, moves, PieceType.King));
+            }
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
             return result;

@@ -56,12 +56,23 @@ namespace ChessApp
         public bool W_KingsideCastle;
         public bool W_QueensideCastle;
 
+        public static ulong total_checks;
+        public static ulong total_doublechecks;
         public void SetupSquareAttacks()
         {
             squares_to_block_check = ulong.MaxValue;
             WhiteAttackedSquares = WhiteAttacks();
             BlackAttackedSquares = BlackAttacks();
             SetupPins();
+
+            if (check)
+            {
+                ++total_checks;
+            }
+            if (doublecheck)
+            {
+                ++total_doublechecks;
+            }
         }
         public void SetupPins()
         {
@@ -367,8 +378,12 @@ namespace ChessApp
         public static ulong enpassantes;
         public static ulong castles;
         public static ulong promotions;
+
+        public static double MoveTime;
         public Bitboard Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             Bitboard copy = Copy();
 
             var othersidepieces = side == Side.White ? BlackPieces : WhitePieces;
@@ -579,7 +594,8 @@ namespace ChessApp
             {
                 copy.B_KingsideCastle = false;
             }
-
+            stopwatch.Stop();
+            MoveTime += stopwatch.ElapsedTicks;
             return copy;
         }
     }
