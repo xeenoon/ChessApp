@@ -60,6 +60,8 @@ namespace EngineTester
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.GetMovesCalls));
             Console.WriteLine(string.Format("   King    {0} ticks", MoveGenerator.KingMovesTime));
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.KingMovesCalls));
+            Console.WriteLine(string.Format("   Lists   {0} ticks", MoveGenerator.list_time));
+            Console.WriteLine(string.Format("   Range   {0} ticks", MoveGenerator.range_time));
             Console.WriteLine();
             Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
             Console.WriteLine(string.Format("   Simulation      {0} ticks", Bitboard.MoveTime));
