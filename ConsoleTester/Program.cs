@@ -22,7 +22,7 @@ namespace EngineTester
                     continue;
                 }
 
-                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
+                var FEN = "88/8/8/8/8/8/PP4pp/KNr2Rnk w - - 0 1"; // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
                 Bitboard B = Bitboard.FromFEN(FEN);
                 Node n = new Node(B, Side.White);
                 stopwatch.Restart();

@@ -944,6 +944,28 @@ namespace ChessApp
 
             List<Move> result = new List<Move>();
             byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+            //ulong bitpos = 1ul << kingpos;
+
+            var moves = king[kingpos];
+            moves &= (moves ^ myside ^ attackedSquares);
+            if (moves != 0)
+            {
+                AddMoves(ref result, kingpos, moves, PieceType.King);
+            }
+            stopwatch.Stop();
+            KingMovesTime += stopwatch.ElapsedTicks;
+            return result;
+        }
+        /*public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
+        {
+            ++KingMovesCalls;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong attackedSquares = s == Side.White ? b.BlackAttackedSquares : b.WhiteAttackedSquares;
+            ulong myside = s == Side.White ? b.WhitePieces : b.BlackPieces;
+
+            List<Move> result = new List<Move>();
+            byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
 
             ulong attacked = myside ^ attackedSquares;
 
@@ -997,13 +1019,9 @@ namespace ChessApp
 
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
-            if (result.Count != 0)
-            {
-
-            }
             return result;
-        }
-
+        }*/
+        
         private static ulong MoveLeft(byte kingpos)
         {
             return (1ul << (kingpos - 1)) & NO_RIGHT_COLLUMN;
