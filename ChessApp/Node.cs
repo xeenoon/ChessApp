@@ -25,12 +25,12 @@ namespace ChessApp
         public static double populateTime = 0;
         private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
-            Stopwatch stopwatch = new Stopwatch();
             ulong result = 0;
             if (nodes == 0)
             {
                 return 1;
             }
+            Stopwatch stopwatch = new Stopwatch();
             nodes--;
             if (first)
             {
