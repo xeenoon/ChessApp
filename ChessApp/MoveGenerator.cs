@@ -944,17 +944,131 @@ namespace ChessApp
 
             List<Move> result = new List<Move>();
             byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-            //ulong bitpos = 1ul << kingpos;
 
-            var moves = king[kingpos];
-            moves &= (moves ^ myside ^ attackedSquares);
-            if (moves != 0)
+            ulong attacked = myside ^ attackedSquares;
+
+            var pos = MoveLeft(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
             {
-                AddMoves(ref result, kingpos, moves, PieceType.King);
+                result.Add(new Move(kingpos, (byte)(kingpos + 1), PieceType.King));
             }
+
+            pos = MoveRight(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 1), PieceType.King));
+            }
+
+            pos = MoveUp(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 8), PieceType.King));
+            }
+
+            pos = MoveDown(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 8), PieceType.King));
+            }
+
+            pos = MoveUpLeft(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 9), PieceType.King));
+            }
+
+            pos = MoveUpRight(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 7), PieceType.King));
+            }
+
+            pos = MoveDownLeft(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 7), PieceType.King));
+            }
+
+            pos = MoveDownRight(kingpos);
+            if (pos != 0 && (pos & attacked) == 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 9), PieceType.King));
+            }
+
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
+            if (result.Count != 0)
+            {
+
+            }
             return result;
+        }
+
+        private static ulong MoveLeft(byte kingpos)
+        {
+            return (1ul << (kingpos - 1)) & NO_RIGHT_COLLUMN;
+        }
+        private static ulong MoveRight(byte kingpos)
+        {
+            return (1ul << (kingpos + 1)) & NO_LEFT_COLLUMN;
+        }
+        private static ulong MoveUp(byte kingpos)
+        {
+            return (1ul << (kingpos + 8)) & NO_BOTTOM_ROW;
+        }
+        private static ulong MoveDown(byte kingpos)
+        {
+            return (1ul << (kingpos - 8)) & NO_TOP_ROW;
+        } //Up is down and down is up
+        /*
+         *  0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            1 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+        * When king moves left by one (<<-1 for flip) , the one will appear on the right hand side
+        *  0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 1
+           0 0 0 0 0 0 0 0
+
+        Therefore, by going & with
+
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+
+        The one will disappear, it will be a 0 move, or 'invalid'
+         */
+
+
+        private static ulong MoveUpLeft(byte kingpos)
+        {
+            return (1ul << (kingpos + 7)) & NO_RIGHT_COLLUMN & NO_BOTTOM_ROW;
+        }
+        private static ulong MoveUpRight(byte kingpos)
+        {
+            return (1ul << (kingpos + 9)) & NO_LEFT_COLLUMN & NO_BOTTOM_ROW;
+        }
+        private static ulong MoveDownLeft(byte kingpos)
+        {
+            return (1ul << (kingpos - 9)) & NO_RIGHT_COLLUMN & NO_TOP_ROW;
+        }
+        private static ulong MoveDownRight(byte kingpos)
+        {
+            return (1ul << (kingpos - 7)) & NO_LEFT_COLLUMN & NO_TOP_ROW;
         }
 
         private static void AddMoves(ref List<Move> result, byte startpos, ulong moves, PieceType pieceType)
