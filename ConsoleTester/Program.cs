@@ -22,7 +22,7 @@ namespace EngineTester
                     continue;
                 }
 
-                var FEN = "88/8/8/8/8/8/PP4pp/KNr2Rnk w - - 0 1"; // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
+                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
                 Bitboard B = Bitboard.FromFEN(FEN);
                 Node n = new Node(B, Side.White);
                 stopwatch.Restart();
@@ -126,7 +126,7 @@ namespace EngineTester
                 Console.WriteLine(String.Format("Calculated {0} more lines", Node.linescalculated - lastlines));
                 lastlines = Node.linescalculated;
             }
-            if (Node.threads.All(t=>t.ThreadState != System.Threading.ThreadState.Running))
+            if (Node.threadcount == Node.total_nodes.Count())
             {
                 totalnodes = 0;
                 foreach (ulong u in Node.total_nodes)

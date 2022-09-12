@@ -881,28 +881,15 @@ namespace ChessApp
                 queens  = b.B_Queen;
                 king    = b.B_King;
             }
-            Stopwatch special = new Stopwatch();
-            special.Start();
             List<Move> result = new List<Move>();
-            List<Move> pawn_moves = GetMoves(b, pawns, s, PieceType.Pawn);
-            List<Move> knight_moves = GetMoves(b, knights, s, PieceType.Knight);
-            List<Move> bishop_moves = GetMoves(b, bishops, s, PieceType.Bishop);
-            List<Move> rook_moves = GetMoves(b, rooks, s, PieceType.Rook);
-            List<Move> queen_moves = GetMoves(b, queens, s, PieceType.Queen);
-            List<Move> king_moves = GetKingMoves(b, king, s);
-            special.Stop();
-            list_time += special.ElapsedTicks;
-
-            special.Restart();
-            result.AddRange(pawn_moves);
-            result.AddRange(knight_moves);
-            result.AddRange(bishop_moves);
-            result.AddRange(rook_moves);
-            result.AddRange(queen_moves);
-            result.AddRange(king_moves);
-            special.Stop();
-            range_time += special.ElapsedTicks;
-
+            
+            result.AddRange(GetMoves(b, pawns, s, PieceType.Pawn));
+            result.AddRange(GetMoves(b, knights, s, PieceType.Knight));
+            result.AddRange(GetMoves(b, bishops, s, PieceType.Bishop));
+            result.AddRange(GetMoves(b, rooks, s, PieceType.Rook));
+            result.AddRange(GetMoves(b, queens, s, PieceType.Queen));
+            result.AddRange(GetKingMoves(b, king, s));
+            
             stopwatch.Stop();
             TOTALTIME += stopwatch.ElapsedTicks;
             return result;
@@ -934,7 +921,7 @@ namespace ChessApp
         }
         public static double KingMovesTime = 0;
         public static double KingMovesCalls = 0;
-        public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
+        /*public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
         {
             ++KingMovesCalls;
             Stopwatch stopwatch = new Stopwatch();
@@ -944,7 +931,6 @@ namespace ChessApp
 
             List<Move> result = new List<Move>();
             byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-            //ulong bitpos = 1ul << kingpos;
 
             var moves = king[kingpos];
             moves &= (moves ^ myside ^ attackedSquares);
@@ -955,8 +941,8 @@ namespace ChessApp
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
             return result;
-        }
-        /*public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
+        }*/
+        public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
         {
             ++KingMovesCalls;
             Stopwatch stopwatch = new Stopwatch();
@@ -1020,7 +1006,7 @@ namespace ChessApp
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
             return result;
-        }*/
+        }
         
         private static ulong MoveLeft(byte kingpos)
         {

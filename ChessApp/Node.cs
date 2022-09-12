@@ -62,6 +62,8 @@ namespace ChessApp
         public static int threads_running = 0;
         public static ConcurrentBag<ulong> total_nodes = new ConcurrentBag<ulong>();
         public static List<Thread> threads = new List<Thread>();
+        public static int threadcount;
+
         public void BasePopulate(int nodes)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -79,6 +81,7 @@ namespace ChessApp
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
             total_nodes = new ConcurrentBag<ulong>();
+            threadcount = source.Count();
             for (int i = 0; i < source.Count; i++)
             {
                 Move move = source[i];
