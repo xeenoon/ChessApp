@@ -22,7 +22,7 @@ namespace ChessApp
             children = new List<Node>();
         }
         public static double squareattacktime = 0;
-        public static double copytime = 0;
+        public static double populateTime = 0;
         private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -48,7 +48,7 @@ namespace ChessApp
                 var copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
                 stopwatch.Stop();
-                copytime += stopwatch.ElapsedTicks;
+                populateTime += stopwatch.ElapsedTicks;
 
                 result += Populate(nodes, copy, otherturn);
             }
@@ -88,14 +88,13 @@ namespace ChessApp
                 var t = new Thread(() =>
                 {
                     total_nodes.Add(Populate(nodes, copy, otherturn));
-                    //total_nodes[i] = v;
                 });
 
                 t.Start();
                 threads.Add(t);
                 
                 stopwatch.Stop();
-                copytime += stopwatch.ElapsedTicks;
+                populateTime += stopwatch.ElapsedTicks;
                 ++linescalculated;
             }
         }

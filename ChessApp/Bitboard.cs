@@ -354,11 +354,16 @@ namespace ChessApp
         public static ulong promotions;
 
         public static double MoveTime;
+        public static double CopyTime;
         public Bitboard Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Bitboard copy = Copy();
+            stopwatch.Stop();
+            CopyTime += stopwatch.ElapsedTicks;
+            stopwatch.Restart();
+
             //stopwatch.Stop();
             //MoveTime += stopwatch.ElapsedTicks;
             //return copy;

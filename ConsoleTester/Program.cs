@@ -40,7 +40,7 @@ namespace EngineTester
         {
             var time1 = Node.squareattacktime;
             var time2 = MoveGenerator.TOTALTIME;
-            var time3 = Node.copytime;
+            var time3 = Node.populateTime;
             stopwatch.Stop();
             iswaiting = true;
             var total = stopwatch.ElapsedTicks;
@@ -63,6 +63,7 @@ namespace EngineTester
             Console.WriteLine();
             Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
             Console.WriteLine(string.Format("   Simulation      {0} ticks", Bitboard.MoveTime));
+            Console.WriteLine(string.Format("   Copy            {0} ticks", Bitboard.CopyTime));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine();
             Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
@@ -94,7 +95,7 @@ namespace EngineTester
             MoveGenerator.KingMovesTime = 0;
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
-            Node.copytime = 0;
+            Node.populateTime = 0;
 
             Bitboard.total_checks = 0;
             Bitboard.total_doublechecks = 0;
