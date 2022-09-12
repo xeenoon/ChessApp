@@ -47,7 +47,7 @@ namespace EngineTester
             timer.Stop();
             lastthreads = 0;
             lastlines = 0;
-            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", Node.total_nodes.Sum(), input));
+            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", totalnodes, input));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
             //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
@@ -74,7 +74,7 @@ namespace EngineTester
             }
             else 
             {
-                Console.WriteLine("Nodes per second: " + 1000 * (Node.total_nodes.Sum() / stopwatch.ElapsedMilliseconds));
+                Console.WriteLine("Nodes per second: " + 1000 * (totalnodes / (ulong)stopwatch.ElapsedMilliseconds));
             }
             Console.WriteLine();
             Console.WriteLine("---Node Data---");
@@ -110,6 +110,7 @@ namespace EngineTester
 
         static int lastthreads = 0;
         static int lastlines = 0;
+        static ulong totalnodes;
         public static void TimerTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (lastthreads != Node.threads_running)
@@ -124,6 +125,11 @@ namespace EngineTester
             }
             if (Node.threads.All(t=>t.ThreadState != System.Threading.ThreadState.Running))
             {
+                totalnodes = 0;
+                foreach (ulong u in Node.total_nodes)
+                {
+                    totalnodes += u;
+                }
                 PrintDebug();
                 return;
             }

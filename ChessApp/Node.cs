@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -22,10 +23,10 @@ namespace ChessApp
         }
         public static double squareattacktime = 0;
         public static double copytime = 0;
-        private static int Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
+        private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
             Stopwatch stopwatch = new Stopwatch();
-            int result = 0;
+            ulong result = 0;
             if (nodes == 0)
             {
                 return 1;
@@ -59,7 +60,7 @@ namespace ChessApp
         }
         public static int linescalculated = 0;
         public static int threads_running = 0;
-        public static int[] total_nodes;
+        public static ConcurrentBag<ulong> total_nodes = new ConcurrentBag<ulong>();
         public static List<Thread> threads = new List<Thread>();
         public void BasePopulate(int nodes)
         {
@@ -77,7 +78,7 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
-            total_nodes = new int[source.Count];
+            total_nodes = new ConcurrentBag<ulong>();
             for (int i = 0; i < source.Count; i++)
             {
                 Move move = source[i];
@@ -86,7 +87,7 @@ namespace ChessApp
                 var copy = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 var t = new Thread(() =>
                 {
-                    Populate(nodes, copy, otherturn);
+                    total_nodes.Add(Populate(nodes, copy, otherturn));
                     //total_nodes[i] = v;
                 });
 
