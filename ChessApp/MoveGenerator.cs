@@ -266,12 +266,12 @@ namespace ChessApp
             ulong blockers;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces;
+                blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
             }
             else
             {
-                blockers = b.BlackPieces;
+                blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
             }
 
@@ -322,12 +322,12 @@ namespace ChessApp
             ulong blockers;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces;
+                blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
             }
             else
             {
-                blockers = b.BlackPieces;
+                blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
             }
 
@@ -714,12 +714,12 @@ namespace ChessApp
             ulong blockers;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces;
+                blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
             }
             else
             {
-                blockers = b.BlackPieces;
+                blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
             }
 

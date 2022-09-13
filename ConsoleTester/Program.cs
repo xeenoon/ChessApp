@@ -28,10 +28,11 @@ namespace EngineTester
                 stopwatch.Restart();
                 timer = new System.Timers.Timer();
                 timer.Interval = 100;
-                timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerTick);
+                //timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerTick);
                 timer.Start();
                 iswaiting = false;
                 n.BasePopulate(int_depth);
+
                 //PrintDebug();
             }
         }
