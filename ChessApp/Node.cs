@@ -42,7 +42,7 @@ namespace ChessApp
             squareattacktime += stopwatch.ElapsedTicks;
             if (nodes == 0)
             {
-                return (ulong)MoveGenerator.CalculateAll(b, hasturn).Count;
+                return MoveGenerator.MoveCount(b, hasturn);
             }
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))

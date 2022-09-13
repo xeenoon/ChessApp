@@ -50,25 +50,19 @@ namespace EngineTester
             Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", totalnodes, input));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
-            //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
-            //Console.WriteLine(string.Format("   Sliding {0} ticks", Bitboard.SlidingAttack));
-            //Console.WriteLine(string.Format("   Static  {0} ticks", Bitboard.StaticAttack));
-            //Console.WriteLine(string.Format("   Timers  {0} ticks", time1 - (Bitboard.Pins + Bitboard.SlidingAttack + Bitboard.StaticAttack)));
             Console.WriteLine();
             Console.WriteLine(string.Format("CalculateAll()     {0} ticks", time2));
             Console.WriteLine(string.Format("   Moves   {0} ticks", MoveGenerator.GetMovesTime));
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.GetMovesCalls));
             Console.WriteLine(string.Format("   King    {0} ticks", MoveGenerator.KingMovesTime));
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.KingMovesCalls));
-            Console.WriteLine(string.Format("   Lists   {0} ticks", MoveGenerator.list_time));
-            Console.WriteLine(string.Format("   Range   {0} ticks", MoveGenerator.range_time));
+            Console.WriteLine(string.Format("   Count   {0} ticks", MoveGenerator.MoveCountTime));
             Console.WriteLine();
             Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
             Console.WriteLine(string.Format("   Simulation      {0} ticks", Bitboard.MoveTime));
             Console.WriteLine(string.Format("   Copy            {0} ticks", Bitboard.CopyTime));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine();
-            Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
             Console.WriteLine("Total elapsed ticks: " + total);
             Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
             if (stopwatch.ElapsedMilliseconds == 0)

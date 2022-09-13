@@ -16,6 +16,7 @@ namespace ChessApp
         private const ulong NO_LEFT_COLLUMN  = 18374403900871474942;
 
         private static readonly ulong[] blackPawnAttack = new ulong[64] { 144115188075855872UL, 360287970189639680UL, 720575940379279360UL, 1441151880758558720UL, 2882303761517117440UL, 5764607523034234880UL, 11529215046068469760UL, 4611686018427387904UL, 2UL, 5UL, 10UL, 20UL, 40UL, 80UL, 160UL, 64UL, 512UL, 1280UL, 2560UL, 5120UL, 10240UL, 20480UL, 40960UL, 16384UL, 131072UL, 327680UL, 655360UL, 1310720UL, 2621440UL, 5242880UL, 10485760UL, 4194304UL, 33554432UL, 83886080UL, 167772160UL, 335544320UL, 671088640UL, 1342177280UL, 2684354560UL, 1073741824UL, 8589934592UL, 21474836480UL, 42949672960UL, 85899345920UL, 171798691840UL, 343597383680UL, 687194767360UL, 274877906944UL, 2199023255552UL, 5497558138880UL, 10995116277760UL, 21990232555520UL, 43980465111040UL, 87960930222080UL, 175921860444160UL, 70368744177664UL, 562949953421312UL, 1407374883553280UL, 2814749767106560UL, 5629499534213120UL, 11258999068426240UL, 22517998136852480UL, 45035996273704960UL, 18014398509481984UL, };
+
         private static readonly ulong[] whitePawnAttack = new ulong[64] { 512UL, 1280UL, 2560UL, 5120UL, 10240UL, 20480UL, 40960UL, 16384UL, 131072UL, 327680UL, 655360UL, 1310720UL, 2621440UL, 5242880UL, 10485760UL, 4194304UL, 33554432UL, 83886080UL, 167772160UL, 335544320UL, 671088640UL, 1342177280UL, 2684354560UL, 1073741824UL, 8589934592UL, 21474836480UL, 42949672960UL, 85899345920UL, 171798691840UL, 343597383680UL, 687194767360UL, 274877906944UL, 2199023255552UL, 5497558138880UL, 10995116277760UL, 21990232555520UL, 43980465111040UL, 87960930222080UL, 175921860444160UL, 70368744177664UL, 562949953421312UL, 1407374883553280UL, 2814749767106560UL, 5629499534213120UL, 11258999068426240UL, 22517998136852480UL, 45035996273704960UL, 18014398509481984UL, 144115188075855872UL, 360287970189639680UL, 720575940379279360UL, 1441151880758558720UL, 2882303761517117440UL, 5764607523034234880UL, 11529215046068469760UL, 4611686018427387904UL, 2UL, 5UL, 10UL, 20UL, 40UL, 80UL, 160UL, 64UL, };
         private static readonly ulong[] blackPawnNoAttack = new ulong[64] { 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 1UL, 2UL, 4UL, 8UL, 16UL, 32UL, 64UL, 128UL, 256UL, 512UL, 1024UL, 2048UL, 4096UL, 8192UL, 16384UL, 32768UL, 65536UL, 131072UL, 262144UL, 524288UL, 1048576UL, 2097152UL, 4194304UL, 8388608UL, 16777216UL, 33554432UL, 67108864UL, 134217728UL, 268435456UL, 536870912UL, 1073741824UL, 2147483648UL, 4294967296UL, 8589934592UL, 17179869184UL, 34359738368UL, 68719476736UL, 137438953472UL, 274877906944UL, 549755813888UL, 1103806595072UL, 2207613190144UL, 4415226380288UL, 8830452760576UL, 17660905521152UL, 35321811042304UL, 70643622084608UL, 141287244169216UL, 281474976710656UL, 562949953421312UL, 1125899906842624UL, 2251799813685248UL, 4503599627370496UL, 9007199254740992UL, 18014398509481984UL, 36028797018963968UL };
         private static readonly ulong[] whitePawnNoAttack = new ulong[64] { 256UL, 512UL, 1024UL, 2048UL, 4096UL, 8192UL, 16384UL, 32768UL, 16842752UL, 33685504UL, 67371008UL, 134742016UL, 269484032UL, 538968064UL, 1077936128UL, 2155872256UL, 16777216UL, 33554432UL, 67108864UL, 134217728UL, 268435456UL, 536870912UL, 1073741824UL, 2147483648UL, 4294967296UL, 8589934592UL, 17179869184UL, 34359738368UL, 68719476736UL, 137438953472UL, 274877906944UL, 549755813888UL, 1099511627776UL, 2199023255552UL, 4398046511104UL, 8796093022208UL, 17592186044416UL, 35184372088832UL, 70368744177664UL, 140737488355328UL, 281474976710656UL, 562949953421312UL, 1125899906842624UL, 2251799813685248UL, 4503599627370496UL, 9007199254740992UL, 18014398509481984UL, 36028797018963968UL, 72057594037927936UL, 144115188075855872UL, 288230376151711744UL, 576460752303423488UL, 1152921504606846976UL, 2305843009213693952UL, 4611686018427387904UL, 9223372036854775808UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
@@ -850,9 +851,71 @@ namespace ChessApp
             n += 1;
             return n >> 1;
         }
+
+        public static double MoveCountTime = 0;
+        internal static ulong MoveCount(Bitboard b, Side s)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            ulong result = 0ul;
+
+            ulong pawns;
+            ulong rooks;
+            ulong knights;
+            ulong bishops;
+            ulong queens;
+            ulong king;
+            if (s == Side.White)
+            {
+                pawns = b.W_Pawn;
+                rooks = b.W_Rook;
+                knights = b.W_Knight;
+                bishops = b.W_Bishop;
+                queens = b.W_Queen;
+                king = b.W_King;
+            }
+            else
+            {
+                pawns = b.B_Pawn;
+                rooks = b.B_Rook;
+                knights = b.B_Knight;
+                bishops = b.B_Bishop;
+                queens = b.B_Queen;
+                king = b.B_King;
+            }
+            
+            result += (GetMoveCount(b, pawns, s, PieceType.Pawn));
+            result += (GetMoveCount(b, knights, s, PieceType.Knight));
+            result += (GetMoveCount(b, bishops, s, PieceType.Bishop));
+            result += (GetMoveCount(b, rooks, s, PieceType.Rook));
+            result += (GetMoveCount(b, queens, s, PieceType.Queen));
+            result += (GetMoveCount(b, king, s, PieceType.King));
+
+            stopwatch.Stop();
+            MoveCountTime += stopwatch.ElapsedTicks;
+            return result;
+        }
+        public static ulong GetMoveCount(Bitboard b, ulong piece_bitboard, Side s, PieceType pieceType)
+        {
+            ulong result = 0ul;
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this piece from the ulong of pieces
+
+                ulong moves = MoveGenerator.Moves(pieceType, s, lsb, b);
+                result += BitOperations.NumberOfSetBits(moves);
+            }
+            return result;
+        }
+
+
         public static double TOTALTIME;
         public static double list_time;
         public static double range_time;
+
         public static List<Move> CalculateAll(Bitboard b, Side s)
         {
             Stopwatch stopwatch = new Stopwatch();
