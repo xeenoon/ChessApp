@@ -1016,8 +1016,10 @@ namespace ChessApp
             List<Move> result = new List<Move>();
             byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
 
-            var moves = king[kingpos];
-            moves &= (moves ^ myside ^ attackedSquares);
+            ulong moves = king[kingpos];
+            ulong legal_no_takes = moves & (FULL ^ myside);
+            moves = (legal_no_takes & (FULL ^ attackedSquares));
+
 
             var pos = MoveLeft(kingpos);
             if ((pos & moves) != 0)
@@ -1065,6 +1067,16 @@ namespace ChessApp
             if ((pos & moves) != 0)
             {
                 result.Add(new Move(kingpos, (byte)(kingpos - 9), PieceType.King));
+            }
+
+            ulong castle = CastleMoves(s, b);
+            if ((castle & (1ul << kingpos + 2)) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 2), PieceType.King));
+            }
+            if ((castle & (1ul << kingpos - 2)) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 2), PieceType.King));
             }
 
             stopwatch.Stop();
