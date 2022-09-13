@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,30 +9,28 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
-    public class Node
+    public struct Node
     {
         public Bitboard b;
         public Side hasturn;
-        public Node parent;
-        public List<Node> children = new List<Node>();
-        public static ulong totalnodes = 0;
+        public List<Node> children;
 
-        public Node(Bitboard b, Side hasturn, Node parent)
+        public Node(Bitboard b, Side hasturn)
         {
             this.b = b;
             this.hasturn = hasturn;
+            children = new List<Node>();
         }
         public static double squareattacktime = 0;
-        public static double copytime = 0;
-        private void Populate(int nodes, bool first = false)
+        public static double populateTime = 0;
+        private static ulong Populate(int nodes, Bitboard b, Side hasturn, bool first = false)
         {
-            Stopwatch stopwatch = new Stopwatch();
-
+            ulong result = 0;
             if (nodes == 0)
             {
-                ++totalnodes;
-                return;
+                return 1;
             }
+            Stopwatch stopwatch = new Stopwatch();
             nodes--;
             if (first)
             {
@@ -41,37 +40,34 @@ namespace ChessApp
             b.SetupSquareAttacks();
             stopwatch.Stop();
             squareattacktime += stopwatch.ElapsedTicks;
+            if (nodes == 0)
+            {
+                return MoveGenerator.MoveCount(b, hasturn);
+            }
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                var resultpos = move.current;
-                while (resultpos != 0ul)
-                {
-                    stopwatch.Restart();
+                stopwatch.Restart();
+                //Simulating move
+                Bitboard copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
-                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
-                    ulong bitpos = 1ul << lsb;
+                stopwatch.Stop();
+                populateTime += stopwatch.ElapsedTicks;
 
-                    //Simulating move
-                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
-
-
-                    Node n = new Node(copy, otherturn, this);
-                    stopwatch.Stop();
-
-                    n.Populate(nodes);
-                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
-
-                    copytime += stopwatch.ElapsedTicks;
-                }
+                result += Populate(nodes, copy, otherturn);
             }
             if (first)
             {
                 --threads_running;
             }
+            return result;
         }
         public static int linescalculated = 0;
         public static int threads_running = 0;
+        public static ConcurrentBag<ulong> total_nodes = new ConcurrentBag<ulong>();
+        public static List<Thread> threads = new List<Thread>();
+        public static int threadcount;
+
         public void BasePopulate(int nodes)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -88,33 +84,26 @@ namespace ChessApp
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             var options = new ParallelOptions();// { MaxDegreeOfParallelism = int.MaxValue };
             List<Move> source = MoveGenerator.CalculateAll(b, hasturn);
-            foreach (var move in source) 
-            { 
-                var resultpos = move.current;
-                while (resultpos != 0ul)
+            total_nodes = new ConcurrentBag<ulong>();
+            threadcount = source.Count();
+            for (int i = 0; i < source.Count; i++)
+            {
+                Move move = source[i];
+
+                //Simulating move
+                var copy = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
+                var t = new Thread(() =>
                 {
-                    stopwatch.Restart();
+                    total_nodes.Add(Populate(nodes, copy, otherturn));
+                });
 
-                    byte lsb = (byte)(BitOperations.TrailingZeros(resultpos) - 1);
-                    ulong bitpos = 1ul << lsb;
-                    resultpos ^= bitpos; //remove this piece from the ulong of pieces
-
-                    //Simulating move
-                    var copy = b.Move((byte)(BitOperations.TrailingZeros(move.last) - 1), lsb, move.last, bitpos, move.pieceType, hasturn);
-                    Node n = new Node(copy, otherturn, this);
-                    var t = new Thread(() =>
-                    {
-                        n.Populate(nodes, true);
-                    });
-
-                    t.Start();
-                    stopwatch.Stop();
-                    copytime += stopwatch.ElapsedTicks;
-                }
+                t.Start();
+                threads.Add(t);
+                
+                stopwatch.Stop();
+                populateTime += stopwatch.ElapsedTicks;
                 ++linescalculated;
             }
         }
-
-
     }
 }

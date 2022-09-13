@@ -16,20 +16,15 @@ namespace EngineTester
             while (true)
             {
                 input = Console.ReadLine();
-                if (input == "nodes")
-                {
-                    Console.WriteLine(Node.totalnodes);
-                    continue;
-                }
                 int int_depth;
                 if (!int.TryParse(input, out int_depth))
                 {
                     continue;
                 }
 
-                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
+                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                 Bitboard B = Bitboard.FromFEN(FEN);
-                Node n = new Node(B, Side.White, null);
+                Node n = new Node(B, Side.White);
                 stopwatch.Restart();
                 timer = new System.Timers.Timer();
                 timer.Interval = 100;
@@ -43,35 +38,31 @@ namespace EngineTester
 
         private static void PrintDebug()
         {
-            var nodes = Node.totalnodes;
             var time1 = Node.squareattacktime;
             var time2 = MoveGenerator.TOTALTIME;
-            var time3 = Node.copytime;
+            var time3 = Node.populateTime;
             stopwatch.Stop();
             iswaiting = true;
             var total = stopwatch.ElapsedTicks;
             timer.Stop();
             lastthreads = 0;
             lastlines = 0;
-            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", nodes, input));
+            Console.WriteLine(String.Format("Total nodes searched: {0}, Depth: {1}", totalnodes, input));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine(string.Format("SquareAttackCalc() {0} ticks", time1));
-            //Console.WriteLine(string.Format("   Pins    {0} ticks", Bitboard.Pins));
-            //Console.WriteLine(string.Format("   Sliding {0} ticks", Bitboard.SlidingAttack));
-            //Console.WriteLine(string.Format("   Static  {0} ticks", Bitboard.StaticAttack));
-            //Console.WriteLine(string.Format("   Timers  {0} ticks", time1 - (Bitboard.Pins + Bitboard.SlidingAttack + Bitboard.StaticAttack)));
             Console.WriteLine();
             Console.WriteLine(string.Format("CalculateAll()     {0} ticks", time2));
             Console.WriteLine(string.Format("   Moves   {0} ticks", MoveGenerator.GetMovesTime));
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.GetMovesCalls));
             Console.WriteLine(string.Format("   King    {0} ticks", MoveGenerator.KingMovesTime));
             Console.WriteLine(string.Format("               {0} calls", MoveGenerator.KingMovesCalls));
+            Console.WriteLine(string.Format("   Count   {0} ticks", MoveGenerator.MoveCountTime));
             Console.WriteLine();
             Console.WriteLine(string.Format("Populate()         {0} ticks", time3));
             Console.WriteLine(string.Format("   Simulation      {0} ticks", Bitboard.MoveTime));
+            Console.WriteLine(string.Format("   Copy            {0} ticks", Bitboard.CopyTime));
             Console.WriteLine("---Time Stats---");
             Console.WriteLine();
-            Console.WriteLine("SUM OF MAJOR TIMES:  " + (time1 + time2 + time3));
             Console.WriteLine("Total elapsed ticks: " + total);
             Console.WriteLine("Total time (miliseconds): " + stopwatch.ElapsedMilliseconds);
             if (stopwatch.ElapsedMilliseconds == 0)
@@ -80,7 +71,7 @@ namespace EngineTester
             }
             else 
             {
-                Console.WriteLine("Nodes per second: " + 1000 * (nodes / (ulong)stopwatch.ElapsedMilliseconds));
+                Console.WriteLine("Nodes per second: " + 1000 * (totalnodes / (ulong)stopwatch.ElapsedMilliseconds));
             }
             Console.WriteLine();
             Console.WriteLine("---Node Data---");
@@ -95,13 +86,12 @@ namespace EngineTester
             Bitboard.SlidingAttack = 0;
             Bitboard.StaticAttack = 0;
             Node.squareattacktime = 0;
-            Node.totalnodes = 0;
             MoveGenerator.TOTALTIME = 0;
             MoveGenerator.KingMovesCalls = 0;
             MoveGenerator.KingMovesTime = 0;
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
-            Node.copytime = 0;
+            Node.populateTime = 0;
 
             Bitboard.total_checks = 0;
             Bitboard.total_doublechecks = 0;
@@ -117,6 +107,7 @@ namespace EngineTester
 
         static int lastthreads = 0;
         static int lastlines = 0;
+        static ulong totalnodes;
         public static void TimerTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (lastthreads != Node.threads_running)
@@ -129,8 +120,13 @@ namespace EngineTester
                 Console.WriteLine(String.Format("Calculated {0} more lines", Node.linescalculated - lastlines));
                 lastlines = Node.linescalculated;
             }
-            if (lastthreads == 0)
+            if (Node.threadcount == Node.total_nodes.Count())
             {
+                totalnodes = 0;
+                foreach (ulong u in Node.total_nodes)
+                {
+                    totalnodes += u;
+                }
                 PrintDebug();
                 return;
             }

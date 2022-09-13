@@ -16,6 +16,7 @@ namespace ChessApp
         private const ulong NO_LEFT_COLLUMN  = 18374403900871474942;
 
         private static readonly ulong[] blackPawnAttack = new ulong[64] { 144115188075855872UL, 360287970189639680UL, 720575940379279360UL, 1441151880758558720UL, 2882303761517117440UL, 5764607523034234880UL, 11529215046068469760UL, 4611686018427387904UL, 2UL, 5UL, 10UL, 20UL, 40UL, 80UL, 160UL, 64UL, 512UL, 1280UL, 2560UL, 5120UL, 10240UL, 20480UL, 40960UL, 16384UL, 131072UL, 327680UL, 655360UL, 1310720UL, 2621440UL, 5242880UL, 10485760UL, 4194304UL, 33554432UL, 83886080UL, 167772160UL, 335544320UL, 671088640UL, 1342177280UL, 2684354560UL, 1073741824UL, 8589934592UL, 21474836480UL, 42949672960UL, 85899345920UL, 171798691840UL, 343597383680UL, 687194767360UL, 274877906944UL, 2199023255552UL, 5497558138880UL, 10995116277760UL, 21990232555520UL, 43980465111040UL, 87960930222080UL, 175921860444160UL, 70368744177664UL, 562949953421312UL, 1407374883553280UL, 2814749767106560UL, 5629499534213120UL, 11258999068426240UL, 22517998136852480UL, 45035996273704960UL, 18014398509481984UL, };
+
         private static readonly ulong[] whitePawnAttack = new ulong[64] { 512UL, 1280UL, 2560UL, 5120UL, 10240UL, 20480UL, 40960UL, 16384UL, 131072UL, 327680UL, 655360UL, 1310720UL, 2621440UL, 5242880UL, 10485760UL, 4194304UL, 33554432UL, 83886080UL, 167772160UL, 335544320UL, 671088640UL, 1342177280UL, 2684354560UL, 1073741824UL, 8589934592UL, 21474836480UL, 42949672960UL, 85899345920UL, 171798691840UL, 343597383680UL, 687194767360UL, 274877906944UL, 2199023255552UL, 5497558138880UL, 10995116277760UL, 21990232555520UL, 43980465111040UL, 87960930222080UL, 175921860444160UL, 70368744177664UL, 562949953421312UL, 1407374883553280UL, 2814749767106560UL, 5629499534213120UL, 11258999068426240UL, 22517998136852480UL, 45035996273704960UL, 18014398509481984UL, 144115188075855872UL, 360287970189639680UL, 720575940379279360UL, 1441151880758558720UL, 2882303761517117440UL, 5764607523034234880UL, 11529215046068469760UL, 4611686018427387904UL, 2UL, 5UL, 10UL, 20UL, 40UL, 80UL, 160UL, 64UL, };
         private static readonly ulong[] blackPawnNoAttack = new ulong[64] { 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 1UL, 2UL, 4UL, 8UL, 16UL, 32UL, 64UL, 128UL, 256UL, 512UL, 1024UL, 2048UL, 4096UL, 8192UL, 16384UL, 32768UL, 65536UL, 131072UL, 262144UL, 524288UL, 1048576UL, 2097152UL, 4194304UL, 8388608UL, 16777216UL, 33554432UL, 67108864UL, 134217728UL, 268435456UL, 536870912UL, 1073741824UL, 2147483648UL, 4294967296UL, 8589934592UL, 17179869184UL, 34359738368UL, 68719476736UL, 137438953472UL, 274877906944UL, 549755813888UL, 1103806595072UL, 2207613190144UL, 4415226380288UL, 8830452760576UL, 17660905521152UL, 35321811042304UL, 70643622084608UL, 141287244169216UL, 281474976710656UL, 562949953421312UL, 1125899906842624UL, 2251799813685248UL, 4503599627370496UL, 9007199254740992UL, 18014398509481984UL, 36028797018963968UL };
         private static readonly ulong[] whitePawnNoAttack = new ulong[64] { 256UL, 512UL, 1024UL, 2048UL, 4096UL, 8192UL, 16384UL, 32768UL, 16842752UL, 33685504UL, 67371008UL, 134742016UL, 269484032UL, 538968064UL, 1077936128UL, 2155872256UL, 16777216UL, 33554432UL, 67108864UL, 134217728UL, 268435456UL, 536870912UL, 1073741824UL, 2147483648UL, 4294967296UL, 8589934592UL, 17179869184UL, 34359738368UL, 68719476736UL, 137438953472UL, 274877906944UL, 549755813888UL, 1099511627776UL, 2199023255552UL, 4398046511104UL, 8796093022208UL, 17592186044416UL, 35184372088832UL, 70368744177664UL, 140737488355328UL, 281474976710656UL, 562949953421312UL, 1125899906842624UL, 2251799813685248UL, 4503599627370496UL, 9007199254740992UL, 18014398509481984UL, 36028797018963968UL, 72057594037927936UL, 144115188075855872UL, 288230376151711744UL, 576460752303423488UL, 1152921504606846976UL, 2305843009213693952UL, 4611686018427387904UL, 9223372036854775808UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
@@ -66,7 +67,19 @@ namespace ChessApp
                     result = RookMoves(position, b, side) | BishopMoves(position, b, side);
                     break;
             }
-            result = result & b.pinnedPieces[position];
+            ulong xrays = side == Side.White ? b.b_xrays : b.w_xrays;
+            ulong bitpos = (1ul << position);
+            if ((bitpos & xrays) != 0) //Are we pinned to something
+            {
+                foreach (var ray in b.xrays)
+                {
+                    if ((bitpos & ray) != 0)
+                    {
+                        result = result & ray;
+                        break;
+                    }
+                }
+            }
             return result;
         }
 
@@ -551,7 +564,7 @@ namespace ChessApp
             ulong downrightBlockers = (rightdownmask & mypieces);
             downrightBlockers |= ((theirpieces & rightdownmask) & NO_BOTTOM_ROW) >> 7;
             downrightBlockers = HSB(downrightBlockers);
-            ulong rightdownBetween = (FULL ^ (downrightBlockers << 1 - 1)) & rightdownmask;
+            ulong rightdownBetween = (FULL ^ ((downrightBlockers << 1) - 1)) & rightdownmask;
 
             if (downrightBlockers == 0)
             {
@@ -562,7 +575,7 @@ namespace ChessApp
             ulong downleftBlockers = (leftdownmask & mypieces);
             downleftBlockers |= ((theirpieces & leftdownmask) & NO_BOTTOM_ROW) >> 9;
             downleftBlockers = HSB(downleftBlockers);
-            ulong leftdownBetween = (FULL ^ (downleftBlockers << 1 - 1)) & leftdownmask;
+            ulong leftdownBetween = (FULL ^ ((downleftBlockers << 1) - 1)) & leftdownmask;
 
             if (downleftBlockers == 0)
             {
@@ -838,7 +851,71 @@ namespace ChessApp
             n += 1;
             return n >> 1;
         }
+
+        public static double MoveCountTime = 0;
+        internal static ulong MoveCount(Bitboard b, Side s)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            ulong result = 0ul;
+
+            ulong pawns;
+            ulong rooks;
+            ulong knights;
+            ulong bishops;
+            ulong queens;
+            ulong king;
+            if (s == Side.White)
+            {
+                pawns = b.W_Pawn;
+                rooks = b.W_Rook;
+                knights = b.W_Knight;
+                bishops = b.W_Bishop;
+                queens = b.W_Queen;
+                king = b.W_King;
+            }
+            else
+            {
+                pawns = b.B_Pawn;
+                rooks = b.B_Rook;
+                knights = b.B_Knight;
+                bishops = b.B_Bishop;
+                queens = b.B_Queen;
+                king = b.B_King;
+            }
+            
+            result += (GetMoveCount(b, pawns, s, PieceType.Pawn));
+            result += (GetMoveCount(b, knights, s, PieceType.Knight));
+            result += (GetMoveCount(b, bishops, s, PieceType.Bishop));
+            result += (GetMoveCount(b, rooks, s, PieceType.Rook));
+            result += (GetMoveCount(b, queens, s, PieceType.Queen));
+            result += (GetMoveCount(b, king, s, PieceType.King));
+
+            stopwatch.Stop();
+            MoveCountTime += stopwatch.ElapsedTicks;
+            return result;
+        }
+        public static ulong GetMoveCount(Bitboard b, ulong piece_bitboard, Side s, PieceType pieceType)
+        {
+            ulong result = 0ul;
+            while (piece_bitboard != 0)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+                ulong bitpos = 1ul << lsb;
+                piece_bitboard ^= bitpos; //remove this piece from the ulong of pieces
+
+                ulong moves = MoveGenerator.Moves(pieceType, s, lsb, b);
+                result += BitOperations.NumberOfSetBits(moves);
+            }
+            return result;
+        }
+
+
         public static double TOTALTIME;
+        public static double list_time;
+        public static double range_time;
+
         public static List<Move> CalculateAll(Bitboard b, Side s)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -868,12 +945,14 @@ namespace ChessApp
                 king    = b.B_King;
             }
             List<Move> result = new List<Move>();
+            
             result.AddRange(GetMoves(b, pawns, s, PieceType.Pawn));
             result.AddRange(GetMoves(b, knights, s, PieceType.Knight));
             result.AddRange(GetMoves(b, bishops, s, PieceType.Bishop));
             result.AddRange(GetMoves(b, rooks, s, PieceType.Rook));
             result.AddRange(GetMoves(b, queens, s, PieceType.Queen));
             result.AddRange(GetKingMoves(b, king, s));
+            
             stopwatch.Stop();
             TOTALTIME += stopwatch.ElapsedTicks;
             return result;
@@ -897,7 +976,7 @@ namespace ChessApp
                 {
                     continue;
                 }
-                result.Add(new Move(bitpos, moves, pieceType));
+                AddMoves(ref result, lsb, moves, pieceType);
             }
             stopwatch.Stop();
             GetMovesTime += stopwatch.ElapsedTicks;
@@ -905,6 +984,27 @@ namespace ChessApp
         }
         public static double KingMovesTime = 0;
         public static double KingMovesCalls = 0;
+        /*public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
+        {
+            ++KingMovesCalls;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong attackedSquares = s == Side.White ? b.BlackAttackedSquares : b.WhiteAttackedSquares;
+            ulong myside = s == Side.White ? b.WhitePieces : b.BlackPieces;
+
+            List<Move> result = new List<Move>();
+            byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
+
+            var moves = king[kingpos];
+            moves &= (moves ^ myside ^ attackedSquares);
+            if (moves != 0)
+            {
+                AddMoves(ref result, kingpos, moves, PieceType.King);
+            }
+            stopwatch.Stop();
+            KingMovesTime += stopwatch.ElapsedTicks;
+            return result;
+        }*/
         public static List<Move> GetKingMoves(Bitboard b, ulong piece_bitboard, Side s)
         {
             ++KingMovesCalls;
@@ -914,28 +1014,161 @@ namespace ChessApp
             ulong myside = s == Side.White ? b.WhitePieces : b.BlackPieces;
 
             List<Move> result = new List<Move>();
-            byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-            ulong bitpos = 1ul << lsb;
+            byte kingpos = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
 
-            var moves = king[lsb];
-            moves &= (moves ^ myside ^ attackedSquares);
-            if (moves != 0)
+            ulong moves = king[kingpos];
+            ulong legal_no_takes = moves & (FULL ^ myside);
+            moves = (legal_no_takes & (FULL ^ attackedSquares));
+
+
+            var pos = MoveLeft(kingpos);
+            if ((pos & moves) != 0)
             {
-                result.Add(new Move(bitpos, moves, PieceType.King));
-
+                result.Add(new Move(kingpos, (byte)(kingpos + 1), PieceType.King));
             }
+
+            pos = MoveRight(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 1), PieceType.King));
+            }
+
+            pos = MoveUp(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 8), PieceType.King));
+            }
+
+            pos = MoveDown(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 8), PieceType.King));
+            }
+
+            pos = MoveUpLeft(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 9), PieceType.King));
+            }
+
+            pos = MoveUpRight(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 7), PieceType.King));
+            }
+
+            pos = MoveDownLeft(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 7), PieceType.King));
+            }
+
+            pos = MoveDownRight(kingpos);
+            if ((pos & moves) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 9), PieceType.King));
+            }
+
+            ulong castle = CastleMoves(s, b);
+            if ((castle & (1ul << kingpos + 2)) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos + 2), PieceType.King));
+            }
+            if ((castle & (1ul << kingpos - 2)) != 0)
+            {
+                result.Add(new Move(kingpos, (byte)(kingpos - 2), PieceType.King));
+            }
+
             stopwatch.Stop();
             KingMovesTime += stopwatch.ElapsedTicks;
             return result;
         }
+        
+        private static ulong MoveLeft(byte kingpos)
+        {
+            return (1ul << (kingpos - 1));
+        }
+        private static ulong MoveRight(byte kingpos)
+        {
+            return (1ul << (kingpos + 1));
+        }
+        private static ulong MoveUp(byte kingpos)
+        {
+            return (1ul << (kingpos + 8));
+        }
+        private static ulong MoveDown(byte kingpos)
+        {
+            return (1ul << (kingpos - 8));
+        } //Up is down and down is up
+        /*
+         *  0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            1 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0
+        * When king moves left by one (<<-1 for flip) , the one will appear on the right hand side
+        *  0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 0 0 1
+           0 0 0 0 0 0 0 0
+
+        Therefore, by going & with
+
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 0
+
+        The one will disappear, it will be a 0 move, or 'invalid'
+         */
+
+
+        private static ulong MoveUpLeft(byte kingpos)
+        {
+            return (1ul << (kingpos + 7));
+        }
+        private static ulong MoveUpRight(byte kingpos)
+        {
+            return (1ul << (kingpos + 9));
+        }
+        private static ulong MoveDownLeft(byte kingpos)
+        {
+            return (1ul << (kingpos - 9));
+        }
+        private static ulong MoveDownRight(byte kingpos)
+        {
+            return (1ul << (kingpos - 7));
+        }
+
+        private static void AddMoves(ref List<Move> result, byte startpos, ulong moves, PieceType pieceType)
+        {
+            while (moves != 0ul)
+            {
+                byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                ulong bitpos = 1ul << lsb;
+                moves ^= bitpos; //remove this move from the ulong of moves
+                result.Add(new Move(startpos, lsb, pieceType));
+            }
+        }
     }
-    public class Move
+    public struct Move
     {
-        public ulong last;
-        public ulong current;
+        public byte last;
+        public byte current;
         public PieceType pieceType;
 
-        public Move(ulong last, ulong current, PieceType pieceType)
+        public Move(byte last, byte current, PieceType pieceType)
         {
             this.last = last;
             this.current = current;

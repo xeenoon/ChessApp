@@ -19,7 +19,9 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
-        public ulong[] pinnedPieces;
+        public ulong w_xrays;
+        public ulong b_xrays;
+        public List<ulong> xrays;
         //Legal moves allowed because of pins for every place on the board
         //Default is everything
 
@@ -232,8 +234,16 @@ namespace ChessApp
 
                         if ((pinned & (pinned-1)) == 0 && pinned != 0) //Only one bit set
                         {
-                            int v = BitOperations.TrailingZeros(pinned) - 1;
-                            pinnedPieces[v] = attackray | bitpos; //Add this piece to the pinned list, it will not be able to move next turn
+                            ulong xray = attackray | bitpos;
+                            if (s == Side.White)
+                            {
+                                w_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
+                            }
+                            else
+                            {
+                                b_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
+                            }
+                            xrays.Add(xray);
                         }
                     }
                 }
@@ -269,7 +279,7 @@ namespace ChessApp
                 W_QueensideCastle = this.W_QueensideCastle,
 
                 enpassent = this.enpassent,
-                pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue },
+                xrays = new List<ulong>(),
             };
         }
         public static Bitboard FromBoard(Chessboard board)
@@ -332,9 +342,9 @@ namespace ChessApp
 
             bitboard.W_KingsideCastle  = board.whiteCastles.Kingside;
             bitboard.W_QueensideCastle = board.whiteCastles.Queenside;
-            bitboard.pinnedPieces = new ulong[64] { ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue };
             bitboard.squares_to_block_check = ulong.MaxValue;
             bitboard.enpassent = -2;
+            bitboard.xrays = new List<ulong>();
             return bitboard;
         }
 
@@ -344,11 +354,16 @@ namespace ChessApp
         public static ulong promotions;
 
         public static double MoveTime;
+        public static double CopyTime;
         public Bitboard Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Bitboard copy = Copy();
+            stopwatch.Stop();
+            CopyTime += stopwatch.ElapsedTicks;
+            stopwatch.Restart();
+
             //stopwatch.Stop();
             //MoveTime += stopwatch.ElapsedTicks;
             //return copy;
