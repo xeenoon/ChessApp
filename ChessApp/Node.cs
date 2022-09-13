@@ -40,15 +40,14 @@ namespace ChessApp
             b.SetupSquareAttacks();
             stopwatch.Stop();
             squareattacktime += stopwatch.ElapsedTicks;
+            if (nodes == 0)
+            {
+                return (ulong)MoveGenerator.CalculateAll(b, hasturn).Count;
+            }
             var otherturn = hasturn == Side.White ? Side.Black : Side.White;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
                 stopwatch.Restart();
-                if (nodes == 0) 
-                {
-                    ++result;
-                    continue;
-                }
                 //Simulating move
                 Bitboard copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
