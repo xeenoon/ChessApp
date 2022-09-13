@@ -44,8 +44,13 @@ namespace ChessApp
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
                 stopwatch.Restart();
+                if (nodes == 0) 
+                {
+                    ++result;
+                    continue;
+                }
                 //Simulating move
-                var copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
+                Bitboard copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
                 stopwatch.Stop();
                 populateTime += stopwatch.ElapsedTicks;
