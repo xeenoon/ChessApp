@@ -1087,7 +1087,7 @@ namespace ChessApp
             }
         }
     }
-    public class Move
+    public struct Move
     {
         public byte last;
         public byte current;
