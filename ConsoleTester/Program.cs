@@ -51,7 +51,7 @@ namespace EngineTester
         private static void PrintDebug()
         {
             var time1 = Node.squareattacktime;
-            var time2 = MoveGenerator.TOTALTIME;
+            var time2 = MoveGenerator.TOTALTIME + MoveGenerator.MoveCountTime;
             var time3 = Node.populateTime;
             stopwatch.Stop();
             iswaiting = true;
