@@ -93,12 +93,12 @@ namespace ChessApp
             checks = 0;
 
             ulong attacks = 0ul;
-            attacks |= StaticPieceAttacks(W_Pawn, PieceType.Pawn     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Rook, PieceType.Rook     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Bishop, PieceType.Bishop , Side.White, B_King);
-            attacks |= StaticPieceAttacks(W_King, PieceType.King     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Queen, PieceType.Queen   , Side.White, B_King);
-            attacks |= StaticPieceAttacks(W_Knight, PieceType.Knight , Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_Pawn, PieceType.Pawn, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Rook, PieceType.Rook, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Bishop, PieceType.Bishop, Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_King, PieceType.King, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Queen, PieceType.Queen, Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_Knight, PieceType.Knight, Side.White, B_King);
             if (checks == 1)
             {
                 check = true;

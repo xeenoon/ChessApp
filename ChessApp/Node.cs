@@ -92,13 +92,13 @@ namespace ChessApp
 
                 //Simulating move
                 var copy = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
-                var t = new Thread(() =>
-                {
+                //var t = new Thread(() =>
+                //{
                     total_nodes.Add(Populate(nodes, copy, otherturn));
-                });
+                //});
 
-                t.Start();
-                threads.Add(t);
+                //t.Start();
+                //threads.Add(t);
                 
                 stopwatch.Stop();
                 populateTime += stopwatch.ElapsedTicks;

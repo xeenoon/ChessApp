@@ -58,7 +58,7 @@ namespace ChessApp
                     ulong legal_no_takes = moves & (FULL ^ myside);
                     return (legal_no_takes & (FULL ^ attackedSquares)) | CastleMoves(side, b);
                 case PieceType.Pawn:
-                    result = PawnMoves(side, position, b) & b.squares_to_block_check;
+                    result = PawnMoves(side, position, b);
                     break;
                 case PieceType.Bishop:
                     result = BishopMoves(position, b, side);
@@ -591,9 +591,9 @@ namespace ChessApp
             ulong attackMoves;
             if (side == Side.White)
             {
-                attackMoves = whitePawnAttack[position] & b.BlackPieces; //Get all attacking moves where they intersect with black pieces
+                attackMoves = whitePawnAttack[position] & b.BlackPieces & b.squares_to_block_check; //Get all attacking moves where they intersect with black pieces
 
-                passiveMoves = whitePawnNoAttack[position] ^ (whitePawnNoAttack[position] & (b.BlackPieces | b.WhitePieces)); //Get all moves where no pieces intersect
+                passiveMoves = (whitePawnNoAttack[position] ^ (whitePawnNoAttack[position] & (b.BlackPieces | b.WhitePieces))) & b.squares_to_block_check; //Get all moves where no pieces intersect
 
                 //On the second row, there will be 2 moves upwards, if a piece is one above, the 2nd move up SHOULD NOT be returned
 
@@ -606,21 +606,29 @@ namespace ChessApp
                 {
                     if (b.enpassent == (position % 8) + 1) //Left enpassante
                     {
-                        attackMoves |= (1ul << position + 9);
-                        ++enpassantes;
+                        ulong left_ep = (1ul << position + 9);
+                        if ((b.squares_to_block_check & (left_ep >> 8)) != 0) //Make sure it is legal?
+                        {
+                            attackMoves |= left_ep;
+                            ++enpassantes;
+                        }
                     }
                     else if (b.enpassent == (position % 8) - 1)
                     {
-                        attackMoves |= (1ul << position + 7);
-                        ++enpassantes;
+                        var right_ep = attackMoves |= (1ul << position + 7);
+                        if ((b.squares_to_block_check & (right_ep >> 8)) != 0) //Make sure it is legal?
+                        {
+                            attackMoves |= right_ep;
+                            ++enpassantes;
+                        }    
                     }
                 }
             }
             else
             {
-                attackMoves = blackPawnAttack[position] & b.WhitePieces; //Get all attacking moves where they intersect with white pieces
+                attackMoves = blackPawnAttack[position] & b.WhitePieces & b.squares_to_block_check; //Get all attacking moves where they intersect with white pieces
 
-                passiveMoves = blackPawnNoAttack[position] ^ (blackPawnNoAttack[position] & (b.BlackPieces | b.WhitePieces)); //Get all moves where no pieces intersect
+                passiveMoves = (blackPawnNoAttack[position] ^ (blackPawnNoAttack[position] & (b.BlackPieces | b.WhitePieces))) & b.squares_to_block_check; //Get all moves where no pieces intersect
 
                 //On the seventh row, there will be 2 moves fowards(down, >>8), if a piece is one above(below), the 2nd move up SHOULD NOT be returned
 
@@ -634,13 +642,21 @@ namespace ChessApp
                 {
                     if (b.enpassent == (position % 8) + 1) //Left enpassante
                     {
-                        attackMoves |= ((1ul << position) >> 7);
-                        ++enpassantes;
+                        ulong left_ep = ((1ul << position) >> 7);
+                        if ((b.squares_to_block_check & (left_ep << 8)) != 0) //Make sure it is legal?
+                        {
+                            attackMoves |= left_ep;
+                            ++enpassantes;
+                        }
                     }
                     else if (b.enpassent == (position % 8) - 1)
                     {
-                        attackMoves |= ((1ul<<position) >> 9);
-                        ++enpassantes;
+                        ulong right_ep = ((1ul << position) >> 9);
+                        if ((b.squares_to_block_check & (right_ep << 8)) != 0) //Make sure it is legal?
+                        {
+                            attackMoves |= right_ep;
+                            ++enpassantes;
+                        }
                     }
                 }
             }
