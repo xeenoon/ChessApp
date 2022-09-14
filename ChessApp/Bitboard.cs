@@ -93,12 +93,12 @@ namespace ChessApp
             checks = 0;
 
             ulong attacks = 0ul;
-            attacks |= StaticPieceAttacks(W_Pawn, PieceType.Pawn     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Rook, PieceType.Rook     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Bishop, PieceType.Bishop , Side.White, B_King);
-            attacks |= StaticPieceAttacks(W_King, PieceType.King     , Side.White, B_King);
-            attacks |= SlidingPieceAttacks(attacks, W_Queen, PieceType.Queen   , Side.White, B_King);
-            attacks |= StaticPieceAttacks(W_Knight, PieceType.Knight , Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_Pawn, PieceType.Pawn, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Rook, PieceType.Rook, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Bishop, PieceType.Bishop, Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_King, PieceType.King, Side.White, B_King);
+            attacks |= SlidingPieceAttacks(attacks, W_Queen, PieceType.Queen, Side.White, B_King);
+            attacks |= StaticPieceAttacks(W_Knight, PieceType.Knight, Side.White, B_King);
             if (checks == 1)
             {
                 check = true;
@@ -139,16 +139,17 @@ namespace ChessApp
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
 
-                ulong[] moves = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
-                foreach (var attackray in moves)
+                ulong[] rays = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
+                ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
+                foreach (var attackray in rays)
                 {
                     if ((attackray & oppositeKing) != 0) //King is in check
                     {
                         ++checks;
                         squares_to_block_check = (attackray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
                     }
-                    attacks |= attackray; //Get all the attacking moves and add them to the attacks bitboard
                 }
+                attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
             }
             return attacks;
         }
