@@ -777,8 +777,13 @@ namespace ChessApp
                         ulong left_ep = (1ul << position + 9);
                         if ((b.squares_to_block_check & (left_ep >> 8)) != 0) //Make sure it is legal?
                         {
-                            attackMoves |= left_ep;
-                            ++enpassantes;
+                            var copy = b.Move(position, (byte)(position+9), 1ul<<position, left_ep, PieceType.Pawn, side);
+                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            if (!copy.check)
+                            {
+                                attackMoves |= left_ep;
+                                ++enpassantes;
+                            }
                         }
                     }
                     else if (b.enpassent == (position % 8) - 1)
@@ -786,8 +791,13 @@ namespace ChessApp
                         var right_ep = attackMoves |= (1ul << position + 7);
                         if ((b.squares_to_block_check & (right_ep >> 8)) != 0) //Make sure it is legal?
                         {
-                            attackMoves |= right_ep;
-                            ++enpassantes;
+                            var copy = b.Move(position, (byte)(position+7), 1ul << position, right_ep, PieceType.Pawn, side);
+                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            if (!copy.check)
+                            {
+                                attackMoves |= right_ep;
+                                ++enpassantes;
+                            }
                         }    
                     }
                 }
@@ -813,8 +823,13 @@ namespace ChessApp
                         ulong left_ep = ((1ul << position) >> 7);
                         if ((b.squares_to_block_check & (left_ep << 8)) != 0) //Make sure it is legal?
                         {
-                            attackMoves |= left_ep;
-                            ++enpassantes;
+                            var copy = b.Move(position, (byte)(position-7), 1ul << position, left_ep, PieceType.Pawn, side);
+                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            if (!copy.check)
+                            {
+                                attackMoves |= left_ep;
+                                ++enpassantes;
+                            }
                         }
                     }
                     else if (b.enpassent == (position % 8) - 1)
@@ -822,8 +837,13 @@ namespace ChessApp
                         ulong right_ep = ((1ul << position) >> 9);
                         if ((b.squares_to_block_check & (right_ep << 8)) != 0) //Make sure it is legal?
                         {
-                            attackMoves |= right_ep;
-                            ++enpassantes;
+                            var copy = b.Move(position, (byte)(position-9), 1ul << position, right_ep, PieceType.Pawn, side);
+                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            if (!copy.check)
+                            {
+                                attackMoves |= right_ep;
+                                ++enpassantes;
+                            }
                         }
                     }
                 }
