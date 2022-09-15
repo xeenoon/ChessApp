@@ -99,22 +99,22 @@ namespace ChessApp
 
             if (side == Side.White)
             {
-                if (b.W_KingsideCastle && (b.WhitePieces & W_KINGSIDE_SQUARES) == 0  && (W_KINGSIDE_SQUARES & b.BlackAttackedSquares) == 0) //Can we castle, and is the space clear?
+                if (b.W_KingsideCastle && (b.WhitePieces & W_KINGSIDE_SQUARES) == 0  && (W_KINGSIDE_SQUARES & b.BlackAttackedSquares) == 0 && (b.W_Rook & 128)!=0) //Can we castle, and is the space clear?
                 {
                     result |= b.W_King << 2;
                 }
-                if (b.W_QueensideCastle && (b.WhitePieces & W_QUEENSIDE_SQUARES) == 0 && (W_QUEENSIDE_SQUARES & b.BlackAttackedSquares) == 0) //Can we castle, and is the space clear?
+                if (b.W_QueensideCastle && (b.WhitePieces & W_QUEENSIDE_SQUARES) == 0 && (W_QUEENSIDE_SQUARES & b.BlackAttackedSquares) == 0 && (b.W_Rook & 1) != 0) //Can we castle, and is the space clear?
                 {
                     result |= b.W_King >> 2;
                 }
             }
             else
             {
-                if (b.B_KingsideCastle && (b.BlackPieces & B_KINGSIDE_SQUARES) == 0 && (B_KINGSIDE_SQUARES & b.WhiteAttackedSquares) == 0) //Can we castle, and is the space clear?
+                if (b.B_KingsideCastle && (b.BlackPieces & B_KINGSIDE_SQUARES) == 0 && (B_KINGSIDE_SQUARES & b.WhiteAttackedSquares) == 0 && (b.B_Rook & (9223372036854775808UL)) != 0) //Can we castle, and is the space clear?
                 {
                     result |= b.B_King << 2;
                 }
-                if (b.B_QueensideCastle && (b.BlackPieces & B_QUEENSIDE_SQUARES) == 0 && (B_QUEENSIDE_SQUARES & b.WhiteAttackedSquares) == 0) //Can we castle, and is the space clear?
+                if (b.B_QueensideCastle && (b.BlackPieces & B_QUEENSIDE_SQUARES) == 0 && (B_QUEENSIDE_SQUARES & b.WhiteAttackedSquares) == 0 &&  (b.B_Rook & (72057594037927936)) != 0) //Can we castle, and is the space clear?
                 {
                     result |= b.B_King >> 2;
                 }
