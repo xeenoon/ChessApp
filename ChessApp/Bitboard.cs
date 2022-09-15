@@ -146,10 +146,11 @@ namespace ChessApp
                     {
                         ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
                         attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
-
+            
                         ++checks;
                         squares_to_block_check = (attackray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
                     }
+                    attacks |= attackray;
                 }
             }
             return attacks;

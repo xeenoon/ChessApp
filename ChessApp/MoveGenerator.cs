@@ -121,7 +121,17 @@ namespace ChessApp
             }
             return result;
         }
+        public struct PieceAttacks
+        {
+            public ulong Checkray;
+            public ulong AttackedSquares;
 
+            public PieceAttacks(ulong checkray, ulong attackedSquares)
+            {
+                Checkray = checkray;
+                AttackedSquares = attackedSquares;
+            }
+        }
         public static ulong[] SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
             switch (pieceType)
@@ -982,7 +992,6 @@ namespace ChessApp
                 blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
             }
-
 
             var rightmask = right[position];
             ulong rightBlockers = ((blockers & rightmask) & NO_RIGHT_COLLUMN) << 1;

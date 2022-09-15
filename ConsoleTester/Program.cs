@@ -104,6 +104,7 @@ namespace EngineTester
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
             Node.populateTime = 0;
+            MoveGenerator.MoveCountTime = 0;
 
             Bitboard.total_checks = 0;
             Bitboard.total_doublechecks = 0;
