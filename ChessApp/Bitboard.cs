@@ -135,23 +135,22 @@ namespace ChessApp
         {
             while (piece_bitboard != 0)
             {
-                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard)-1);
+                byte lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
 
-                ulong[] rays = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
-                foreach (var attackray in rays)
+                var sliding_attacks = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
+
+                if ((sliding_attacks.checkray & oppositeKing) != 0) //King is in check
                 {
-                    if ((attackray & oppositeKing) != 0) //King is in check
-                    {
-                        ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
-                        attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
-            
-                        ++checks;
-                        squares_to_block_check = (attackray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
-                    }
-                    attacks |= attackray;
+                    ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
+                    attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
+
+                    ++checks;
+                    squares_to_block_check = (sliding_attacks.checkray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
                 }
+                attacks |= sliding_attacks.attacks;
+
             }
             return attacks;
         }

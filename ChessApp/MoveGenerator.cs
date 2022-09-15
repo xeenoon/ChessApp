@@ -123,16 +123,16 @@ namespace ChessApp
         }
         public struct PieceAttacks
         {
-            public ulong Checkray;
-            public ulong AttackedSquares;
+            public ulong checkray;
+            public ulong attacks;
 
             public PieceAttacks(ulong checkray, ulong attackedSquares)
             {
-                Checkray = checkray;
-                AttackedSquares = attackedSquares;
+                this.checkray = checkray;
+                attacks = attackedSquares;
             }
         }
-        public static ulong[] SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
+        public static PieceAttacks SlidingAttackRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
             switch (pieceType)
             {
@@ -142,9 +142,8 @@ namespace ChessApp
                     return BishopAttackRays(position, b, side);
                 case PieceType.Queen:
                     return QueenAttackRays(position, b, side);
-                
             }
-            return null; //wot
+            throw new Exception("Can only call \"Sliding attack rays\" for Rook, Bishop and Queen");
         }
         public static ulong SlidingDangerRays(PieceType pieceType, Side side, byte position, Bitboard b)
         {
@@ -341,18 +340,21 @@ namespace ChessApp
             return rightupBetween | leftupBetween | rightdownBetween | leftdownBetween;
         }
 
-        private static ulong[] BishopAttackRays(byte position, Bitboard b, Side s)
+        private static PieceAttacks BishopAttackRays(byte position, Bitboard b, Side s)
         {
             ulong blockers;
+            ulong oppositeking;
             if (s == Side.White)
             {
                 blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
+                oppositeking = b.B_King;
             }
             else
             {
                 blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
+                oppositeking = b.W_King;
             }
 
             var rightupmask = upRight[position];
@@ -395,7 +397,34 @@ namespace ChessApp
                 leftdownBetween = downLeft[position];
             }
 
-            return new ulong[4] {rightupBetween, leftupBetween, rightdownBetween, leftdownBetween};
+            PieceAttacks result = new PieceAttacks();
+
+            if ((rightupBetween & oppositeking) != 0)
+            {
+                result.checkray = rightupBetween;
+                result.attacks = rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((leftupBetween & oppositeking) != 0)
+            {
+                result.checkray = leftupBetween;
+                result.attacks = rightdownBetween | rightupBetween | leftdownBetween;
+            }
+            else if ((rightdownBetween & oppositeking) != 0)
+            {
+                result.checkray = rightdownBetween;
+                result.attacks = rightupBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((leftdownBetween & oppositeking) != 0)
+            {
+                result.checkray = leftdownBetween;
+                result.attacks = rightdownBetween | leftupBetween | rightupBetween;
+            }
+            else
+            {
+                result.attacks = rightupBetween | leftupBetween | rightdownBetween | leftdownBetween;
+            }
+
+            return result;
         }
         public static ulong QueenDangerRays(byte position, Bitboard b, Side s)
         {
@@ -495,18 +524,21 @@ namespace ChessApp
 
             return rightBetween | leftBetween | upBetween | downBetween | rightupBetween | leftupBetween | rightdownBetween | leftdownBetween;
         }
-        public static ulong[] QueenAttackRays(byte position, Bitboard b, Side s)
+        public static PieceAttacks QueenAttackRays(byte position, Bitboard b, Side s)
         {
             ulong blockers;
+            ulong oppositeking;
             if (s == Side.White)
             {
                 blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
+                oppositeking = b.B_King;
             }
             else
             {
                 blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
+                oppositeking = b.W_King;
             }
 
             var rightmask = right[position];
@@ -590,8 +622,55 @@ namespace ChessApp
                 leftdownBetween = downLeft[position];
             }
 
+            PieceAttacks result = new PieceAttacks();
 
-            return new ulong[8] { rightBetween, leftBetween, upBetween, downBetween, rightupBetween, leftupBetween, rightdownBetween, leftdownBetween};
+            if ((rightBetween & oppositeking) != 0)
+            {
+                result.checkray = rightBetween;
+                result.attacks = leftBetween | upBetween | downBetween | rightupBetween | rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((leftBetween & oppositeking) != 0)
+            {
+                result.checkray = leftBetween;
+                result.attacks = rightBetween | upBetween | downBetween | rightupBetween | rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((upBetween & oppositeking) != 0)
+            {
+                result.checkray = upBetween;
+                result.attacks = leftBetween | rightBetween | downBetween | rightupBetween | rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((downBetween & oppositeking) != 0)
+            {
+                result.checkray = downBetween;
+                result.attacks = leftBetween | upBetween | rightBetween | rightupBetween | rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            if ((rightupBetween & oppositeking) != 0)
+            {
+                result.checkray = rightupBetween;
+                result.attacks = leftBetween | upBetween | downBetween | rightBetween | rightdownBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((leftupBetween & oppositeking) != 0)
+            {
+                result.checkray = leftupBetween;
+                result.attacks = leftBetween | upBetween | downBetween | rightupBetween | rightdownBetween | rightBetween | leftdownBetween;
+            }
+            else if ((rightdownBetween & oppositeking) != 0)
+            {
+                result.checkray = rightdownBetween;
+                result.attacks = leftBetween | upBetween | downBetween | rightupBetween | rightBetween | leftupBetween | leftdownBetween;
+            }
+            else if ((leftdownBetween & oppositeking) != 0)
+            {
+                result.checkray = leftdownBetween;
+                result.attacks = leftBetween | upBetween | downBetween | rightupBetween | rightdownBetween | leftupBetween | leftBetween;
+            }
+            else
+            {
+                result.checkray = 0;
+                result.attacks = rightBetween | leftBetween | upBetween | downBetween | rightupBetween | leftupBetween | rightdownBetween | leftdownBetween;
+            }
+
+            return result;
         }
 
         private static ulong[] Bishop_XRAY(byte position, Bitboard b, Side s)
@@ -979,18 +1058,21 @@ namespace ChessApp
 
             return rightBetween | leftBetween | upBetween | downBetween;
         }
-        public static ulong[] RookAttackRays(byte position, Bitboard b, Side s)
+        public static PieceAttacks RookAttackRays(byte position, Bitboard b, Side s)
         {
             ulong blockers;
+            ulong oppositeking;
             if (s == Side.White)
             {
                 blockers = b.WhitePieces | b.B_King;
                 blockers |= (b.BlackPieces ^ b.B_King);
+                oppositeking = b.B_King;
             }
             else
             {
                 blockers = b.BlackPieces | b.B_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
+                oppositeking = b.W_King;
             }
 
             var rightmask = right[position];
@@ -1033,7 +1115,34 @@ namespace ChessApp
                 downBetween = down[position];
             }
 
-            return new ulong[4] { rightBetween, leftBetween, upBetween, downBetween };
+            PieceAttacks result = new PieceAttacks();
+
+            if ((rightBetween & oppositeking) != 0)
+            {
+                result.checkray = rightBetween;
+                result.attacks = leftBetween | upBetween | downBetween;
+            }
+            else if ((leftBetween & oppositeking) != 0)
+            {
+                result.checkray = leftBetween;
+                result.attacks = rightBetween | upBetween | downBetween;
+            }
+            else if ((upBetween & oppositeking) != 0)
+            {
+                result.checkray = upBetween;
+                result.attacks = leftBetween | rightBetween | downBetween;
+            }
+            else if ((downBetween & oppositeking) != 0)
+            {
+                result.checkray = downBetween;
+                result.attacks = leftBetween | upBetween | rightBetween;
+            }
+            else
+            {
+                result.checkray = 0;
+                result.attacks = rightBetween | leftBetween | upBetween | downBetween;
+            }
+            return result;
         }
         public static ulong[] Rook_XRAY(byte position, Bitboard b, Side s)
         {
