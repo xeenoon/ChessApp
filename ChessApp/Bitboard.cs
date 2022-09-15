@@ -227,26 +227,24 @@ namespace ChessApp
                 ulong bitpos = 1ul << lsb;
                 piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
 
-                ulong[] moves = MoveGenerator.XRAY(lsb, this, s, pieceType);
-                foreach (var attackray in moves)
-                {
-                    if ((attackray & oppositeKing) != 0) //King is in check
-                    {
-                        var pinned = attackray & oppositeside ^ oppositeKing; //Find all the pinned pieces
+                ulong checkray = MoveGenerator.XRAY_Checks(lsb, this, s, pieceType);
 
-                        if ((pinned & (pinned-1)) == 0 && pinned != 0) //Only one bit set
+                if (checkray != 0) //King is in check
+                {
+                    var pinned = checkray & oppositeside ^ oppositeKing; //Find all the pinned pieces
+
+                    if ((pinned & (pinned - 1)) == 0 && pinned != 0) //Only one bit set
+                    {
+                        ulong xray = checkray | bitpos;
+                        if (s == Side.White)
                         {
-                            ulong xray = attackray | bitpos;
-                            if (s == Side.White)
-                            {
-                                w_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
-                            }
-                            else
-                            {
-                                b_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
-                            }
-                            xrays.Add(xray);
+                            w_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
                         }
+                        else
+                        {
+                            b_xrays |= xray; //Add this piece to the pinned list, it will not be able to move next turn
+                        }
+                        xrays.Add(xray);
                     }
                 }
             }
