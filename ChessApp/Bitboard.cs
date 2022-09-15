@@ -140,16 +140,17 @@ namespace ChessApp
                 piece_bitboard ^= bitpos; //remove this pawn from the ulong of pieces
 
                 ulong[] rays = MoveGenerator.SlidingAttackRays(pieceType, s, lsb, this);
-                ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
                 foreach (var attackray in rays)
                 {
                     if ((attackray & oppositeKing) != 0) //King is in check
                     {
+                        ulong danger = MoveGenerator.SlidingDangerRays(pieceType, s, lsb, this);
+                        attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
+
                         ++checks;
                         squares_to_block_check = (attackray ^ oppositeKing) | bitpos; //Find all places a piece could move to block
                     }
                 }
-                attacks |= danger; //Get all the attacking moves and add them to the attacks bitboard
             }
             return attacks;
         }
