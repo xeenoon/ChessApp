@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ChessApp
 {
@@ -11,12 +12,14 @@ namespace ChessApp
     {
         private Square[] squares = new Square[64];
         Point offset;
+        Point edit_offset;
         int size;
         public Chessboard board;
 
         public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move)
         {
             this.offset = offset;
+            DrawEdit(g);
             this.size = size;
             this.board = board;
 
@@ -33,6 +36,7 @@ namespace ChessApp
 
         internal void Paint(Graphics graphics)
         {
+            DrawEdit(graphics);
             foreach (var square in squares)
             {
                 square.g = graphics;
@@ -42,6 +46,10 @@ namespace ChessApp
 
         internal Square SquareAt(Point location)
         {
+            if (EditSquareAt(location) != null)
+            {
+                return null;
+            }
             location.X = location.X - offset.X;
             location.Y = location.Y - offset.Y;
 
@@ -49,7 +57,10 @@ namespace ChessApp
             location.Y /= size;
 
             location.Y = 7 - location.Y;
-
+            if (location.X <= -1 || location.X >= 8 || location.Y <= -1 || location.Y >= 8)
+            {
+                return null;
+            }
             int index = location.X + location.Y * 8;
             if (index <= -1 || index >= 64)
             {
@@ -57,9 +68,107 @@ namespace ChessApp
             }
             return squares[index];
         }
+        public EditSquare selected_edit;
+        internal EditSquare EditSquareAt(Point location)
+        {
+            if (editSquares == null)
+            {
+                return null;
+            }
+            location.X = location.X - edit_offset.X;
+            location.Y = location.Y - edit_offset.Y;
+
+            location.Y /= (size+Vertical_Indent);
+
+            if (location.Y >= 7)
+            {
+                return null; //clicked too low
+            }
+
+            int left = editSquares[0].realworld.X;
+            int right = size + Horizontal_Indent + left;
+            int startidx = location.X > left && location.X < right ? 0 : 6;
+            if (startidx == 6) //Check if mouse is actually on the right
+            {
+                int farleft = editSquares[6].realworld.X;
+                int farright = farleft + size + Horizontal_Indent;
+                if (!(location.X > farleft && location.X < farright))
+                {
+                    return null;
+                }
+            }
+
+            startidx += location.Y;
+            return editSquares[startidx];
+        }
         public Square highlight;
         public List<Square> moveSquares = new List<Square>();
+        public bool edit;
+        public static int Horizontal_Indent = 5;
+        public static int Vertical_Indent = 5;
+        internal void SetupEdit(bool indented)
+        {
+            edit = indented;
+            moveSquares.Clear();
 
+            foreach (var square in squares)
+            {
+                square.realworld = new Rectangle(square.realworld.X + (indented ? size+Horizontal_Indent : -(size+Horizontal_Indent)), square.realworld.Y, size, size);
+            }
+            if (indented) 
+            {
+                edit_offset = offset;
+                editSquares = new EditSquare[12];
+                Rectangle bounds = new Rectangle(this.offset.X, this.offset.Y, size, size);
+                editSquares[0] = new EditSquare(PieceType.King, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[1] = new EditSquare(PieceType.Queen, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[2] = new EditSquare(PieceType.Rook, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[3] = new EditSquare(PieceType.Bishop, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[4] = new EditSquare(PieceType.Knight, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[5] = new EditSquare(PieceType.Pawn, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+
+                bounds.X = bounds.X + 9 * size + Horizontal_Indent * 2;
+                bounds.Y = offset.Y;
+
+                editSquares[6] = new EditSquare(PieceType.King, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[7] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[8] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[9] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[10] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[11] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+
+                offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);
+            }
+            else
+            {
+                editSquares = null;
+                selected_edit = null;
+                offset = new Point(offset.X - (Horizontal_Indent + size), offset.Y);
+            }
+        }
+        EditSquare[] editSquares;
+        public void DrawEdit(Graphics g)
+        {
+            if (edit)
+            {
+                foreach (var sqr in editSquares)
+                {
+                    sqr.Paint(g);
+                }
+            }
+        }
         public Square this[int index]
         {
             get
@@ -121,9 +230,32 @@ namespace ChessApp
 
         internal void Click()
         {
+            if (squares.selected_edit != null)
+            {
+                if (piece != null && squares.selected_edit.pieceType == piece.pieceType)
+                {
+                    squares.board.Pieces.Remove(this.piece);
+                    piece = null;
+                    squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                    ((Form1)(Form1.ActiveForm)).WriteFEN();
+                    return;
+                }
+
+                piece = new Piece(squares.selected_edit.pieceType, squares.selected_edit.side, location);
+                squares.board.Pieces.Add(piece);
+                squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                ((Form1)(Form1.ActiveForm)).WriteFEN();
+                return;
+            }
+
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
                 squares.highlight.Move(location);
+                if (squares.selected_edit == null && squares.edit)
+                {
+                    squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                    ((Form1)(Form1.ActiveForm)).WriteFEN();
+                }
             }
             squares.moveSquares.Clear();
 
@@ -136,7 +268,7 @@ namespace ChessApp
             {
                 squares.highlight = this;
             }
-           if (piece != null && squares.board.hasturn == piece.side) //Displaying moves?
+           if (piece != null && (squares.board.hasturn == piece.side || squares.edit)) //Displaying moves?
            {
 
                var board = squares.board.bitboard.Copy();
@@ -193,15 +325,62 @@ namespace ChessApp
 
             piece.position = location;
             squares[location].piece = piece;
-
-            squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
-
+            if (!squares.edit)
+            {
+                squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
+            }
             piece = null;
         }
 
         internal void MoveHighlight()
         {
             squares.moveSquares.Add(this);
+        }
+    }
+    internal class EditSquare
+    {
+        public PieceType pieceType;
+        public Side side;
+        public Rectangle realworld;
+        public bool selected;
+        public Squares squares;
+
+        public EditSquare(PieceType pieceType, Side side, Rectangle rectangle, Squares squares)
+        {
+            this.pieceType = pieceType;
+            this.side = side;
+            this.realworld = rectangle;
+            this.squares = squares;
+        }
+
+        public void Paint(Graphics g)
+        {
+            if (selected)
+            {
+                g.FillRectangle(new Pen(Color.Gray).Brush, realworld);
+            }
+            else
+            {
+                g.DrawRectangle(new Pen(Color.Gray), realworld);
+            }
+            g.DrawImage(new Piece(pieceType, side, -1).IMG, realworld);
+        }
+        public void Click()
+        {
+            if (squares.selected_edit != this)
+            {
+                if (squares.selected_edit != null)
+                {
+                    squares.selected_edit.Click();
+                }
+                selected = true;
+                squares.selected_edit = this;
+            }
+            else
+            {
+                selected = false;
+                squares.selected_edit = null;
+            }
         }
     }
 }
