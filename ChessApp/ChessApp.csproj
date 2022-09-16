@@ -68,6 +68,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MagicBitboards.cs" />
     <Compile Include="MoveGenerator.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
