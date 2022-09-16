@@ -644,7 +644,7 @@ namespace ChessApp
                 result.checkray = downBetween;
                 result.attacks = leftBetween | upBetween | rightBetween | rightupBetween | rightdownBetween | leftupBetween | leftdownBetween;
             }
-            if ((rightupBetween & oppositeking) != 0)
+            else if ((rightupBetween & oppositeking) != 0)
             {
                 result.checkray = rightupBetween;
                 result.attacks = leftBetween | upBetween | downBetween | rightBetween | rightdownBetween | leftupBetween | leftdownBetween;
