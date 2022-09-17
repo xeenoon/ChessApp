@@ -31,11 +31,17 @@ namespace ChessApp
         }
 
         const int SQUARESIZE = 45;
+        bool reload = false;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (squares == null)
             {
                 squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
+            }
+            else if (reload)
+            {
+                reload = false;
+                squares.Reload(e.Graphics);
             }
             else
             {
@@ -61,6 +67,14 @@ namespace ChessApp
                     Invalidate();
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            squares.UndoMove();
+            this.chessboard = squares.board;
+            reload = true;
+            Invalidate();
         }
     }
 }

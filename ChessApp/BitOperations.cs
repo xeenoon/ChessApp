@@ -37,5 +37,16 @@ namespace ChessApp
             i = (i & 0x3333333333333333UL) + ((i >> 2) & 0x3333333333333333UL);
             return (unchecked(((i + (i >> 4)) & 0xF0F0F0F0F0F0F0FUL) * 0x101010101010101UL) >> 56);
         }
+
+        internal static IEnumerable<byte> Bitloop(ulong input)
+        {
+            var bitboard = input;
+            while (bitboard != 0)
+            {
+                byte lsb = (byte)(TrailingZeros(bitboard) - 1);
+                bitboard ^= 1ul<<lsb; //remove this piece from the ulong of pieces
+                yield return lsb;
+            }
+        }
     }
 }

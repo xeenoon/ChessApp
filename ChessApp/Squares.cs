@@ -14,19 +14,34 @@ namespace ChessApp
         int size;
         public Chessboard board;
 
+        Color light;
+        Color dark;
+        Color select;
+        Color move;
+
+        public List<Bitboard.BoardData> undomoves = new List<Bitboard.BoardData>();
         public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move)
         {
             this.offset = offset;
             this.size = size;
             this.board = board;
+            this.light = light;
+            this.dark = dark;
+            this.select = select;
+            this.move = move;
 
+            Reload(g);
+        }
+
+        public void Reload(Graphics g)
+        {
             for (int i = 0; i < 64; ++i) //Draw all the squares
             {
                 int xpos = (i % 8);
                 int ypos = 7 - (i / 8);
 
                 Rectangle bounds = new Rectangle(offset.X + xpos * size, offset.Y + ypos * size, size, size);
-                squares[i] = new Square(bounds, board.PieceAt(i), (i + i/8) % 2 == 1 ? light : dark, i, 1ul<<i, g, this, select, move);
+                squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
         }
@@ -59,6 +74,19 @@ namespace ChessApp
         }
         public Square highlight;
         public List<Square> moveSquares = new List<Square>();
+
+        internal void UndoMove()
+        {
+            if (undomoves.Count == 0)
+            {
+                return;
+            }
+            board.bitboard.UndoMove(undomoves.Last());
+            undomoves.Remove(undomoves.Last());
+
+            board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+            board.Reload();
+        }
 
         public Square this[int index]
         {
@@ -184,7 +212,7 @@ namespace ChessApp
                 kingsiderook.position = location + 1;
             }
 
-            squares.board.bitboard = squares.board.bitboard.CopyMove((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side);
+            squares.undomoves.Add(squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side));
 
             if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
             {

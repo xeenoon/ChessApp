@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ChessApp
@@ -248,6 +249,49 @@ namespace ChessApp
                     }
                 }
             }
+        }
+
+        internal ulong GetBitboard(PieceType pieceType, Side side)
+        {
+
+            if (side == Side.White)
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return W_Pawn;
+                    case PieceType.Rook:
+                        return W_Rook;
+                    case PieceType.Knight:
+                        return W_Knight;
+                    case PieceType.Bishop:
+                        return W_Bishop;
+                    case PieceType.Queen:
+                        return W_Queen;
+                    case PieceType.King:
+                        return W_King;
+                }
+            }
+            else
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return B_Pawn;
+                    case PieceType.Rook:
+                        return B_Rook;
+                    case PieceType.Knight:
+                        return B_Knight;
+                    case PieceType.Bishop:
+                        return B_Bishop;
+                    case PieceType.Queen:
+                        return B_Queen;
+                    case PieceType.King:
+                        return B_King;
+                }
+            }
+            return 0ul; //wot
+
         }
 
         public static Bitboard FromFEN(string FEN)
@@ -932,7 +976,7 @@ namespace ChessApp
             {
                 if (old.side == Side.White) //Taken piece is black
                 {
-                    switch (old.pieceType)
+                    switch (old.takenPiece)
                     {
                         case PieceType.Pawn:
                             B_Pawn ^= 1ul << old.endlocation;
@@ -956,7 +1000,7 @@ namespace ChessApp
                 }
                 else //Taken piece is white
                 {
-                    switch (old.pieceType)
+                    switch (old.takenPiece)
                     {
                         case PieceType.Pawn:
                             W_Pawn ^= 1ul << old.endlocation;
