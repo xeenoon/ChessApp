@@ -22,14 +22,8 @@ namespace ChessApp
             {
                 var copy = bitboard.CopyMove(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 int score = 0;
-                if (hasturn == Side.Black)
-                {
-                    score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
-                }
-                else
-                {
-                    score = alphaBetaMax(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
-                }
+                
+                score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
                 if (score > max)
                 {
                     max = score;
