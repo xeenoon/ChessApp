@@ -20,7 +20,7 @@ namespace ChessApp
             foreach (var move in MoveGenerator.CalculateAll(bitboard, hasturn))
             {
                 var data = bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
-                var score = mini(3, bitboard, hasturn == Side.White ? Side.Black : Side.White);
+                var score = alphaBetaMin(int.MinValue, int.MaxValue,3, bitboard, hasturn == Side.White ? Side.Black : Side.White);
                 bitboard.UndoMove(data);
                 if (score > max)
                 {
@@ -30,43 +30,46 @@ namespace ChessApp
             }
             return best;
         }
-        static int maxi(int depth, Bitboard b, Side hasturn)
+
+
+        static int alphaBetaMax(int alpha, int beta, int depthleft, Bitboard b, Side hasturn)
         {
-            if (depth == 0)
+            if (depthleft == 0)
             {
                 return Evaluation.Evaluate(b);
             }
-            int max = int.MinValue;
-            b.SetupSquareAttacks();
-
-            foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
-            {
-                var data = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
-                var score = mini(depth - 1, b, hasturn == Side.White ? Side.Black : Side.White);
-                b.UndoMove(data);
-                if (score > max)
-                    max = score;
-            }
-            return max;
-        }
-
-        static int mini(int depth, Bitboard b, Side hasturn)
-        {
-            if (depth == 0)
-            {
-                return -Evaluation.Evaluate(b);
-            }
-            int min = int.MaxValue;
             b.SetupSquareAttacks();
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
                 var data = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
-                var score = maxi(depth - 1, b, hasturn == Side.White ? Side.Black : Side.White);
+                var score = alphaBetaMin(alpha, beta, depthleft - 1, b, hasturn == Side.White ? Side.Black : Side.White);
                 b.UndoMove(data);
-                if (score < min)
-                    min = score;
+                if (score >= beta)
+                    return beta;   // fail hard beta-cutoff
+                if (score > alpha)
+                    alpha = score; // alpha acts like max in MiniMax
             }
-            return min;
+            return alpha;
+        }
+
+        static int alphaBetaMin(int alpha, int beta, int depthleft, Bitboard b, Side hasturn)
+        {
+            if (depthleft == 0)
+            {
+                return -Evaluation.Evaluate(b);
+            }
+            b.SetupSquareAttacks();
+            foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
+            {
+                var data = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
+                var score = alphaBetaMax(alpha, beta, depthleft - 1, b, hasturn == Side.White ? Side.Black : Side.White);
+                b.UndoMove(data);
+                if (score <= alpha)
+                    return alpha; // fail hard alpha-cutoff
+                if (score < beta)
+                    beta = score; // beta acts like min in MiniMax
+            }
+            return beta;
         }
     }
 }
