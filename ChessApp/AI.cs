@@ -34,7 +34,7 @@ namespace ChessApp
         {
             if (depth == 0)
             {
-                return b.evaluate();
+                return Evaluation.Evaluate(b);
             }
             int max = int.MinValue;
             b.SetupSquareAttacks();
@@ -54,7 +54,7 @@ namespace ChessApp
         {
             if (depth == 0)
             {
-                return -b.evaluate();
+                return -Evaluation.Evaluate(b);
             }
             int min = int.MaxValue;
             b.SetupSquareAttacks();
