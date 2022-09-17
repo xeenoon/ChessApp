@@ -17,17 +17,25 @@ namespace ChessApp
             Move best = new Move(0,0,PieceType.None);
 
             bitboard.SetupSquareAttacks();
-            foreach (var move in MoveGenerator.CalculateAll(bitboard, hasturn))
+
+            Parallel.ForEach(MoveGenerator.CalculateAll(bitboard, hasturn), move =>
             {
-                var data = bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
-                var score = alphaBetaMin(int.MinValue, int.MaxValue,3, bitboard, hasturn == Side.White ? Side.Black : Side.White);
-                bitboard.UndoMove(data);
+                var copy = bitboard.CopyMove(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
+                int score = 0;
+                if (hasturn == Side.Black)
+                {
+                    score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
+                }
+                else
+                {
+                    score = alphaBetaMax(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
+                }
                 if (score > max)
                 {
                     max = score;
                     best = move;
                 }
-            }
+            });
             return best;
         }
 
