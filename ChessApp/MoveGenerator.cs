@@ -1468,13 +1468,13 @@ namespace ChessApp
             var pos = MoveLeft(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos + 1), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos - 1), PieceType.King));
             }
 
             pos = MoveRight(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos - 1), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos + 1), PieceType.King));
             }
 
             pos = MoveUp(kingpos);
@@ -1492,13 +1492,13 @@ namespace ChessApp
             pos = MoveUpLeft(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos + 9), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos + 7), PieceType.King));
             }
 
             pos = MoveUpRight(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos + 7), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos + 9), PieceType.King));
             }
 
             pos = MoveDownLeft(kingpos);

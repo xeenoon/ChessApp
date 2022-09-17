@@ -20,6 +20,47 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
+
+        const int PAWN_VALUE = 1;
+        const int KNIGHT_VALUE = 3;
+        const int BISHOP_VALUE = 3;
+        const int ROOK_VALUE = 5;
+        const int QUEEN_VALUE = 9;
+
+        internal int evaluate(Side hasturn)
+        {
+            int whitevalue = 0;
+            whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Pawn) * PAWN_VALUE);
+            whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Knight) * KNIGHT_VALUE);
+            whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Bishop) * BISHOP_VALUE);
+            whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Rook) * ROOK_VALUE);
+            whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Queen) * QUEEN_VALUE);
+
+
+            int blackvalue = 0;
+            blackvalue += (int)(BitOperations.NumberOfSetBits(B_Pawn) * PAWN_VALUE);
+            blackvalue += (int)(BitOperations.NumberOfSetBits(B_Knight) * KNIGHT_VALUE);
+            blackvalue += (int)(BitOperations.NumberOfSetBits(B_Bishop) * BISHOP_VALUE);
+            blackvalue += (int)(BitOperations.NumberOfSetBits(B_Rook) * ROOK_VALUE);
+            blackvalue += (int)(BitOperations.NumberOfSetBits(B_Queen) * QUEEN_VALUE);
+
+            if (MoveGenerator.MoveCount(this, hasturn) == 0 && check) //Checkmate?
+            {
+                if (hasturn == Side.Black)
+                {
+                    whitevalue = int.MaxValue;
+                    blackvalue = 0;
+                }
+                else
+                {
+                    blackvalue = int.MaxValue;
+                    whitevalue = 0;
+                }
+            }
+
+            return whitevalue - blackvalue;
+        }
+
         public ulong w_xrays;
         public ulong b_xrays;
         public List<ulong> xrays;
