@@ -184,7 +184,7 @@ namespace ChessApp
                 kingsiderook.position = location + 1;
             }
 
-            squares.board.bitboard = squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side);
+            squares.board.bitboard = squares.board.bitboard.CopyMove((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side);
 
             if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
             {

@@ -19,6 +19,7 @@ namespace ChessApp
         Bishop,
         Queen,
         King,
+        None
     }
     public enum Side
     {
