@@ -15,11 +15,12 @@ namespace ChessApp
             
             int max = int.MinValue;
             Move best = new Move(0,0,PieceType.None);
+
+            bitboard.SetupSquareAttacks();
             foreach (var move in MoveGenerator.CalculateAll(bitboard, hasturn))
             {
-                bitboard.SetupSquareAttacks(); //Yeah... slow
                 var data = bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
-                var score = mini(2, bitboard, hasturn == Side.White ? Side.Black : Side.White);
+                var score = mini(3, bitboard, hasturn == Side.White ? Side.Black : Side.White);
                 bitboard.UndoMove(data);
                 if (score > max)
                 {
@@ -33,12 +34,13 @@ namespace ChessApp
         {
             if (depth == 0)
             {
-                return b.evaluate(hasturn);
+                return b.evaluate();
             }
             int max = int.MinValue;
+            b.SetupSquareAttacks();
+
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                b.SetupSquareAttacks(); //Yeah... slow
                 var data = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
                 var score = mini(depth - 1, b, hasturn == Side.White ? Side.Black : Side.White);
                 b.UndoMove(data);
@@ -52,12 +54,12 @@ namespace ChessApp
         {
             if (depth == 0)
             {
-                return -b.evaluate(hasturn);
+                return -b.evaluate();
             }
             int min = int.MaxValue;
+            b.SetupSquareAttacks();
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
-                b.SetupSquareAttacks(); //Yeah... slow
                 var data = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 var score = maxi(depth - 1, b, hasturn == Side.White ? Side.Black : Side.White);
                 b.UndoMove(data);

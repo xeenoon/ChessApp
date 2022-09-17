@@ -27,7 +27,7 @@ namespace ChessApp
         const int ROOK_VALUE = 5;
         const int QUEEN_VALUE = 9;
 
-        internal int evaluate(Side hasturn)
+        internal int evaluate()
         {
             int whitevalue = 0;
             whitevalue +=  (int)(BitOperations.NumberOfSetBits(W_Pawn) * PAWN_VALUE);
@@ -43,20 +43,6 @@ namespace ChessApp
             blackvalue += (int)(BitOperations.NumberOfSetBits(B_Bishop) * BISHOP_VALUE);
             blackvalue += (int)(BitOperations.NumberOfSetBits(B_Rook) * ROOK_VALUE);
             blackvalue += (int)(BitOperations.NumberOfSetBits(B_Queen) * QUEEN_VALUE);
-
-            if (MoveGenerator.MoveCount(this, hasturn) == 0 && check) //Checkmate?
-            {
-                if (hasturn == Side.Black)
-                {
-                    whitevalue = int.MaxValue;
-                    blackvalue = 0;
-                }
-                else
-                {
-                    blackvalue = int.MaxValue;
-                    whitevalue = 0;
-                }
-            }
 
             return whitevalue - blackvalue;
         }
