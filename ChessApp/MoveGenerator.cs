@@ -1504,13 +1504,13 @@ namespace ChessApp
             pos = MoveDownLeft(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos - 7), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos - 9), PieceType.King));
             }
 
             pos = MoveDownRight(kingpos);
             if ((pos & moves) != 0)
             {
-                result.Add(new Move(kingpos, (byte)(kingpos - 9), PieceType.King));
+                result.Add(new Move(kingpos, (byte)(kingpos - 7), PieceType.King));
             }
 
             ulong castle = CastleMoves(s, b);

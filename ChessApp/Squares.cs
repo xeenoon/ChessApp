@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChessApp
@@ -19,8 +20,10 @@ namespace ChessApp
         Color select;
         Color move;
 
+        Form1 parent;
+
         public List<Bitboard.BoardData> undomoves = new List<Bitboard.BoardData>();
-        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move)
+        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move, Form1 parent)
         {
             this.offset = offset;
             this.size = size;
@@ -29,6 +32,7 @@ namespace ChessApp
             this.dark = dark;
             this.select = select;
             this.move = move;
+            this.parent = parent;
 
             Reload(g);
         }
@@ -93,6 +97,23 @@ namespace ChessApp
             get
             {
                 return squares[index];
+            }
+        }
+        public bool AI_can_move;
+        internal void AiMove()
+        {
+            if (AI_can_move)
+            {
+                board.bitboard.SetupSquareAttacks();
+                if (MoveGenerator.MoveCount(board.bitboard, board.hasturn) == 0)
+                {
+                    return;
+                }
+                var move = AI.GetMove(board.bitboard, board.hasturn);
+                undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, board.hasturn));
+                board.Reload();
+                parent.Reload();
+                board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
             }
         }
     }
@@ -225,6 +246,8 @@ namespace ChessApp
             squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
 
             piece = null;
+
+            squares.AiMove();
         }
 
         internal void MoveHighlight()

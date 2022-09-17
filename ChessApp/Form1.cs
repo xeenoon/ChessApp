@@ -36,7 +36,7 @@ namespace ChessApp
         {
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
             }
             else if (reload)
             {
@@ -73,6 +73,17 @@ namespace ChessApp
         {
             squares.UndoMove();
             this.chessboard = squares.board;
+            reload = true;
+            Invalidate();
+        }
+
+        private void PlayComputerCheckChange(object sender, EventArgs e)
+        {
+            squares.AI_can_move = PlayComputer.Checked;
+        }
+
+        internal void Reload()
+        {
             reload = true;
             Invalidate();
         }

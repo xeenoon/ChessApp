@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI.cs" />
     <Compile Include="Bitboard.cs" />
     <Compile Include="BitOperations.cs" />
     <Compile Include="Chessboard.cs" />
