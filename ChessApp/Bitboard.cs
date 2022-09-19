@@ -1072,7 +1072,7 @@ namespace ChessApp
                 else
                 {
                     B_Rook ^= (1ul << 56);
-                    B_Rook ^= (1ul << 50);
+                    B_Rook ^= (1ul << 59);
                 }
             }
 
