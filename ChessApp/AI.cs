@@ -29,7 +29,7 @@ namespace ChessApp
                 }
                 else
                 {
-                    score = -alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, Side.Black);
+                    score = alphaBetaMax(int.MinValue, int.MaxValue, 4, copy, Side.Black);
                 }
                 if (score > max)
                 {
