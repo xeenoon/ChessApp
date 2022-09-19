@@ -206,8 +206,7 @@ namespace ChessApp
                     result |= MoveGenerator.king[lsb];
                     break;
                 case PieceType.Knight:
-                    lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-                    var knightattacks = MoveGenerator.KnightAttackRays(s, piece_bitboard);
+                    var knightattacks = MoveGenerator.KnightAttackRays(piece_bitboard);
                     if ((knightattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
@@ -550,7 +549,7 @@ namespace ChessApp
                 else
                 {
                     B_Rook ^= (1ul << 56);
-                    B_Rook ^= (1ul << 50);
+                    B_Rook ^= (1ul << 59);
                 }
             }
 
@@ -776,7 +775,7 @@ namespace ChessApp
                 else
                 {
                     copy.B_Rook ^= (1ul << 56);
-                    copy.B_Rook ^= (1ul << 50);
+                    copy.B_Rook ^= (1ul << 59);
                 }
             }
 

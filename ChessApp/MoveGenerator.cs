@@ -201,7 +201,7 @@ namespace ChessApp
 
         static ulong KNIGHT_TOP = 281474976710655ul;
         static ulong KNIGHT_FAR_TOP = 72057594037927935ul;
-        public static ulong KnightAttackRays(Side side, ulong bitboard)
+        public static ulong KnightAttackRays(ulong bitboard)
         {
             var bottom_right_attacks = (bitboard & KNIGHT_FAR_RIGHT & KNIGHT_BOTTOM) >> 15;
             bottom_right_attacks |= (bitboard & KNIGHT_RIGHT & KNIGHT_FAR_BOTTOM) >> 6;
