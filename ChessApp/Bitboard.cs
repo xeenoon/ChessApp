@@ -921,6 +921,8 @@ namespace ChessApp
         }
         public void UndoMove(BoardData old)
         {
+            xrays.Clear();
+
             if (old.side == Side.White)
             {
                 switch (old.pieceType)

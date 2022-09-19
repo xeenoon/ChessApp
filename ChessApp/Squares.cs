@@ -111,10 +111,10 @@ namespace ChessApp
         {
             if (AI_can_move)
             {
-                board.bitboard.SetupSquareAttacks();
+                var copy = board.bitboard.Copy();
                 if (MoveGenerator.MoveCount(board.bitboard, board.hasturn) != 0)
                 {
-                    var move = AI.GetMove(board.bitboard, board.hasturn);
+                    var move = AI.GetMove(copy, board.hasturn);
                     undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, board.hasturn));
                     board.Reload();
                     parent.Reload();
