@@ -23,7 +23,14 @@ namespace ChessApp
                 var copy = bitboard.CopyMove(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 int score = 0;
                 
-                score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, hasturn == Side.White ? Side.Black : Side.White);
+                if (hasturn == Side.Black)
+                {
+                    score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, Side.White);
+                }
+                else
+                {
+                    score = -alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, Side.Black);
+                }
                 if (score > max)
                 {
                     max = score;
@@ -53,7 +60,7 @@ namespace ChessApp
             }
             return alpha;
         }
-
+        
         static int alphaBetaMin(int alpha, int beta, int depthleft, Bitboard b, Side hasturn)
         {
             if (depthleft == 0)
