@@ -26,7 +26,7 @@ namespace ChessApp
 
 
             int blackvalue = 0;
-            //blackvalue += (int)(BitOperations.NumberOfSetBits(bitboard.B_Pawn) * PAWN_VALUE);
+            blackvalue += (int)(BitOperations.NumberOfSetBits(bitboard.B_Pawn) * PAWN_VALUE);
             blackvalue += (int)(BitOperations.NumberOfSetBits(bitboard.B_Knight) * KNIGHT_VALUE);
             blackvalue += (int)(BitOperations.NumberOfSetBits(bitboard.B_Bishop) * BISHOP_VALUE);
             blackvalue += (int)(BitOperations.NumberOfSetBits(bitboard.B_Rook) * ROOK_VALUE);

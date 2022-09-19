@@ -665,8 +665,19 @@ namespace ChessApp
             {
                 B_KingsideCastle = false;
             }
+            if (pieceType == PieceType.King)
+            {
+                if (side == Side.White)
+                {
+                    W_KingsideCastle = false;
+                }
+                else
+                {
+                    B_KingsideCastle = false;
+                }
+            }
 
-            
+
             stopwatch.Stop();
             MoveTime += stopwatch.ElapsedTicks;
             return new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
@@ -891,6 +902,17 @@ namespace ChessApp
             {
                 copy.B_KingsideCastle = false;
             }
+            if (pieceType == PieceType.King)
+            {
+                if (side == Side.White)
+                {
+                    copy.W_KingsideCastle = false;
+                }
+                else
+                {
+                    copy.B_KingsideCastle = false;
+                }
+            }
 
 
             stopwatch.Stop();
@@ -1062,7 +1084,7 @@ namespace ChessApp
                 }
                 else //To find enemy piece, go up a row
                 {
-                    W_Pawn ^= 1ul << (old.endlocation + 7);
+                    W_Pawn ^= 1ul << (old.endlocation + 8);
                 }
             }
 
