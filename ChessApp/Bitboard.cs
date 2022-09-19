@@ -1093,7 +1093,7 @@ namespace ChessApp
             this.W_KingsideCastle  = old.W_KingsideCastle;
             this.B_KingsideCastle  = old.B_KingsideCastle;
             this.W_QueensideCastle = old.W_QueensideCastle;
-            this.B_QueensideCastle = old.B_QueensideCastle; //Reset the caslte options
+            this.B_QueensideCastle = old.B_QueensideCastle; //Reset the castle options
 
             this.enpassent = old.enpassant;
         }
