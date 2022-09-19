@@ -31,7 +31,7 @@ namespace ChessApp
                 {
                     score = alphaBetaMax(int.MinValue, int.MaxValue, 4, copy, Side.Black);
                 }
-                if (score > max)
+                if (score >= max)
                 {
                     max = score;
                     best = move;

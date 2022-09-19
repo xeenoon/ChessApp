@@ -100,21 +100,28 @@ namespace ChessApp
             }
         }
         public bool AI_can_move;
-        internal void AiMove()
+        public bool canshowmove = true;
+        internal async void AiMove()
+        {
+            canshowmove = false;
+            await Task.Run(() => GetAIMove());
+        }
+
+        private void GetAIMove()
         {
             if (AI_can_move)
             {
                 board.bitboard.SetupSquareAttacks();
-                if (MoveGenerator.MoveCount(board.bitboard, board.hasturn) == 0)
+                if (MoveGenerator.MoveCount(board.bitboard, board.hasturn) != 0)
                 {
-                    return;
+                    var move = AI.GetMove(board.bitboard, board.hasturn);
+                    undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, board.hasturn));
+                    board.Reload();
+                    parent.Reload();
+                    board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
                 }
-                var move = AI.GetMove(board.bitboard, board.hasturn);
-                undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, board.hasturn));
-                board.Reload();
-                parent.Reload();
-                board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
             }
+            canshowmove = true;
         }
     }
     internal class Square
@@ -154,13 +161,13 @@ namespace ChessApp
             {
                 g.DrawImage(piece.IMG, realworld);
             }
-            if (squares.highlight == this)
+            if (squares.highlight == this && squares.canshowmove)
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.DrawEllipse(new Pen(movecolor,2), realworld.X + 1, realworld.Y + 1, realworld.Width-3, realworld.Height-2);
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
-            if (squares.moveSquares.Contains(this))
+            if (squares.moveSquares.Contains(this) && squares.canshowmove)
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.FillEllipse(new Pen(movecolor).Brush, realworld.X + 5, realworld.Y + 5, realworld.Width - 10, realworld.Height - 10);
@@ -185,7 +192,7 @@ namespace ChessApp
             {
                 squares.highlight = this;
             }
-           if (piece != null && squares.board.hasturn == piece.side) //Displaying moves?
+           if (piece != null && squares.board.hasturn == piece.side && squares.canshowmove) //Displaying moves?
            {
 
                var board = squares.board.bitboard.Copy();
