@@ -95,6 +95,47 @@ namespace ChessApp
             this.side = side;
             this.position = position;
         }
+
+        public override string ToString()
+        {
+            if (side == Side.Black)
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return "p";
+                    case PieceType.Rook:
+                        return "r";
+                    case PieceType.Knight:
+                        return "n";
+                    case PieceType.Bishop:
+                        return "b";
+                    case PieceType.Queen:
+                        return "q";
+                    case PieceType.King:
+                        return "k";
+                }
+            }
+            else
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        return "P";
+                    case PieceType.Rook:
+                        return "R";
+                    case PieceType.Knight:
+                        return "N";
+                    case PieceType.Bishop:
+                        return "B";
+                    case PieceType.Queen:
+                        return "Q";
+                    case PieceType.King:
+                        return "K";
+                }
+            }
+            return "";
+        }
     }
     public class CastleOptions
     {
@@ -107,6 +148,38 @@ namespace ChessApp
             this.side = side;
             Queenside = queenside;
             Kingside = kingside;
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+            if (side == Side.Black)
+            {
+                if (Kingside)
+                {
+                    result += "k";
+                }
+                if (Queenside)
+                {
+                    result += "q";
+                }
+                if (!Queenside && !Kingside)
+                {
+                    result = "-";
+                }
+            }
+            else
+            {
+                if (Kingside)
+                {
+                    result += "K";
+                }
+                if (Queenside)
+                {
+                    result += "Q";
+                }
+            }
+            return result;
         }
     }
     public class Chessboard
@@ -207,7 +280,7 @@ namespace ChessApp
                 return;
             }
             var castles = strs[2];
-            whiteCastles = new CastleOptions(Side.Black, false, false);
+            whiteCastles = new CastleOptions(Side.White, false, false);
             blackCastles = new CastleOptions(Side.Black, false, false);
 
             if (castles.Contains("K"))
@@ -226,6 +299,56 @@ namespace ChessApp
             {
                 blackCastles.Queenside = true;
             }
+        }
+        public string GetFEN()
+        {
+            string result = "";
+            int curr_row = 7;
+            int colsused = 0;
+            var set = Pieces.OrderByUpsideGrid();
+            for (int i = 0; i < set.Count; i++)
+            {
+                Piece p = set[i];
+                if (p.position / 8 != curr_row)
+                {
+                    if (8-colsused != 0)
+                    {
+                        result += (8 - colsused).ToString();
+                    }
+                    result += "/";
+                    for (int j = 0; j < ((curr_row - 1) - (p.position / 8)); ++j)
+                    {
+                        result += "8/";
+                    }
+                    curr_row = p.position / 8;
+                    if (p.position % 8 != 0)
+                    {
+                        result += p.position % 8;
+                    }
+                    colsused = p.position % 8;
+                }
+                if (p.position % 8 != colsused)
+                {
+                    int used = ((p.position % 8) - (colsused));
+                    if (used != 8)
+                    {
+                        result += used.ToString();
+                        colsused += used;
+                    }
+                }
+                result += p.ToString();
+                colsused++;
+                if (colsused == 0)
+                {
+                    colsused = 8;
+                    result += "/";
+                }
+            }
+            result += String.Format(" {0} ", hasturn == Side.White ? "w" : "b");
+            result += whiteCastles.ToString();
+            result += blackCastles.ToString();
+            result += " - 0 1";
+            return result;
         }
 
         internal Piece PieceAt(int i)
