@@ -18,7 +18,7 @@ namespace ChessApp
 
             bitboard.SetupSquareAttacks();
 
-            Parallel.ForEach(MoveGenerator.CalculateAll(bitboard, hasturn), move =>
+            foreach(var move in MoveGenerator.CalculateAll(bitboard, hasturn))
             {
                 var copy = bitboard.CopyMove(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 int score = 0;
@@ -30,6 +30,10 @@ namespace ChessApp
 
                     }
                     score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, Side.White);
+                    if (score == int.MinValue)
+                    {
+
+                    }
                 }
                 else
                 {
@@ -40,7 +44,7 @@ namespace ChessApp
                     max = score;
                     best = move;
                 }
-            });
+            }
             return best;
         }
 
@@ -75,7 +79,13 @@ namespace ChessApp
         {
             if (depthleft == 0)
             {
-                return -Evaluation.Evaluate(b, hasturn);
+                int v = Evaluation.Evaluate(b, hasturn);
+                if (v == int.MinValue)
+                {
+                    return v - 1;
+                }
+
+                return -1 * v;
             }
             b.SetupSquareAttacks();
             bool didnothing = true;
@@ -92,7 +102,15 @@ namespace ChessApp
             }
             if (didnothing)
             {
-                return -Evaluation.Evaluate(b, hasturn, true);
+                int v = Evaluation.Evaluate(b, hasturn, true);
+                if (v == int.MinValue)
+                {
+                    return v - 1;
+                }
+                else
+                {
+                    return -v;
+                }
             }
             return beta;
         }
