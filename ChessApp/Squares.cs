@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,20 +17,38 @@ namespace ChessApp
         int size;
         public Chessboard board;
 
-        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move)
+        Color light;
+        Color dark;
+        Color select;
+        Color move;
+
+        Form1 parent;
+
+        public List<Bitboard.BoardData> undomoves = new List<Bitboard.BoardData>();
+        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move, Form1 parent)
         {
             this.offset = offset;
             DrawEdit(g);
             this.size = size;
             this.board = board;
+            this.light = light;
+            this.dark = dark;
+            this.select = select;
+            this.move = move;
+            this.parent = parent;
 
+            Reload(g);
+        }
+
+        public void Reload(Graphics g)
+        {
             for (int i = 0; i < 64; ++i) //Draw all the squares
             {
                 int xpos = (i % 8);
                 int ypos = 7 - (i / 8);
 
                 Rectangle bounds = new Rectangle(offset.X + xpos * size, offset.Y + ypos * size, size, size);
-                squares[i] = new Square(bounds, board.PieceAt(i), (i + i/8) % 2 == 1 ? light : dark, i, 1ul<<i, g, this, select, move);
+                squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
         }
@@ -169,12 +188,48 @@ namespace ChessApp
                 }
             }
         }
+        internal void UndoMove()
+        {
+            if (undomoves.Count == 0)
+            {
+                return;
+            }
+            board.bitboard.UndoMove(undomoves.Last());
+            undomoves.Remove(undomoves.Last());
+
+            board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+            board.Reload();
+        }
         public Square this[int index]
         {
             get
             {
                 return squares[index];
             }
+        }
+        public bool AI_can_move;
+        public bool canshowmove = true;
+        internal async void AiMove()
+        {
+            canshowmove = false;
+            await Task.Run(() => GetAIMove());
+        }
+
+        private void GetAIMove()
+        {
+            if (AI_can_move)
+            {
+                var copy = board.bitboard.Copy();
+                if (MoveGenerator.MoveCount(board.bitboard, board.hasturn) != 0)
+                {
+                    var move = AI.GetMove(copy, board.hasturn);
+                    undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, board.hasturn));
+                    board.Reload();
+                    parent.Reload();
+                    board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+                }
+            }
+            canshowmove = true;
         }
     }
     internal class Square
@@ -214,13 +269,13 @@ namespace ChessApp
             {
                 g.DrawImage(piece.IMG, realworld);
             }
-            if (squares.highlight == this)
+            if (squares.highlight == this && squares.canshowmove)
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.DrawEllipse(new Pen(movecolor,2), realworld.X + 1, realworld.Y + 1, realworld.Width-3, realworld.Height-2);
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
-            if (squares.moveSquares.Contains(this))
+            if (squares.moveSquares.Contains(this) && squares.canshowmove)
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.FillEllipse(new Pen(movecolor).Brush, realworld.X + 5, realworld.Y + 5, realworld.Width - 10, realworld.Height - 10);
@@ -268,7 +323,8 @@ namespace ChessApp
             {
                 squares.highlight = this;
             }
-           if (piece != null && (squares.board.hasturn == piece.side || squares.edit)) //Displaying moves?
+
+           if (piece != null && (squares.board.hasturn == piece.side || squares.edit) && squares.board.hasturn == piece.side && squares.canshowmove) //Displaying moves?
            {
 
                var board = squares.board.bitboard.Copy();
@@ -316,7 +372,7 @@ namespace ChessApp
                 kingsiderook.position = location + 1;
             }
 
-            squares.board.bitboard = squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side);
+            squares.undomoves.Add(squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side));
 
             if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
             {
@@ -330,6 +386,8 @@ namespace ChessApp
                 squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
             }
             piece = null;
+
+            squares.AiMove();
         }
 
         internal void MoveHighlight()

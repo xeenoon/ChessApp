@@ -49,12 +49,14 @@ namespace ChessApp
             {
                 stopwatch.Restart();
                 //Simulating move
-                Bitboard copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
+                Bitboard.BoardData copy = b.Move(move.last, move.current, 1ul<<move.last, 1ul<<move.current, move.pieceType, hasturn);
 
                 stopwatch.Stop();
                 populateTime += stopwatch.ElapsedTicks;
 
-                result += Populate(nodes, copy, otherturn);
+                result += Populate(nodes, b, otherturn);
+
+                b.UndoMove(copy);
             }
             if (first)
             {
@@ -91,7 +93,7 @@ namespace ChessApp
                 Move move = source[i];
 
                 //Simulating move
-                var copy = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
+                var copy = b.CopyMove(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 var t = new Thread(() =>
                 {
                     total_nodes.Add(Populate(nodes, copy, otherturn));

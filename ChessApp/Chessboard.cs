@@ -19,6 +19,7 @@ namespace ChessApp
         Bishop,
         Queen,
         King,
+        None
     }
     public enum Side
     {
@@ -354,6 +355,30 @@ namespace ChessApp
         {
             var piece = Pieces.Where(p=>p.position == i).FirstOrDefault();
             return piece;
+        }
+
+        internal void Reload()
+        {
+            Pieces.Clear();
+
+            blackCastles.Kingside = bitboard.B_KingsideCastle;
+            blackCastles.Queenside = bitboard.B_QueensideCastle;
+
+            whiteCastles.Kingside = bitboard.W_KingsideCastle;
+            whiteCastles.Queenside = bitboard.W_QueensideCastle;
+
+            List<PieceType> pieceTypes = new List<PieceType>() {PieceType.Pawn, PieceType.Rook, PieceType.Knight, PieceType.Bishop, PieceType.Queen, PieceType.King};
+            foreach (var piecetype in pieceTypes) 
+            {
+                foreach (var position in BitOperations.Bitloop(bitboard.GetBitboard(piecetype, Side.White)))
+                {
+                    Pieces.Add(new Piece(piecetype, Side.White, position));
+                }
+                foreach (var position in BitOperations.Bitloop(bitboard.GetBitboard(piecetype, Side.Black)))
+                {
+                    Pieces.Add(new Piece(piecetype, Side.Black, position));
+                }
+            }
         }
     }
 }

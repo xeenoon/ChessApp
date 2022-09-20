@@ -17,14 +17,25 @@ namespace EngineTester
             {
                 input = Console.ReadLine();
                 int int_depth;
+                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                 if (!int.TryParse(input, out int_depth))
                 {
-                    continue;
+                    if (input.Contains(','))
+                    {
+                        var strs = input.Split(',');
+                        FEN = strs[0];
+                        int_depth = int.Parse(strs[1]);
+                    }
+                    else
+                    {
+                        int_depth = 1;
+                        FEN = input;
+                    }
                 }
 
-                var FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-                Bitboard B = Bitboard.FromFEN(FEN);
-                Node n = new Node(B, Side.White);
+                Chessboard chessboard = new Chessboard(FEN);
+                Bitboard B = chessboard.bitboard.Copy();
+                Node n = new Node(B, chessboard.hasturn);
                 stopwatch.Restart();
                 timer = new System.Timers.Timer();
                 timer.Interval = 100;
@@ -32,6 +43,7 @@ namespace EngineTester
                 timer.Start();
                 iswaiting = false;
                 n.BasePopulate(int_depth);
+
                 //PrintDebug();
             }
         }
@@ -39,7 +51,7 @@ namespace EngineTester
         private static void PrintDebug()
         {
             var time1 = Node.squareattacktime;
-            var time2 = MoveGenerator.TOTALTIME;
+            var time2 = MoveGenerator.TOTALTIME + MoveGenerator.MoveCountTime;
             var time3 = Node.populateTime;
             stopwatch.Stop();
             iswaiting = true;
@@ -92,6 +104,7 @@ namespace EngineTester
             MoveGenerator.GetMovesCalls = 0;
             MoveGenerator.GetMovesTime = 0;
             Node.populateTime = 0;
+            MoveGenerator.MoveCountTime = 0;
 
             Bitboard.total_checks = 0;
             Bitboard.total_doublechecks = 0;

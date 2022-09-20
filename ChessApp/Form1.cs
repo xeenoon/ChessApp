@@ -37,14 +37,21 @@ namespace ChessApp
         }
 
         const int SQUARESIZE = 45;
+
         System.Timers.Timer checkmateDelay;
         bool checkmated = false;
         bool running = false;
+        bool reload = false;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+            }
+            else if (reload)
+            {
+                reload = false;
+                squares.Reload(e.Graphics);
             }
             else
             {
@@ -113,6 +120,25 @@ namespace ChessApp
                 chessboard.hasturn = comboBox1.SelectedIndex == 0 ? Side.White : Side.Black;
                 textBox1.Text = chessboard.GetFEN();
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            squares.UndoMove();
+            this.chessboard = squares.board;
+            reload = true;
+            Invalidate();
+        }
+
+        private void PlayComputerCheckChange(object sender, EventArgs e)
+        {
+            squares.AI_can_move = PlayComputer.Checked;
+        }
+
+        internal void Reload()
+        {
+            reload = true;
+            Invalidate();
         }
     }
 }
