@@ -178,15 +178,15 @@ namespace ChessApp
             var attacks = bitboard;
             if (side == Side.White)
             {
-                attacks &= NO_TOP_ROW; //Pawns on the top row cannot attack
-                attacks = attacks << 7; //This removes the original position, and adds the next one
-                attacks |= attacks << 2; //This adds the next attacking position
+                bitboard &= NO_TOP_ROW; //Pawns on the top row cannot attack
+                attacks = (bitboard&NO_LEFT_COLLUMN) << 7; //This removes the original position, and adds the next one
+                attacks |= (bitboard & NO_RIGHT_COLLUMN) << 9; //This adds the next attacking position
             }
             else
             {
-                attacks &= NO_BOTTOM_ROW; //Pawns on the top row cannot attack
-                attacks = attacks >> 7; //This removes the original position, and adds the next one
-                attacks |= attacks >> 2; //This adds the next attacking position
+                bitboard &= NO_BOTTOM_ROW; //Pawns on the top row cannot attack
+                attacks = (bitboard & NO_RIGHT_COLLUMN) >> 7; //This removes the original position, and adds the next one
+                attacks |= (bitboard & NO_LEFT_COLLUMN) >> 9; //This adds the next attacking position
             }
             return attacks;
         }
