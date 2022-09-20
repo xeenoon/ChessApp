@@ -25,6 +25,10 @@ namespace ChessApp
                 
                 if (hasturn == Side.Black)
                 {
+                    if (move.current == 15)
+                    {
+
+                    }
                     score = alphaBetaMin(int.MinValue, int.MaxValue, 4, copy, Side.White);
                 }
                 else
@@ -45,11 +49,13 @@ namespace ChessApp
         {
             if (depthleft == 0)
             {
-                return Evaluation.Evaluate(b);
+                return Evaluation.Evaluate(b, hasturn);
             }
             b.SetupSquareAttacks();
+            bool didnothing = true;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
+                didnothing = false;
                 var data = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 var score = alphaBetaMin(alpha, beta, depthleft - 1, b, hasturn == Side.White ? Side.Black : Side.White);
                 b.UndoMove(data);
@@ -58,6 +64,10 @@ namespace ChessApp
                 if (score > alpha)
                     alpha = score; // alpha acts like max in MiniMax
             }
+            if (didnothing)
+            {
+                return Evaluation.Evaluate(b, hasturn, true);
+            }
             return alpha;
         }
         
@@ -65,11 +75,13 @@ namespace ChessApp
         {
             if (depthleft == 0)
             {
-                return -Evaluation.Evaluate(b);
+                return -Evaluation.Evaluate(b, hasturn);
             }
             b.SetupSquareAttacks();
+            bool didnothing = true;
             foreach (var move in MoveGenerator.CalculateAll(b, hasturn))
             {
+                didnothing = false;
                 var data = b.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, hasturn);
                 var score = alphaBetaMax(alpha, beta, depthleft - 1, b, hasturn == Side.White ? Side.Black : Side.White);
                 b.UndoMove(data);
@@ -77,6 +89,10 @@ namespace ChessApp
                     return alpha; // fail hard alpha-cutoff
                 if (score < beta)
                     beta = score; // beta acts like min in MiniMax
+            }
+            if (didnothing)
+            {
+                return -Evaluation.Evaluate(b, hasturn, true);
             }
             return beta;
         }

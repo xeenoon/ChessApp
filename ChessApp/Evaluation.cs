@@ -142,8 +142,74 @@ namespace ChessApp
             -30,-40,-40,-50,-50,-40,-40,-30,
         };
 
-        internal static int Evaluate(Bitboard bitboard)
+        internal static int Evaluate(Bitboard bitboard, Side hasmove, bool nomoves = false)
         {
+            //we are only checking to see if hasmove is checkmated
+            Side opposite = hasmove == Side.White ? Side.Black : Side.White;
+            bitboard.SetupSquareAttacks(opposite);
+        
+            if (nomoves)
+            {
+                if ((bitboard.doublecheck || bitboard.check)) //Checkmate?
+                {
+                    if (hasmove == Side.White)
+                    {
+                        return int.MinValue;
+                    }
+                    else
+                    {
+                        return int.MaxValue;
+                    }
+                }
+                else //Stalemate?
+                {
+                    return 0;
+                }
+            }
+
+            else if (bitboard.doublecheck)
+            {
+                bitboard.xrays.Clear();
+                bitboard.SetupPins();
+                byte position = (byte)(BitOperations.TrailingZeros(hasmove == Side.White ? bitboard.W_King : bitboard.B_King) - 1);
+
+                var kingmoves = MoveGenerator.Moves(PieceType.King, hasmove, position, bitboard);
+                if (BitOperations.NumberOfSetBits(kingmoves) == 0) //Can the king not move anywhere?
+                {
+                    //Checkmate
+                    if (hasmove == Side.White)
+                    {
+                        return int.MinValue;
+                    }
+                    else
+                    {
+                        return int.MaxValue;
+                    }
+                }
+            }
+            else if (bitboard.check) //Check for a checkmate
+            {
+                bitboard.xrays.Clear();
+                bitboard.SetupPins();
+
+                var moves = MoveGenerator.MoveCount(bitboard, hasmove);
+                if (moves == 0)
+                {
+                    //Checkmate
+                    if (hasmove == Side.White)
+                    {
+                        return int.MinValue;
+                    }
+                    else
+                    {
+                        return int.MaxValue;
+                    }
+                }
+            }
+
+            
+            
+
             int whitevalue = 0;
             whitevalue += (int)(BitOperations.NumberOfSetBits(bitboard.W_Pawn) * PAWN_VALUE);
             whitevalue += MultiplyValues(bitboard.W_Pawn, WhitePawnVal);

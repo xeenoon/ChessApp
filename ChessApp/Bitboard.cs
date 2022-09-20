@@ -79,6 +79,18 @@ namespace ChessApp
                 ++total_doublechecks;
             }
         }
+        public void SetupSquareAttacks(Side side)
+        {
+            squares_to_block_check = ulong.MaxValue;
+            if (side == Side.White)
+            {
+                WhiteAttackedSquares = WhiteAttacks();
+            }
+            else
+            {
+                BlackAttackedSquares = BlackAttacks();
+            }
+        }
         public void SetupPins()
         {
             SET_XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
@@ -91,7 +103,7 @@ namespace ChessApp
         }
 
         int checks;
-        ulong WhiteAttacks()
+        public ulong WhiteAttacks()
         {
             checks = 0;
 
@@ -112,7 +124,7 @@ namespace ChessApp
             }
             return attacks;
         }
-        ulong BlackAttacks()
+        public ulong BlackAttacks()
         {
             checks = 0;
 

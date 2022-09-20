@@ -1119,7 +1119,7 @@ namespace ChessApp
             }
             else
             {
-                blockers = b.BlackPieces | b.B_King;
+                blockers = b.BlackPieces | b.W_King;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
