@@ -328,7 +328,7 @@ namespace ChessApp
                 }
                 if (p.position % 8 != colsused)
                 {
-                    int used = ((p.position % 8) - (7 - colsused))-1;
+                    int used = ((p.position % 8) - (colsused));
                     if (used != 8)
                     {
                         result += used.ToString();
