@@ -344,6 +344,14 @@ namespace ChessApp
                     result += "/";
                 }
             }
+            if (colsused != 8)
+            {
+                int used = (8 - (colsused));
+                if (used != 8)
+                {
+                    result += used.ToString();
+                }
+            }
             result += String.Format(" {0} ", hasturn == Side.White ? "w" : "b");
             result += whiteCastles.ToString();
             result += blackCastles.ToString();

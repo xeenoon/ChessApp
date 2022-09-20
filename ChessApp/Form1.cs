@@ -111,6 +111,7 @@ namespace ChessApp
             comboBox1.Visible = checkBox1.Checked;
             comboBox1.SelectedIndex = chessboard.hasturn == Side.White ? 0 : 1;
             Invalidate();
+            button2.Enabled = !checkBox1.Checked;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
