@@ -919,10 +919,12 @@ namespace ChessApp
                 if (side == Side.White)
                 {
                     copy.W_KingsideCastle = false;
+                    copy.W_QueensideCastle = false;
                 }
                 else
                 {
                     copy.B_KingsideCastle = false;
+                    copy.B_QueensideCastle = false;
                 }
             }
 
