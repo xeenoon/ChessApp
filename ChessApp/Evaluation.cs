@@ -250,4 +250,15 @@ namespace ChessApp
             return result;
         }
     }
+    public struct EvaluationData
+    {
+        public int eval;
+        public int checkmate_depth_left;
+
+        public EvaluationData(int eval, int checkmate_depth_left)
+        {
+            this.eval = eval;
+            this.checkmate_depth_left = checkmate_depth_left;
+        }
+    }
 }
