@@ -141,5 +141,27 @@ namespace ChessApp
             reload = true;
             Invalidate();
         }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseDown(button);
+                Invalidate();
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseUp(button);
+                Invalidate();
+            }
+        }
     }
 }
