@@ -99,6 +99,11 @@ namespace ChessApp
 
             if (side == Side.White)
             {
+                if ((b.W_King & (1ul<<4)) == 0)
+                {
+                    return 0;
+                }
+
                 if (b.W_KingsideCastle && (b.WhitePieces & W_KINGSIDE_SQUARES) == 0  && (W_KINGSIDE_SQUARES & b.BlackAttackedSquares) == 0 && (b.W_Rook & 128)!=0) //Can we castle, and is the space clear?
                 {
                     result |= b.W_King << 2;
@@ -110,6 +115,10 @@ namespace ChessApp
             }
             else
             {
+                if ((b.B_King & (1ul << 60)) == 0)
+                {
+                    return 0;
+                }
                 if (b.B_KingsideCastle && (b.BlackPieces & B_KINGSIDE_SQUARES) == 0 && (B_KINGSIDE_SQUARES & b.WhiteAttackedSquares) == 0 && (b.B_Rook & (9223372036854775808UL)) != 0) //Can we castle, and is the space clear?
                 {
                     result |= b.B_King << 2;

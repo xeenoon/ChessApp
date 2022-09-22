@@ -648,51 +648,42 @@ namespace ChessApp
                 }
             }
 
+            BoardData boardData = new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
+
             if (pieceType == PieceType.King)
             {
                 if (side == Side.White)
                 {
-                    W_KingsideCastle = false;
-                    W_QueensideCastle = false;
+                    this.W_KingsideCastle = false;
+                    this.W_QueensideCastle = false;
                 }
                 else
                 {
-                    B_KingsideCastle = false;
-                    B_QueensideCastle = false;
+                    this.B_KingsideCastle = false;
+                    this.B_QueensideCastle = false;
                 }
             }
             if (pieceType == PieceType.Rook && startlocation == 0) //Queenside rook
             {
-                W_QueensideCastle = false;
+                this.W_QueensideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 7) //Kingside rook
             {
-                W_KingsideCastle = false;
+                this.W_KingsideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 56) //Queenside rook
             {
-                B_QueensideCastle = false;
+                this.B_QueensideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 63) //Queenside rook
             {
-                B_KingsideCastle = false;
-            }
-            if (pieceType == PieceType.King)
-            {
-                if (side == Side.White)
-                {
-                    W_KingsideCastle = false;
-                }
-                else
-                {
-                    B_KingsideCastle = false;
-                }
+                this.B_KingsideCastle = false;
             }
 
 
             stopwatch.Stop();
             MoveTime += stopwatch.ElapsedTicks;
-            return new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
+            return boardData;
         }
         public Bitboard CopyMove(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
