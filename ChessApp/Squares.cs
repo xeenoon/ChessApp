@@ -181,6 +181,17 @@ namespace ChessApp
                 offset = new Point(offset.X - (Horizontal_Indent + size), offset.Y);
             }
         }
+
+        public List<Square> movehighlights = new List<Square>();
+        internal void ClearMoveHighlights()
+        {
+            foreach (var square in movehighlights)
+            {
+                square.lastmove = false;
+            }
+            movehighlights.Clear();
+        }
+
         EditSquare[] editSquares;
         public void DrawEdit(Graphics g)
         {
@@ -253,6 +264,30 @@ namespace ChessApp
 
         public void AddArrow(Square end, Color arrowcolor)
         {
+            //Check pseudo moves
+            bool cancontinue = false;
+            if (end.location / 8 == arrowStart.location / 8) //Horizontal line
+            {
+                cancontinue = true;
+            }
+            if (end.location % 8 == arrowStart.location % 8) //Vertical line
+            {
+                cancontinue = true;
+            }
+            ulong pseudobishop = MoveGenerator.upRight[arrowStart.location] | MoveGenerator.upLeft[arrowStart.location] | MoveGenerator.downRight[arrowStart.location] | MoveGenerator.downLeft[arrowStart.location];
+            if ((pseudobishop & (1ul<<end.location)) != 0) //Is it a valid diagonal?
+            {
+                cancontinue = true;
+            }
+            if ((MoveGenerator.knight[arrowStart.location] & (1ul<<end.location)) != 0) //Valid horsey move
+            {
+                cancontinue = true;
+            }
+            if (!cancontinue)
+            {
+                return;
+            }
+
             Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush);
             var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
             if (duplicate != null)

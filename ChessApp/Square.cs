@@ -20,7 +20,9 @@ namespace ChessApp
 
         public Color selectcolor;
         public Color movecolor;
-        public static Filter filter = new Filter(100,-100,-100);
+        public static Filter danger_filter = new Filter(100, -100, -100);
+        public static Filter move_filter = new Filter(0, 50, 0);
+        public bool lastmove;
 
         public Square(Rectangle bounds, Piece piece, Color color, int location, ulong bitboard_location, Graphics g, Squares squares, Color selectcolor, Color movecolor)
         {
@@ -42,13 +44,17 @@ namespace ChessApp
             {
                 dangerhighlight = false;
             }
-            if (!dangerhighlight)
+            if (dangerhighlight)
             {
-                g.FillRectangle(new Pen(color).Brush, realworld);
+                g.FillRectangle(new Pen(color.AddFilter(danger_filter)).Brush, realworld);
+            }
+            else if (lastmove)
+            {
+                g.FillRectangle(new Pen(color.AddFilter(move_filter)).Brush, realworld);
             }
             else
             {
-                g.FillRectangle(new Pen(color.AddFilter(filter)).Brush, realworld);
+                g.FillRectangle(new Pen(color).Brush, realworld);
             }
             if (piece != null) 
             {
@@ -107,6 +113,10 @@ namespace ChessApp
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
                 squares.highlight.Move(location);
+                lastmove = true;
+                squares.highlight.lastmove = true;
+                squares.movehighlights.Add(this);
+                squares.movehighlights.Add(squares.highlight);
                 if (squares.selected_edit == null && squares.edit)
                 {
                     squares.board.bitboard = Bitboard.FromBoard(squares.board);
@@ -143,6 +153,8 @@ namespace ChessApp
 
         private void Move(int location)
         {
+            squares.ClearMoveHighlights();
+
             squares.board.Pieces.Remove(squares.board.PieceAt(location));
 
             if (piece.pieceType == PieceType.Pawn && Math.Abs(location - this.location) % 8 != 0 && squares.board.PieceAt(location) == null) //En passante?
