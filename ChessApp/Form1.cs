@@ -172,6 +172,22 @@ namespace ChessApp
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             var button = e.Button;
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                arrowColour = Color.Red;
+            }
+            else if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+            {
+                arrowColour = Color.Orange;
+            }
+            else if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                arrowColour = Color.Yellow;
+            }
+            else
+            {
+                arrowColour = Color.Blue;
+            }
             Square clicked = squares.SquareAt(e.Location);
             if (clicked != null)
             {
@@ -180,29 +196,6 @@ namespace ChessApp
             }
         }
         public Color arrowColour = Color.Blue;
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.ControlKey:
-                    arrowColour = Color.Orange;
-                    return;
-                case Keys.ShiftKey:
-                    arrowColour = Color.Red;
-                    return;
-                case Keys.Menu:
-                    arrowColour = Color.Yellow;
-                    return;
-            }
-        }
-
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.Menu)
-            {
-                arrowColour = Color.Blue;
-            }
-        }
 
         private void CastleOptionChanged(object sender, EventArgs e)
         {
