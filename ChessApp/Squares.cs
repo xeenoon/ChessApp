@@ -99,17 +99,17 @@ namespace ChessApp
 
             location.Y /= (size+Vertical_Indent);
 
-            if (location.Y >= 7)
+            if (location.Y >= 8)
             {
                 return null; //clicked too low
             }
 
             int left = editSquares[0].realworld.X;
             int right = size + Horizontal_Indent + left;
-            int startidx = location.X > left && location.X < right ? 0 : 6;
-            if (startidx == 6) //Check if mouse is actually on the right
+            int startidx = location.X > left && location.X < right ? 0 : 7;
+            if (startidx == 7) //Check if mouse is actually on the right
             {
-                int farleft = editSquares[6].realworld.X;
+                int farleft = editSquares[7].realworld.X;
                 int farright = farleft + size + Horizontal_Indent;
                 if (!(location.X > farleft && location.X < farright))
                 {
@@ -137,7 +137,7 @@ namespace ChessApp
             if (indented) 
             {
                 edit_offset = offset;
-                editSquares = new EditSquare[12];
+                editSquares = new EditSquare[14];
                 Rectangle bounds = new Rectangle(this.offset.X, this.offset.Y, size, size);
                 editSquares[0] = new EditSquare(PieceType.King, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
@@ -151,21 +151,25 @@ namespace ChessApp
                 bounds.Y = bounds.Y + size + Vertical_Indent;
                 editSquares[5] = new EditSquare(PieceType.Pawn, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[6] = new EditSquare(PieceType.None, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
 
                 bounds.X = bounds.X + 9 * size + Horizontal_Indent * 2;
                 bounds.Y = offset.Y;
 
-                editSquares[6] = new EditSquare(PieceType.King, Side.White, bounds, this);
+                editSquares[7] = new EditSquare(PieceType.King, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[7] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
+                editSquares[8] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[8] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
+                editSquares[9] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[9] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
+                editSquares[10] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[10] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
+                editSquares[11] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[11] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+                editSquares[12] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[13] = new EditSquare(PieceType.None, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
 
                 offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);

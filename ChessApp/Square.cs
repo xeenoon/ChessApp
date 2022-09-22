@@ -79,7 +79,7 @@ namespace ChessApp
                 if (piece != null)
                 {
 
-                    if (squares.selected_edit.pieceType == piece.pieceType && squares.selected_edit.side == piece.side)
+                    if ((squares.selected_edit.pieceType == piece.pieceType && squares.selected_edit.side == piece.side) || squares.selected_edit.pieceType == PieceType.None)
                     {
                         squares.board.Pieces.Remove(this.piece);
                         piece = null;
@@ -93,7 +93,10 @@ namespace ChessApp
                         piece = null;
                     }
                 }
-
+                if (squares.selected_edit.pieceType == PieceType.None)
+                {
+                    return;
+                }
                 piece = new Piece(squares.selected_edit.pieceType, squares.selected_edit.side, location);
                 squares.board.Pieces.Add(piece);
                 squares.board.bitboard = Bitboard.FromBoard(squares.board);

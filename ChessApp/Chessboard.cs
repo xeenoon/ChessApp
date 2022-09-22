@@ -41,10 +41,17 @@ namespace ChessApp
         public static readonly Bitmap img_WHITE_BISHOP = Properties.Resources.WhiteBishop;
         public static readonly Bitmap img_WHITE_KING   = Properties.Resources.WhiteKing;
         public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.WhiteQueen;
+
+        public static readonly Bitmap img_NONE = Properties.Resources.Delete;
+
         public Bitmap IMG
         {
             get
             {
+                if (pieceType == PieceType.None)
+                {
+                    return img_NONE;
+                }
                 if (side == Side.Black) 
                 {
                     switch (pieceType)
