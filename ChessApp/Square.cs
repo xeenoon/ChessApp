@@ -20,6 +20,7 @@ namespace ChessApp
 
         public Color selectcolor;
         public Color movecolor;
+        public static Filter check_filter = new Filter(250, -150, -150);
         public static Filter danger_filter = new Filter(100, -100, -100);
         public static Filter move_filter = new Filter(0, 50, 0);
         public bool lastmove;
@@ -37,7 +38,31 @@ namespace ChessApp
             this.movecolor = movecolor;
             this.selectcolor = selectcolor;
         }
-
+        public bool IsCheck()
+        {
+            if (piece != null && piece.pieceType == PieceType.King)
+            {
+                if (piece.side == Side.White)
+                {
+                    var bb = squares.board.bitboard.Copy();
+                    bb.SetupSquareAttacks();
+                    if ((bb.BlackAttackedSquares & (1ul<<location)) != 0) //Are we in check?
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    var bb = squares.board.bitboard.Copy();
+                    bb.SetupSquareAttacks();
+                    if ((bb.WhiteAttackedSquares & (1ul << location)) != 0) //Are we in check?
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public void Paint()
         {
             if (squares.cancelHighlights)
@@ -51,6 +76,10 @@ namespace ChessApp
             else if (lastmove)
             {
                 g.FillRectangle(new Pen(color.AddFilter(move_filter)).Brush, realworld);
+            }
+            else if (IsCheck())
+            {
+                g.FillRectangle(new Pen(color.AddFilter(check_filter)).Brush, realworld);
             }
             else
             {
