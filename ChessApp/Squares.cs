@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ChessApp
 {
@@ -61,6 +60,7 @@ namespace ChessApp
                 square.g = graphics;
                 square.Paint();
             }
+            DrawArrows(graphics);
         }
 
         internal Square SquareAt(Point location)
@@ -99,17 +99,17 @@ namespace ChessApp
 
             location.Y /= (size+Vertical_Indent);
 
-            if (location.Y >= 7)
+            if (location.Y >= 8)
             {
                 return null; //clicked too low
             }
 
             int left = editSquares[0].realworld.X;
             int right = size + Horizontal_Indent + left;
-            int startidx = location.X > left && location.X < right ? 0 : 6;
-            if (startidx == 6) //Check if mouse is actually on the right
+            int startidx = location.X > left && location.X < right ? 0 : 7;
+            if (startidx == 7) //Check if mouse is actually on the right
             {
-                int farleft = editSquares[6].realworld.X;
+                int farleft = editSquares[7].realworld.X;
                 int farright = farleft + size + Horizontal_Indent;
                 if (!(location.X > farleft && location.X < farright))
                 {
@@ -137,7 +137,7 @@ namespace ChessApp
             if (indented) 
             {
                 edit_offset = offset;
-                editSquares = new EditSquare[12];
+                editSquares = new EditSquare[14];
                 Rectangle bounds = new Rectangle(this.offset.X, this.offset.Y, size, size);
                 editSquares[0] = new EditSquare(PieceType.King, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
@@ -151,21 +151,25 @@ namespace ChessApp
                 bounds.Y = bounds.Y + size + Vertical_Indent;
                 editSquares[5] = new EditSquare(PieceType.Pawn, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[6] = new EditSquare(PieceType.None, Side.Black, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
 
                 bounds.X = bounds.X + 9 * size + Horizontal_Indent * 2;
                 bounds.Y = offset.Y;
 
-                editSquares[6] = new EditSquare(PieceType.King, Side.White, bounds, this);
+                editSquares[7] = new EditSquare(PieceType.King, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[7] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
+                editSquares[8] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[8] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
+                editSquares[9] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[9] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
+                editSquares[10] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[10] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
+                editSquares[11] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[11] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+                editSquares[12] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+                bounds.Y = bounds.Y + size + Vertical_Indent;
+                editSquares[13] = new EditSquare(PieceType.None, Side.Black, bounds, this);
                 bounds.Y = bounds.Y + size + Vertical_Indent;
 
                 offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);
@@ -177,6 +181,17 @@ namespace ChessApp
                 offset = new Point(offset.X - (Horizontal_Indent + size), offset.Y);
             }
         }
+
+        public List<Square> movehighlights = new List<Square>();
+        internal void ClearMoveHighlights()
+        {
+            foreach (var square in movehighlights)
+            {
+                square.lastmove = false;
+            }
+            movehighlights.Clear();
+        }
+
         EditSquare[] editSquares;
         public void DrawEdit(Graphics g)
         {
@@ -207,6 +222,7 @@ namespace ChessApp
                 return squares[index];
             }
         }
+
         public bool AI_can_move;
         public bool canshowmove = true;
         internal async void AiMove()
@@ -224,221 +240,76 @@ namespace ChessApp
                 {
                     var move = AI.GetMove(copy, board.hasturn);
                     undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, board.hasturn));
-                    board.Reload();
-                    parent.Reload();
                     board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+                    board.Reload();
+
+                    ClearMoveHighlights();
+
+                    squares[move.last].lastmove = true;
+                    squares[move.current].lastmove = true;
+                    foreach (var square in squares)
+                    {
+                        square.piece = board.PieceAt(square.location);
+                    }
+                    movehighlights.Add(squares[move.last]);
+                    movehighlights.Add(squares[move.current]); //Highlight the move
+                    parent.Invalidate();
                 }
             }
             canshowmove = true;
         }
-    }
-    internal class Square
-    {
-        Squares squares;
 
-        public Rectangle realworld;
-        public int location;
-        public ulong bitboard_location;
+        public bool cancelHighlights = false;
 
-        public Piece piece;
-        public Color color;
-
-        public Graphics g;
-
-        public Color selectcolor;
-        public Color movecolor;
-
-        public Square(Rectangle bounds, Piece piece, Color color, int location, ulong bitboard_location, Graphics g, Squares squares, Color selectcolor, Color movecolor)
+        public Square arrowStart;
+        public List<Arrow> arrows = new List<Arrow>();
+        private void DrawArrows(Graphics g)
         {
-            this.realworld = bounds;
-            this.piece = piece;
-            this.color = color;
-            this.location = location;
-            this.g = g;
-            this.squares = squares;
-            this.bitboard_location = bitboard_location;
-
-            this.movecolor = movecolor;
-            this.selectcolor = selectcolor;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            foreach (var arrow in arrows)
+            {
+                arrow.Draw(g);
+            }
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
         }
 
-        public void Paint()
+        public void AddArrow(Square end, Color arrowcolor)
         {
-            g.FillRectangle(new Pen(color).Brush,realworld);
-            if (piece != null) 
+            //Check pseudo moves
+            bool cancontinue = false;
+            if (end.location / 8 == arrowStart.location / 8) //Horizontal line
             {
-                g.DrawImage(piece.IMG, realworld);
+                cancontinue = true;
             }
-            if (squares.highlight == this && squares.canshowmove)
+            if (end.location % 8 == arrowStart.location % 8) //Vertical line
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.DrawEllipse(new Pen(movecolor,2), realworld.X + 1, realworld.Y + 1, realworld.Width-3, realworld.Height-2);
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
+                cancontinue = true;
             }
-            if (squares.moveSquares.Contains(this) && squares.canshowmove)
+            ulong pseudobishop = MoveGenerator.upRight[arrowStart.location] | MoveGenerator.upLeft[arrowStart.location] | MoveGenerator.downRight[arrowStart.location] | MoveGenerator.downLeft[arrowStart.location];
+            if ((pseudobishop & (1ul<<end.location)) != 0) //Is it a valid diagonal?
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.FillEllipse(new Pen(movecolor).Brush, realworld.X + 5, realworld.Y + 5, realworld.Width - 10, realworld.Height - 10);
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
+                cancontinue = true;
             }
-        }
-
-        internal void Click()
-        {
-            if (squares.selected_edit != null)
+            if ((MoveGenerator.knight[arrowStart.location] & (1ul<<end.location)) != 0) //Valid horsey move
             {
-                if (piece != null && squares.selected_edit.pieceType == piece.pieceType)
-                {
-                    squares.board.Pieces.Remove(this.piece);
-                    piece = null;
-                    squares.board.bitboard = Bitboard.FromBoard(squares.board);
-                    ((Form1)(Form1.ActiveForm)).WriteFEN();
-                    return;
-                }
-
-                piece = new Piece(squares.selected_edit.pieceType, squares.selected_edit.side, location);
-                squares.board.Pieces.Add(piece);
-                squares.board.bitboard = Bitboard.FromBoard(squares.board);
-                ((Form1)(Form1.ActiveForm)).WriteFEN();
+                cancontinue = true;
+            }
+            if (!cancontinue)
+            {
                 return;
             }
 
-            if (squares.moveSquares.Contains(this)) //Are we moving here?
+            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush);
+            var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
+            if (duplicate != null)
             {
-                squares.highlight.Move(location);
-                if (squares.selected_edit == null && squares.edit)
-                {
-                    squares.board.bitboard = Bitboard.FromBoard(squares.board);
-                    ((Form1)(Form1.ActiveForm)).WriteFEN();
-                }
-            }
-            squares.moveSquares.Clear();
-
-            if (squares.highlight == this)
-            {
-                squares.highlight = null;
-                return;
+                arrows.Remove(duplicate);
             }
             else
             {
-                squares.highlight = this;
+                arrows.Add(item);
             }
-
-           if (piece != null && (squares.board.hasturn == piece.side || squares.edit) && squares.board.hasturn == piece.side && squares.canshowmove) //Displaying moves?
-           {
-
-               var board = squares.board.bitboard.Copy();
-               board.SetupSquareAttacks();
-        
-               var moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
-               while (moves != 0ul)
-               {
-                   byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
-                   moves ^= 1ul<<lsb;
-                   squares[lsb].MoveHighlight();
-               }
-           }
-        }
-
-        private void Move(int location)
-        {
-            squares.board.Pieces.Remove(squares.board.PieceAt(location));
-
-            if (piece.pieceType == PieceType.Pawn && Math.Abs(location - this.location) % 8 != 0 && squares.board.PieceAt(location) == null) //En passante?
-            {
-                if (piece.side == Side.White && this.location /8 == 4 && squares.board.bitboard.enpassent == location % 8)
-                {
-                    squares.board.Pieces.Remove(squares.board.PieceAt(location - 8));
-                    squares[location - 8].piece = null;
-                }
-                else if(this.location / 8 == 3 && squares.board.bitboard.enpassent == location % 8)
-                {
-                    squares.board.Pieces.Remove(squares.board.PieceAt(location + 8));
-                    squares[location + 8].piece = null;
-                }
-            }
-            if (piece.pieceType == PieceType.King && (location - this.location) == 2) //Kingside castle?
-            {
-                var kingsiderook = squares.board.PieceAt(location + 1);
-                squares[location + 1].piece = null;
-                squares[location - 1].piece = kingsiderook;
-                kingsiderook.position = location - 1;
-            }
-            if (piece.pieceType == PieceType.King && (location - this.location) == -2) //Queenside castle?
-            {
-                var kingsiderook = squares.board.PieceAt(location - 2);
-                squares[location - 2].piece = null;
-                squares[location + 1].piece = kingsiderook;
-                kingsiderook.position = location + 1;
-            }
-
-            squares.undomoves.Add(squares.board.bitboard.Move((byte)this.location, (byte)location, 1ul << this.location, 1ul << location, piece.pieceType, piece.side));
-
-            if (piece.pieceType == PieceType.Pawn && (location / 8 == 7 || location / 8 == 0))
-            {
-                piece.pieceType = PieceType.Queen;
-            }
-
-            piece.position = location;
-            squares[location].piece = piece;
-            if (!squares.edit)
-            {
-                squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
-            }
-            piece = null;
-
-            squares.AiMove();
-        }
-
-        internal void MoveHighlight()
-        {
-            squares.moveSquares.Add(this);
-        }
-    }
-    internal class EditSquare
-    {
-        public PieceType pieceType;
-        public Side side;
-        public Rectangle realworld;
-        public bool selected;
-        public Squares squares;
-
-        public EditSquare(PieceType pieceType, Side side, Rectangle rectangle, Squares squares)
-        {
-            this.pieceType = pieceType;
-            this.side = side;
-            this.realworld = rectangle;
-            this.squares = squares;
-        }
-
-        public void Paint(Graphics g)
-        {
-            if (selected)
-            {
-                g.FillRectangle(new Pen(Color.Gray).Brush, realworld);
-            }
-            else
-            {
-                g.DrawRectangle(new Pen(Color.Gray), realworld);
-            }
-            g.DrawImage(new Piece(pieceType, side, -1).IMG, realworld);
-        }
-        public void Click()
-        {
-            if (squares.selected_edit != this)
-            {
-                if (squares.selected_edit != null)
-                {
-                    squares.selected_edit.Click();
-                }
-                selected = true;
-                squares.selected_edit = this;
-            }
-            else
-            {
-                selected = false;
-                squares.selected_edit = null;
-            }
+            arrowStart = null;
         }
     }
 }

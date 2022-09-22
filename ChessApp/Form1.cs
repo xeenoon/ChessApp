@@ -21,16 +21,16 @@ namespace ChessApp
             InitializeComponent();
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
-            textBox1.Text = FEN;
+            FEN_TEXT.Text = FEN;
         }
         public void WriteFEN()
         {
-            textBox1.Text = chessboard.GetFEN();
+            FEN_TEXT.Text = chessboard.GetFEN();
         }
         private void button1_Click(object sender, EventArgs e)
         {
             checkBox1.Checked = false;
-            chessboard = new Chessboard(textBox1.Text);
+            chessboard = new Chessboard(FEN_TEXT.Text);
             squares = null;
 
             Invalidate();
@@ -47,6 +47,7 @@ namespace ChessApp
             if (squares == null)
             {
                 squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+                squares.AI_can_move = PlayComputer.Checked;
             }
             else if (reload)
             {
@@ -107,11 +108,26 @@ namespace ChessApp
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            squares.arrows.Clear();
             squares.SetupEdit(checkBox1.Checked);
-            comboBox1.Visible = checkBox1.Checked;
+
+            bool enabled = checkBox1.Checked;
+
+
             comboBox1.SelectedIndex = chessboard.hasturn == Side.White ? 0 : 1;
+            W_KingsideCastle.Checked = chessboard.whiteCastles.Kingside;
+            W_QueensideCastle.Checked = chessboard.whiteCastles.Queenside;
+
+            B_KingsideCastle.Checked = chessboard.blackCastles.Kingside;
+            B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
+
             Invalidate();
+
+            panel1.Visible = enabled;
+            
             button2.Enabled = !checkBox1.Checked;
+            FEN_TEXT.ReadOnly = checkBox1.Checked;
+            PlayComputer.Enabled = !checkBox1.Checked;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -119,7 +135,7 @@ namespace ChessApp
             if (checkBox1.Checked)
             {
                 chessboard.hasturn = comboBox1.SelectedIndex == 0 ? Side.White : Side.Black;
-                textBox1.Text = chessboard.GetFEN();
+                FEN_TEXT.Text = chessboard.GetFEN();
             }
         }
 
@@ -140,6 +156,57 @@ namespace ChessApp
         {
             reload = true;
             Invalidate();
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseDown(button);
+                Invalidate();
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                arrowColour = Color.Red;
+            }
+            else if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+            {
+                arrowColour = Color.Orange;
+            }
+            else if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                arrowColour = Color.Yellow;
+            }
+            else
+            {
+                arrowColour = Color.Blue;
+            }
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseUp(button);
+                Invalidate();
+            }
+        }
+        public Color arrowColour = Color.Blue;
+
+        private void CastleOptionChanged(object sender, EventArgs e)
+        {
+            if (!panel1.Visible) //Are we inactive?
+            {
+                return;
+            }
+            chessboard.whiteCastles = new CastleOptions(Side.White, W_QueensideCastle.Checked, W_KingsideCastle.Checked);
+            chessboard.blackCastles = new CastleOptions(Side.Black, B_QueensideCastle.Checked, B_KingsideCastle.Checked);
+            FEN_TEXT.Text = chessboard.GetFEN();
+            chessboard.bitboard = Bitboard.FromBoard(chessboard);
         }
     }
 }

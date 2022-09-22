@@ -41,10 +41,17 @@ namespace ChessApp
         public static readonly Bitmap img_WHITE_BISHOP = Properties.Resources.WhiteBishop;
         public static readonly Bitmap img_WHITE_KING   = Properties.Resources.WhiteKing;
         public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.WhiteQueen;
+
+        public static readonly Bitmap img_NONE = Properties.Resources.Delete;
+
         public Bitmap IMG
         {
             get
             {
+                if (pieceType == PieceType.None)
+                {
+                    return img_NONE;
+                }
                 if (side == Side.Black) 
                 {
                     switch (pieceType)
@@ -150,7 +157,7 @@ namespace ChessApp
             Kingside = kingside;
         }
 
-        public override string ToString()
+        public string ToString(CastleOptions prev = null)
         {
             string result = "";
             if (side == Side.Black)
@@ -163,7 +170,7 @@ namespace ChessApp
                 {
                     result += "q";
                 }
-                if (!Queenside && !Kingside)
+                if (!Queenside && !Kingside && !prev.Queenside && !prev.Kingside)
                 {
                     result = "-";
                 }
@@ -354,7 +361,7 @@ namespace ChessApp
             }
             result += String.Format(" {0} ", hasturn == Side.White ? "w" : "b");
             result += whiteCastles.ToString();
-            result += blackCastles.ToString();
+            result += blackCastles.ToString(whiteCastles);
             result += " - 0 1";
             return result;
         }
