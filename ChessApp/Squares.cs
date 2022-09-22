@@ -246,9 +246,11 @@ namespace ChessApp
                     ClearMoveHighlights();
 
                     squares[move.last].lastmove = true;
-                    squares[move.last].piece = board.PieceAt(move.last);
                     squares[move.current].lastmove = true;
-                    squares[move.current].piece = board.PieceAt(move.current);
+                    foreach (var square in squares)
+                    {
+                        square.piece = board.PieceAt(square.location);
+                    }
                     movehighlights.Add(squares[move.last]);
                     movehighlights.Add(squares[move.current]); //Highlight the move
                     parent.Invalidate();

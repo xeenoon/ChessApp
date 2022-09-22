@@ -87,7 +87,9 @@ namespace ChessApp
             }
             if (piece != null) 
             {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.DrawImage(piece.IMG, realworld);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
             if (squares.highlight == this && squares.canshowmove)
             {
@@ -108,7 +110,6 @@ namespace ChessApp
             squares.cancelHighlights = true;
             squares.arrows.Clear();
             squares.arrowStart = null;
-
             if (squares.selected_edit != null)
             {
                 if (piece != null)
@@ -136,6 +137,19 @@ namespace ChessApp
                 squares.board.Pieces.Add(piece);
                 squares.board.bitboard = Bitboard.FromBoard(squares.board);
                 ((Form1)(Form1.ActiveForm)).WriteFEN();
+                return;
+            }
+            else if (squares.edit)
+            {
+                if (squares.highlight == this)
+                {
+                    squares.highlight = null;
+                    return;
+                }
+                else
+                {
+                    squares.highlight = this;
+                }
                 return;
             }
 

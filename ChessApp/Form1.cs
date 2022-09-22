@@ -127,6 +127,7 @@ namespace ChessApp
             
             button2.Enabled = !checkBox1.Checked;
             FEN_TEXT.ReadOnly = checkBox1.Checked;
+            PlayComputer.Enabled = !checkBox1.Checked;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
