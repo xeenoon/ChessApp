@@ -221,7 +221,7 @@ namespace ChessApp
                 }
                 else
                 {
-                    squares.AddArrow(this);
+                    squares.AddArrow(this, ((Form1)(Form1.ActiveForm)).arrowColour);
                 }
             }
         }

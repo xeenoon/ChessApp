@@ -251,9 +251,9 @@ namespace ChessApp
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
         }
 
-        public void AddArrow(Square end)
+        public void AddArrow(Square end, Color arrowcolor)
         {
-            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,Color.Blue)).Brush);
+            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush);
             var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
             if (duplicate != null)
             {

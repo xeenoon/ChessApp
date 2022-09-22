@@ -157,7 +157,7 @@ namespace ChessApp
             Kingside = kingside;
         }
 
-        public override string ToString()
+        public string ToString(CastleOptions prev = null)
         {
             string result = "";
             if (side == Side.Black)
@@ -170,7 +170,7 @@ namespace ChessApp
                 {
                     result += "q";
                 }
-                if (!Queenside && !Kingside)
+                if (!Queenside && !Kingside && !prev.Queenside && !prev.Kingside)
                 {
                     result = "-";
                 }
@@ -361,7 +361,7 @@ namespace ChessApp
             }
             result += String.Format(" {0} ", hasturn == Side.White ? "w" : "b");
             result += whiteCastles.ToString();
-            result += blackCastles.ToString();
+            result += blackCastles.ToString(whiteCastles);
             result += " - 0 1";
             return result;
         }

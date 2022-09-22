@@ -21,16 +21,16 @@ namespace ChessApp
             InitializeComponent();
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
-            textBox1.Text = FEN;
+            FEN_TEXT.Text = FEN;
         }
         public void WriteFEN()
         {
-            textBox1.Text = chessboard.GetFEN();
+            FEN_TEXT.Text = chessboard.GetFEN();
         }
         private void button1_Click(object sender, EventArgs e)
         {
             checkBox1.Checked = false;
-            chessboard = new Chessboard(textBox1.Text);
+            chessboard = new Chessboard(FEN_TEXT.Text);
             squares = null;
 
             Invalidate();
@@ -109,10 +109,23 @@ namespace ChessApp
         {
             squares.arrows.Clear();
             squares.SetupEdit(checkBox1.Checked);
-            comboBox1.Visible = checkBox1.Checked;
+
+            bool enabled = checkBox1.Checked;
+
+
             comboBox1.SelectedIndex = chessboard.hasturn == Side.White ? 0 : 1;
+            W_KingsideCastle.Checked = chessboard.whiteCastles.Kingside;
+            W_QueensideCastle.Checked = chessboard.whiteCastles.Queenside;
+
+            B_KingsideCastle.Checked = chessboard.blackCastles.Kingside;
+            B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
+
             Invalidate();
+
+            panel1.Visible = enabled;
+            
             button2.Enabled = !checkBox1.Checked;
+            FEN_TEXT.ReadOnly = checkBox1.Checked;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -120,7 +133,7 @@ namespace ChessApp
             if (checkBox1.Checked)
             {
                 chessboard.hasturn = comboBox1.SelectedIndex == 0 ? Side.White : Side.Black;
-                textBox1.Text = chessboard.GetFEN();
+                FEN_TEXT.Text = chessboard.GetFEN();
             }
         }
 
@@ -163,6 +176,42 @@ namespace ChessApp
                 clicked.MouseUp(button);
                 Invalidate();
             }
+        }
+        public Color arrowColour = Color.Blue;
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.ControlKey:
+                    arrowColour = Color.Orange;
+                    return;
+                case Keys.ShiftKey:
+                    arrowColour = Color.Red;
+                    return;
+                case Keys.Menu:
+                    arrowColour = Color.Yellow;
+                    return;
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.Menu)
+            {
+                arrowColour = Color.Blue;
+            }
+        }
+
+        private void CastleOptionChanged(object sender, EventArgs e)
+        {
+            if (!panel1.Visible) //Are we inactive?
+            {
+                return;
+            }
+            chessboard.whiteCastles = new CastleOptions(Side.White, W_QueensideCastle.Checked, W_KingsideCastle.Checked);
+            chessboard.blackCastles = new CastleOptions(Side.Black, B_QueensideCastle.Checked, B_KingsideCastle.Checked);
+            FEN_TEXT.Text = chessboard.GetFEN();
+            chessboard.bitboard = Bitboard.FromBoard(chessboard);
         }
     }
 }
