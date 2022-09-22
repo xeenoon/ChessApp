@@ -180,7 +180,7 @@ namespace ChessApp
            }
         }
 
-        private void Move(int location)
+        public void Move(int location)
         {
             squares.ClearMoveHighlights();
 

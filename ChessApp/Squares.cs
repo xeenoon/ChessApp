@@ -240,9 +240,18 @@ namespace ChessApp
                 {
                     var move = AI.GetMove(copy, board.hasturn);
                     undomoves.Add(board.bitboard.Move(move.last, move.current, 1ul << move.last, 1ul << move.current, move.pieceType, board.hasturn));
-                    board.Reload();
-                    parent.Reload();
                     board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+                    board.Reload();
+
+                    ClearMoveHighlights();
+
+                    squares[move.last].lastmove = true;
+                    squares[move.last].piece = board.PieceAt(move.last);
+                    squares[move.current].lastmove = true;
+                    squares[move.current].piece = board.PieceAt(move.current);
+                    movehighlights.Add(squares[move.last]);
+                    movehighlights.Add(squares[move.current]); //Highlight the move
+                    parent.Invalidate();
                 }
             }
             canshowmove = true;
