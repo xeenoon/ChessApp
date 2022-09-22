@@ -249,7 +249,7 @@ namespace ChessApp
 
         public void AddArrow(Square end)
         {
-            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 10, 25, new Pen(Color.Orange).Brush);
+            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,Color.Blue)).Brush);
             var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
             if (duplicate != null)
             {

@@ -107,6 +107,7 @@ namespace ChessApp
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            squares.arrows.Clear();
             squares.SetupEdit(checkBox1.Checked);
             comboBox1.Visible = checkBox1.Checked;
             comboBox1.SelectedIndex = chessboard.hasturn == Side.White ? 0 : 1;

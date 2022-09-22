@@ -76,13 +76,22 @@ namespace ChessApp
 
             if (squares.selected_edit != null)
             {
-                if (piece != null && squares.selected_edit.pieceType == piece.pieceType)
+                if (piece != null)
                 {
-                    squares.board.Pieces.Remove(this.piece);
-                    piece = null;
-                    squares.board.bitboard = Bitboard.FromBoard(squares.board);
-                    ((Form1)(Form1.ActiveForm)).WriteFEN();
-                    return;
+
+                    if (squares.selected_edit.pieceType == piece.pieceType && squares.selected_edit.side == piece.side)
+                    {
+                        squares.board.Pieces.Remove(this.piece);
+                        piece = null;
+                        squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                        ((Form1)(Form1.ActiveForm)).WriteFEN();
+                        return;
+                    }
+                    else
+                    {
+                        squares.board.Pieces.Remove(this.piece);
+                        piece = null;
+                    }
                 }
 
                 piece = new Piece(squares.selected_edit.pieceType, squares.selected_edit.side, location);
