@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
+    enum GameType
+    {
+        Standard,
+        StandardDuck
+    }
     internal class Squares
     {
+        public GameType gameType = GameType.Standard;
+        public bool mustMoveDuck;
+
         private Square[] squares = new Square[64];
         Point offset;
         Point edit_offset;

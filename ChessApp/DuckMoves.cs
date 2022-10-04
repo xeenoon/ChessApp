@@ -10,7 +10,7 @@ namespace ChessApp
     {
         private static ulong GetMoves(Bitboard b)
         {
-            return ~(b.WhitePieces | b.BlackPieces);
+            return ~(b.WhitePieces | b.BlackPieces | b.Duck);
         }
         public static List<byte> DuckPositions(Bitboard b)
         {
@@ -20,7 +20,7 @@ namespace ChessApp
             {
                 byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
                 ulong bitpos = 1ul << lsb;
-                moves ^= bitpos; //remove this piece from the ulong of pieces
+                moves ^= bitpos;
                 result.Add(lsb);
             }
             return result;

@@ -155,6 +155,10 @@ namespace ChessApp
 
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
+                if (squares.gameType == GameType.StandardDuck)
+                {
+                    squares.mustMoveDuck = true;
+                }
                 squares.highlight.Move(location);
                 lastmove = true;
                 squares.highlight.lastmove = true;
@@ -178,22 +182,53 @@ namespace ChessApp
                 squares.highlight = this;
             }
 
-           if (piece != null && (squares.board.hasturn == piece.side || squares.edit) && squares.board.hasturn == piece.side && squares.canshowmove) //Displaying moves?
-           {
+            if (piece != null && (squares.board.hasturn == piece.side || piece.side == Side.ImmortalDuck) && squares.canshowmove) //Displaying moves?
+            {
+                Bitboard board;
+                ulong moves;
+                switch (squares.gameType)
+                {
+                    case GameType.Standard:
+                        board = squares.board.bitboard.Copy();
+                        board.SetupSquareAttacks();
 
-               var board = squares.board.bitboard.Copy();
-               board.SetupSquareAttacks();
-        
-               var moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
-               while (moves != 0ul)
-               {
-                   byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
-                   moves ^= 1ul<<lsb;
-                   squares[lsb].MoveHighlight();
-               }
-           }
+                        moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
+                        while (moves != 0ul)
+                        {
+                            byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                            moves ^= 1ul << lsb;
+                            squares[lsb].MoveHighlight();
+                        }
+                        break;
+                    case GameType.StandardDuck:
+                        if (squares.mustMoveDuck)
+                        {
+                            if (piece.pieceType == PieceType.Duck)
+                            {
+                                foreach (var move in DuckMoves.DuckPositions(squares.board.bitboard))
+                                {
+                                    squares[move].MoveHighlight();
+                                }
+                            }
+                        }
+                        else //Normal move
+                        {
+                            board = squares.board.bitboard.Copy(); //No square attacks cos thats how duck-chess works
+                            board.squares_to_block_check = ulong.MaxValue;
+
+                            moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
+                            while (moves != 0ul)
+                            {
+                                byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                                moves ^= 1ul << lsb;
+                                squares[lsb].MoveHighlight();
+                            }
+                        }
+                        break;
+                }
+            }
         }
-
+        
         public void Move(int location)
         {
             squares.ClearMoveHighlights();

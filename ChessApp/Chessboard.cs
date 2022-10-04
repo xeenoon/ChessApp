@@ -19,12 +19,14 @@ namespace ChessApp
         Bishop,
         Queen,
         King,
-        None
+        None,
+        Duck
     }
     public enum Side
     {
         White,
-        Black
+        Black,
+        ImmortalDuck //Reserved for the one and only, THE DUCK
     }
     public class Piece
     {
@@ -42,6 +44,9 @@ namespace ChessApp
         public static readonly Bitmap img_WHITE_KING   = Properties.Resources.WhiteKing;
         public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.WhiteQueen;
 
+        public static readonly Bitmap img_DUCK = Properties.Resources.Duck;
+
+
         public static readonly Bitmap img_NONE = Properties.Resources.Delete;
 
         public Bitmap IMG
@@ -51,6 +56,10 @@ namespace ChessApp
                 if (pieceType == PieceType.None)
                 {
                     return img_NONE;
+                }
+                if (pieceType == PieceType.Duck)
+                {
+                    return img_DUCK;
                 }
                 if (side == Side.Black) 
                 {
@@ -267,6 +276,10 @@ namespace ChessApp
                             break;
                         case 'Q':
                             toadd = new Piece(PieceType.Queen, Side.White, position);
+                            break;
+                        //Duck
+                        case 'D':
+                            toadd = new Piece(PieceType.Duck, Side.ImmortalDuck, position);
                             break;
                     }
                     Pieces.Add(toadd);

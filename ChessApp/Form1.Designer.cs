@@ -47,6 +47,8 @@
             this.QueensideCastleLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.VariantSelector = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,7 +128,7 @@
             // 
             this.CastlingOptionsTitle.AutoSize = true;
             this.CastlingOptionsTitle.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CastlingOptionsTitle.Location = new System.Drawing.Point(12, 64);
+            this.CastlingOptionsTitle.Location = new System.Drawing.Point(13, 64);
             this.CastlingOptionsTitle.Name = "CastlingOptionsTitle";
             this.CastlingOptionsTitle.Size = new System.Drawing.Size(130, 19);
             this.CastlingOptionsTitle.TabIndex = 6;
@@ -220,6 +222,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.VariantSelector);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.CastlingOptionsTitle);
             this.panel1.Controls.Add(this.QueensideCastleLabel);
             this.panel1.Controls.Add(this.comboBox1);
@@ -233,15 +237,38 @@
             this.panel1.Controls.Add(this.W_KingsideCastle);
             this.panel1.Location = new System.Drawing.Point(489, 47);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(155, 156);
+            this.panel1.Size = new System.Drawing.Size(155, 207);
             this.panel1.TabIndex = 15;
             this.panel1.Visible = false;
+            // 
+            // VariantSelector
+            // 
+            this.VariantSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.VariantSelector.FormattingEnabled = true;
+            this.VariantSelector.Items.AddRange(new object[] {
+            "Standard",
+            "Standard duck"});
+            this.VariantSelector.Location = new System.Drawing.Point(15, 173);
+            this.VariantSelector.Name = "VariantSelector";
+            this.VariantSelector.Size = new System.Drawing.Size(121, 21);
+            this.VariantSelector.TabIndex = 16;
+            this.VariantSelector.SelectedIndexChanged += new System.EventHandler(this.VariantSelector_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(46, 150);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(64, 19);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Variant";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 575);
+            this.ClientSize = new System.Drawing.Size(892, 575);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.PlayComputer);
@@ -283,6 +310,8 @@
         private System.Windows.Forms.Label QueensideCastleLabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox VariantSelector;
+        private System.Windows.Forms.Label label1;
     }
 }
 

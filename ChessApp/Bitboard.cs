@@ -20,7 +20,7 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
-
+        public ulong Duck; //Quack
 
         public ulong w_xrays;
         public ulong b_xrays;

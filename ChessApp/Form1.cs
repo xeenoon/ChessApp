@@ -19,7 +19,7 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
-            string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            string FEN = "rnbqkbnr/pppppppp/7D/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
         }
@@ -82,7 +82,7 @@ namespace ChessApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            VariantSelector.SelectedIndex = 0;
         }
 
         private void Form1_Click(object sender, EventArgs e)
@@ -207,6 +207,14 @@ namespace ChessApp
             chessboard.blackCastles = new CastleOptions(Side.Black, B_QueensideCastle.Checked, B_KingsideCastle.Checked);
             FEN_TEXT.Text = chessboard.GetFEN();
             chessboard.bitboard = Bitboard.FromBoard(chessboard);
+        }
+
+        private void VariantSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (squares != null) 
+            {
+                squares.gameType = (GameType)VariantSelector.SelectedIndex;
+            }
         }
     }
 }
