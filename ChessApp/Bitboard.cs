@@ -330,6 +330,8 @@ namespace ChessApp
                 B_Queen = this.B_Queen,
                 B_Rook = this.B_Rook,
 
+                Duck = this.Duck,
+
                 B_KingsideCastle = this.B_KingsideCastle,
                 W_KingsideCastle = this.W_KingsideCastle,
                 B_QueensideCastle = this.B_QueensideCastle,
@@ -345,6 +347,10 @@ namespace ChessApp
 
             foreach (var piece in board.Pieces)
             {
+                if (piece.pieceType == PieceType.Duck)
+                {
+                    bitboard.Duck |= 1ul << piece.position;
+                }
                 if (piece.side == Side.White)
                 {
                     switch (piece.pieceType)
@@ -647,7 +653,11 @@ namespace ChessApp
                         break;
                 }
             }
-
+            if (pieceType == PieceType.Duck)
+            {
+                Duck ^= startpos;
+                Duck ^= endpos;
+            }
             BoardData boardData = new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
 
             if (pieceType == PieceType.King)

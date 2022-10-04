@@ -159,6 +159,10 @@ namespace ChessApp
                 {
                     squares.mustMoveDuck = true;
                 }
+                if (squares.highlight.piece.pieceType == PieceType.Duck)
+                {
+                    squares.mustMoveDuck = false;
+                }
                 squares.highlight.Move(location);
                 lastmove = true;
                 squares.highlight.lastmove = true;
@@ -273,9 +277,9 @@ namespace ChessApp
 
             piece.position = location;
             squares[location].piece = piece;
-            if (!squares.edit)
+            if (!squares.edit && !squares.mustMoveDuck) //Not editing, and has finished duck move
             {
-                squares.board.hasturn = piece.side == Side.White ? Side.Black : Side.White;
+                squares.board.hasturn = squares.board.hasturn == Side.White ? Side.Black : Side.White;
             }
             piece = null;
 
