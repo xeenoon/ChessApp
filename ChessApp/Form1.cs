@@ -6,8 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace ChessApp
 {
@@ -19,24 +19,35 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
-            chessboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
+            string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            chessboard = new Chessboard(FEN);
+            FEN_TEXT.Text = FEN;
         }
-
+        public void WriteFEN()
+        {
+            FEN_TEXT.Text = chessboard.GetFEN();
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            chessboard = new Chessboard(textBox1.Text);
+            checkBox1.Checked = false;
+            chessboard = new Chessboard(FEN_TEXT.Text);
             squares = null;
+
             Invalidate();
         }
 
         const int SQUARESIZE = 45;
+
+        System.Timers.Timer checkmateDelay;
+        bool checkmated = false;
+        bool running = false;
         bool reload = false;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50));
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+                squares.AI_can_move = PlayComputer.Checked;
             }
             else if (reload)
             {
@@ -46,7 +57,27 @@ namespace ChessApp
             else
             {
                 squares.Paint(e.Graphics);
+                if (!checkmated && !running)
+                {
+                    running = true;
+                    checkmateDelay = new System.Timers.Timer(100);
+                    checkmateDelay.Elapsed += new System.Timers.ElapsedEventHandler(CheckMateTick);
+                    checkmateDelay.Start();
+                }
             }
+        }
+
+        private void CheckMateTick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            checkmateDelay.Stop();
+            var copy = squares.board.bitboard.Copy();
+            copy.SetupSquareAttacks();
+            if (!squares.edit && (copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate?
+            {
+                checkmated = true;
+                MessageBox.Show(String.Format("{0} Checkmated {1}", squares.board.hasturn == Side.White ? Side.Black : Side.White, copy.doublecheck ? "Like a boss" : squares.board.hasturn.ToString()));
+            }
+            running = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -66,6 +97,45 @@ namespace ChessApp
                     clicked.Click();
                     Invalidate();
                 }
+                EditSquare editSquare = squares.EditSquareAt(mouse.Location);
+                if (editSquare != null)
+                {
+                    editSquare.Click();
+                    Invalidate();
+                }
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            squares.arrows.Clear();
+            squares.SetupEdit(checkBox1.Checked);
+
+            bool enabled = checkBox1.Checked;
+
+
+            comboBox1.SelectedIndex = chessboard.hasturn == Side.White ? 0 : 1;
+            W_KingsideCastle.Checked = chessboard.whiteCastles.Kingside;
+            W_QueensideCastle.Checked = chessboard.whiteCastles.Queenside;
+
+            B_KingsideCastle.Checked = chessboard.blackCastles.Kingside;
+            B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
+
+            Invalidate();
+
+            panel1.Visible = enabled;
+            
+            button2.Enabled = !checkBox1.Checked;
+            FEN_TEXT.ReadOnly = checkBox1.Checked;
+            PlayComputer.Enabled = !checkBox1.Checked;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                chessboard.hasturn = comboBox1.SelectedIndex == 0 ? Side.White : Side.Black;
+                FEN_TEXT.Text = chessboard.GetFEN();
             }
         }
 
@@ -75,6 +145,68 @@ namespace ChessApp
             this.chessboard = squares.board;
             reload = true;
             Invalidate();
+        }
+
+        private void PlayComputerCheckChange(object sender, EventArgs e)
+        {
+            squares.AI_can_move = PlayComputer.Checked;
+        }
+
+        internal void Reload()
+        {
+            reload = true;
+            Invalidate();
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseDown(button);
+                Invalidate();
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            var button = e.Button;
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                arrowColour = Color.Red;
+            }
+            else if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+            {
+                arrowColour = Color.Orange;
+            }
+            else if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                arrowColour = Color.Yellow;
+            }
+            else
+            {
+                arrowColour = Color.Blue;
+            }
+            Square clicked = squares.SquareAt(e.Location);
+            if (clicked != null)
+            {
+                clicked.MouseUp(button);
+                Invalidate();
+            }
+        }
+        public Color arrowColour = Color.Blue;
+
+        private void CastleOptionChanged(object sender, EventArgs e)
+        {
+            if (!panel1.Visible) //Are we inactive?
+            {
+                return;
+            }
+            chessboard.whiteCastles = new CastleOptions(Side.White, W_QueensideCastle.Checked, W_KingsideCastle.Checked);
+            chessboard.blackCastles = new CastleOptions(Side.Black, B_QueensideCastle.Checked, B_KingsideCastle.Checked);
+            FEN_TEXT.Text = chessboard.GetFEN();
+            chessboard.bitboard = Bitboard.FromBoard(chessboard);
         }
     }
 }

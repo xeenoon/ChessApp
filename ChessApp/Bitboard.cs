@@ -20,6 +20,8 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
+
+
         public ulong w_xrays;
         public ulong b_xrays;
         public List<ulong> xrays;
@@ -77,6 +79,18 @@ namespace ChessApp
                 ++total_doublechecks;
             }
         }
+        public void SetupSquareAttacks(Side side)
+        {
+            squares_to_block_check = ulong.MaxValue;
+            if (side == Side.White)
+            {
+                WhiteAttackedSquares = WhiteAttacks();
+            }
+            else
+            {
+                BlackAttackedSquares = BlackAttacks();
+            }
+        }
         public void SetupPins()
         {
             SET_XRAY_Pins(W_Rook, PieceType.Rook, Side.White, B_King);
@@ -89,7 +103,7 @@ namespace ChessApp
         }
 
         int checks;
-        ulong WhiteAttacks()
+        public ulong WhiteAttacks()
         {
             checks = 0;
 
@@ -110,7 +124,7 @@ namespace ChessApp
             }
             return attacks;
         }
-        ulong BlackAttacks()
+        public ulong BlackAttacks()
         {
             checks = 0;
 
@@ -204,8 +218,7 @@ namespace ChessApp
                     result |= MoveGenerator.king[lsb];
                     break;
                 case PieceType.Knight:
-                    lsb = (byte)(BitOperations.TrailingZeros(piece_bitboard) - 1);
-                    var knightattacks = MoveGenerator.KnightAttackRays(s, piece_bitboard);
+                    var knightattacks = MoveGenerator.KnightAttackRays(piece_bitboard);
                     if ((knightattacks & oppositeKing) != 0) //Is in check
                     {
                         ++checks;
@@ -548,7 +561,7 @@ namespace ChessApp
                 else
                 {
                     B_Rook ^= (1ul << 56);
-                    B_Rook ^= (1ul << 50);
+                    B_Rook ^= (1ul << 59);
                 }
             }
 
@@ -635,40 +648,42 @@ namespace ChessApp
                 }
             }
 
+            BoardData boardData = new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
+
             if (pieceType == PieceType.King)
             {
                 if (side == Side.White)
                 {
-                    W_KingsideCastle = false;
-                    W_QueensideCastle = false;
+                    this.W_KingsideCastle = false;
+                    this.W_QueensideCastle = false;
                 }
                 else
                 {
-                    B_KingsideCastle = false;
-                    B_QueensideCastle = false;
+                    this.B_KingsideCastle = false;
+                    this.B_QueensideCastle = false;
                 }
             }
             if (pieceType == PieceType.Rook && startlocation == 0) //Queenside rook
             {
-                W_QueensideCastle = false;
+                this.W_QueensideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 7) //Kingside rook
             {
-                W_KingsideCastle = false;
+                this.W_KingsideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 56) //Queenside rook
             {
-                B_QueensideCastle = false;
+                this.B_QueensideCastle = false;
             }
             if (pieceType == PieceType.Rook && startlocation == 63) //Queenside rook
             {
-                B_KingsideCastle = false;
+                this.B_KingsideCastle = false;
             }
 
-            
+
             stopwatch.Stop();
             MoveTime += stopwatch.ElapsedTicks;
-            return new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
+            return boardData;
         }
         public Bitboard CopyMove(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
         {
@@ -774,7 +789,7 @@ namespace ChessApp
                 else
                 {
                     copy.B_Rook ^= (1ul << 56);
-                    copy.B_Rook ^= (1ul << 50);
+                    copy.B_Rook ^= (1ul << 59);
                 }
             }
 
@@ -890,6 +905,19 @@ namespace ChessApp
             {
                 copy.B_KingsideCastle = false;
             }
+            if (pieceType == PieceType.King)
+            {
+                if (side == Side.White)
+                {
+                    copy.W_KingsideCastle = false;
+                    copy.W_QueensideCastle = false;
+                }
+                else
+                {
+                    copy.B_KingsideCastle = false;
+                    copy.B_QueensideCastle = false;
+                }
+            }
 
 
             stopwatch.Stop();
@@ -898,6 +926,8 @@ namespace ChessApp
         }
         public void UndoMove(BoardData old)
         {
+            xrays.Clear();
+
             if (old.side == Side.White)
             {
                 switch (old.pieceType)
@@ -1049,7 +1079,7 @@ namespace ChessApp
                 else
                 {
                     B_Rook ^= (1ul << 56);
-                    B_Rook ^= (1ul << 50);
+                    B_Rook ^= (1ul << 59);
                 }
             }
 
@@ -1061,14 +1091,14 @@ namespace ChessApp
                 }
                 else //To find enemy piece, go up a row
                 {
-                    W_Pawn ^= 1ul << (old.endlocation + 7);
+                    W_Pawn ^= 1ul << (old.endlocation + 8);
                 }
             }
 
             this.W_KingsideCastle  = old.W_KingsideCastle;
             this.B_KingsideCastle  = old.B_KingsideCastle;
             this.W_QueensideCastle = old.W_QueensideCastle;
-            this.B_QueensideCastle = old.B_QueensideCastle; //Reset the caslte options
+            this.B_QueensideCastle = old.B_QueensideCastle; //Reset the castle options
 
             this.enpassent = old.enpassant;
         }
