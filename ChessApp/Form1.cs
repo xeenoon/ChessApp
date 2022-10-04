@@ -72,10 +72,17 @@ namespace ChessApp
             checkmateDelay.Stop();
             var copy = squares.board.bitboard.Copy();
             copy.SetupSquareAttacks();
-            if (!squares.edit && (copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate?
+            if (!squares.mustMoveDuck && !squares.edit && (copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate?
             {
                 checkmated = true;
-                MessageBox.Show(String.Format("{0} Checkmated {1}", squares.board.hasturn == Side.White ? Side.Black : Side.White, copy.doublecheck ? "Like a boss" : squares.board.hasturn.ToString()));
+                if (squares.gameType == GameType.StandardDuck)
+                {
+                    MessageBox.Show("Quackmate");
+                }
+                else
+                {
+                    MessageBox.Show(String.Format("{0} Checkmated {1}", squares.board.hasturn == Side.White ? Side.Black : Side.White, copy.doublecheck ? "Like a boss" : squares.board.hasturn.ToString()));
+                }
             }
             running = false;
         }
