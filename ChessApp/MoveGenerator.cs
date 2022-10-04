@@ -355,13 +355,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King;
+                blockers = b.WhitePieces | b.B_King | b.Duck;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King;
+                blockers = b.BlackPieces | b.W_King | b.Duck;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
@@ -539,13 +539,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King;
+                blockers = b.WhitePieces | b.B_King | b.Duck;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King;
+                blockers = b.BlackPieces | b.W_King | b.Duck;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
@@ -1122,13 +1122,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King;
+                blockers = b.WhitePieces | b.B_King | b.Duck;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King;
+                blockers = b.BlackPieces | b.W_King | b.Duck;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
