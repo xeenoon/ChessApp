@@ -19,7 +19,7 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
-            string FEN = "rnbqkbnr/pppppppp/7D/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
         }
@@ -218,9 +218,23 @@ namespace ChessApp
 
         private void VariantSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (squares != null) 
+            if (squares != null)
             {
+                string FEN = "";
+                if (VariantSelector.SelectedIndex == 0) //Standard
+                {
+                    FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    squares.board = new Chessboard(FEN);
+                    reload = true;
+                }
+                else if (VariantSelector.SelectedIndex == 1) //Standard duc,
+                {
+                    FEN = "rnbqkbnr/pppppppp/7D/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    squares.board = new Chessboard(FEN);
+                    reload = true;
+                }
                 squares.gameType = (GameType)VariantSelector.SelectedIndex;
+                Invalidate();
             }
         }
     }
