@@ -149,6 +149,7 @@ namespace ChessApp
                 if (squares.highlight.piece.pieceType == PieceType.Duck)
                 {
                     squares.mustMoveDuck = false;
+                    squares.GooseChase(location);
                 }
                 squares.highlight.Move(location);
                 lastmove = true;

@@ -10,7 +10,7 @@ namespace ChessApp
     {
         private static ulong GetMoves(Bitboard b)
         {
-            return ~(b.WhitePieces | b.BlackPieces | b.Duck);
+            return ~(b.WhitePieces | b.BlackPieces | b.Animals);
         }
         public static List<byte> DuckPositions(Bitboard b)
         {

@@ -191,6 +191,32 @@ namespace ChessApp
             }
         }
 
+        internal void GooseChase(int tochase)
+        {
+            Square goose = this[BitOperations.TrailingZeros(board.bitboard.Goose)-1];
+
+            Point gooseloc = new Point(goose.location % 8, goose.location / 8);
+            Point chaseloc = new Point(tochase % 8, tochase / 8);
+
+            int xdistance = -(gooseloc.X - chaseloc.X);
+            int ydistance = -(gooseloc.Y - chaseloc.Y);
+            if (xdistance != 0) 
+            {
+                xdistance = xdistance <= -1 ? -1 : 1; //Scale down to a 1
+            }
+            if (ydistance != 0)
+            {
+                ydistance = ydistance <= -1 ? -1 : 1; //Scale down to a 1
+            }
+
+            int newloc = gooseloc.X + xdistance + (gooseloc.Y + ydistance) * 8;
+            squares[newloc].piece = goose.piece;
+            squares[newloc].piece.position = newloc;
+            goose.piece = null;
+
+            board.bitboard.Move((byte)goose.location, (byte)newloc, 1ul<<goose.location, 1ul<<newloc, PieceType.Goose, Side.Animal);
+        }
+
         public List<Square> movehighlights = new List<Square>();
         internal void ClearMoveHighlights()
         {
