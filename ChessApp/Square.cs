@@ -112,7 +112,7 @@ namespace ChessApp
             squares.arrowStart = null;
             if (squares.selected_edit != null)
             {
-                if (piece != null)
+                if (piece != null && piece.pieceType != PieceType.Duck)
                 {
 
                     if ((squares.selected_edit.pieceType == piece.pieceType && squares.selected_edit.side == piece.side) || squares.selected_edit.pieceType == PieceType.None)
@@ -137,19 +137,6 @@ namespace ChessApp
                 squares.board.Pieces.Add(piece);
                 squares.board.bitboard = Bitboard.FromBoard(squares.board);
                 ((Form1)(Form1.ActiveForm)).WriteFEN();
-                return;
-            }
-            else if (squares.edit)
-            {
-                if (squares.highlight == this)
-                {
-                    squares.highlight = null;
-                    return;
-                }
-                else
-                {
-                    squares.highlight = this;
-                }
                 return;
             }
 
@@ -186,7 +173,7 @@ namespace ChessApp
                 squares.highlight = this;
             }
 
-            if (piece != null && (squares.board.hasturn == piece.side || piece.side == Side.ImmortalDuck) && squares.canshowmove) //Displaying moves?
+            if (piece != null && (squares.board.hasturn == piece.side || piece.side == Side.ImmortalDuck) && (squares.canshowmove || piece.pieceType == PieceType.Duck)) //Displaying moves?
             {
                 Bitboard board;
                 ulong moves;
@@ -205,7 +192,7 @@ namespace ChessApp
                         }
                         break;
                     case GameType.StandardDuck:
-                        if (squares.mustMoveDuck)
+                        if (squares.mustMoveDuck || squares.edit)
                         {
                             if (piece.pieceType == PieceType.Duck)
                             {

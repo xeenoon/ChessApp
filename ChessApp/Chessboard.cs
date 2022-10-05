@@ -114,6 +114,10 @@ namespace ChessApp
 
         public override string ToString()
         {
+            if (pieceType == PieceType.Duck)
+            {
+                return "D";
+            }
             if (side == Side.Black)
             {
                 switch (pieceType)
