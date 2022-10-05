@@ -59,6 +59,8 @@ namespace ChessApp
                 squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
+            DrawEdit(g);
+            DrawArrows(g);
         }
 
         internal void Paint(Graphics graphics)
