@@ -46,9 +46,9 @@
             this.KingsideCastleLabel = new System.Windows.Forms.Label();
             this.QueensideCastleLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.VariantSelector = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -247,7 +247,8 @@
             this.VariantSelector.FormattingEnabled = true;
             this.VariantSelector.Items.AddRange(new object[] {
             "Standard",
-            "Standard duck"});
+            "Standard duck",
+            "Duck Duck GOOSE"});
             this.VariantSelector.Location = new System.Drawing.Point(15, 173);
             this.VariantSelector.Name = "VariantSelector";
             this.VariantSelector.Size = new System.Drawing.Size(121, 21);

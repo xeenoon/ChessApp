@@ -20,13 +20,14 @@ namespace ChessApp
         Queen,
         King,
         None,
-        Duck
+        Duck,
+        Goose
     }
     public enum Side
     {
         White,
         Black,
-        ImmortalDuck //Reserved for the one and only, THE DUCK
+        Animal //Reserved for the one and only, THE DUCK
     }
     public class Piece
     {
@@ -44,7 +45,8 @@ namespace ChessApp
         public static readonly Bitmap img_WHITE_KING   = Properties.Resources.WhiteKing;
         public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.WhiteQueen;
 
-        public static readonly Bitmap img_DUCK = Properties.Resources.Duck;
+        public static readonly Bitmap img_DUCK  = Properties.Resources.Duck;
+        public static readonly Bitmap img_GOOSE = Properties.Resources.Goose;
 
 
         public static readonly Bitmap img_NONE = Properties.Resources.Delete;
@@ -60,6 +62,10 @@ namespace ChessApp
                 if (pieceType == PieceType.Duck)
                 {
                     return img_DUCK;
+                }
+                if (pieceType == PieceType.Goose)
+                {
+                    return img_GOOSE;
                 }
                 if (side == Side.Black) 
                 {
@@ -283,7 +289,11 @@ namespace ChessApp
                             break;
                         //Duck
                         case 'D':
-                            toadd = new Piece(PieceType.Duck, Side.ImmortalDuck, position);
+                            toadd = new Piece(PieceType.Duck, Side.Animal, position);
+                            break;
+                        //Goose
+                        case 'G':
+                            toadd = new Piece(PieceType.Goose, Side.Animal, position);
                             break;
                     }
                     Pieces.Add(toadd);
@@ -413,7 +423,7 @@ namespace ChessApp
             }
             if (bitboard.Duck != 0) //Placing a duck?
             {
-                Pieces.Add(new Piece(PieceType.Duck, Side.ImmortalDuck, BitOperations.TrailingZeros(bitboard.Duck)-1));
+                Pieces.Add(new Piece(PieceType.Duck, Side.Animal, BitOperations.TrailingZeros(bitboard.Duck)-1));
             }
         }
     }

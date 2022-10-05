@@ -142,7 +142,7 @@ namespace ChessApp
 
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
-                if (squares.gameType == GameType.StandardDuck)
+                if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
                 {
                     squares.mustMoveDuck = true;
                 }
@@ -173,7 +173,7 @@ namespace ChessApp
                 squares.highlight = this;
             }
 
-            if (piece != null && (squares.board.hasturn == piece.side || piece.side == Side.ImmortalDuck) && (squares.canshowmove || piece.pieceType == PieceType.Duck)) //Displaying moves?
+            if (piece != null && (squares.board.hasturn == piece.side || piece.side == Side.Animal) && (squares.canshowmove || piece.pieceType == PieceType.Duck)) //Displaying moves?
             {
                 Bitboard board;
                 ulong moves;
@@ -191,6 +191,7 @@ namespace ChessApp
                             squares[lsb].MoveHighlight();
                         }
                         break;
+                    case GameType.DuckDuckGoose:
                     case GameType.StandardDuck:
                         if (squares.mustMoveDuck || squares.edit)
                         {

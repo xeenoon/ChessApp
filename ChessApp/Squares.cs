@@ -11,7 +11,8 @@ namespace ChessApp
     enum GameType
     {
         Standard,
-        StandardDuck
+        StandardDuck,
+        DuckDuckGoose
     }
     internal class Squares
     {
@@ -218,7 +219,7 @@ namespace ChessApp
                 return;
             }
             board.bitboard.UndoMove(undomoves.Last());
-            if (gameType == GameType.StandardDuck) 
+            if (gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose) 
             {
                 if (undomoves.Last().pieceType == PieceType.Duck) //Moving duck switches turns
                 {
