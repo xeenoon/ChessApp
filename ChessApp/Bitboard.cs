@@ -23,6 +23,14 @@ namespace ChessApp
         public ulong Duck;  //Quack
         public ulong Goose; //QUACCKKK
 
+        public ulong Animals
+        {
+            get
+            {
+                return Duck | Goose;
+            }
+        }
+
         public ulong w_xrays;
         public ulong b_xrays;
         public List<ulong> xrays;

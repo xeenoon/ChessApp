@@ -48,14 +48,14 @@ namespace ChessApp
             {
                 case PieceType.Knight:
                     moves = knight[position];
-                    result = ((moves ^ (myside|b.Duck)) & moves) & b.squares_to_block_check;
+                    result = ((moves ^ (myside|b.Animals)) & moves) & b.squares_to_block_check;
                     break;
                 case PieceType.Rook:
                     result = RookMoves(position, b, side);
                     break;
                 case PieceType.King:
                     moves = king[position];
-                    ulong legal_no_takes = moves & (FULL ^ (myside|b.Duck));
+                    ulong legal_no_takes = moves & (FULL ^ (myside|b.Animals));
                     return (legal_no_takes & (FULL ^ attackedSquares)) | CastleMoves(side, b);
                 case PieceType.Pawn:
                     result = PawnMoves(side, position, b);
@@ -236,12 +236,12 @@ namespace ChessApp
             ulong mypieces;
             if (s == Side.White)
             {
-                mypieces = b.WhitePieces | b.Duck;
+                mypieces = b.WhitePieces | b.Animals;
                 theirpieces = b.BlackPieces;
             }
             else
             {
-                mypieces = b.BlackPieces | b.Duck;
+                mypieces = b.BlackPieces | b.Animals;
                 theirpieces = b.WhitePieces;
             }
 
@@ -355,13 +355,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King | b.Duck;
+                blockers = b.WhitePieces | b.B_King | b.Animals;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King | b.Duck;
+                blockers = b.BlackPieces | b.W_King | b.Animals;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
@@ -539,13 +539,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King | b.Duck;
+                blockers = b.WhitePieces | b.B_King | b.Animals;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King | b.Duck;
+                blockers = b.BlackPieces | b.W_King | b.Animals;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
@@ -908,7 +908,7 @@ namespace ChessApp
             {
                 attackMoves = whitePawnAttack[position] & b.BlackPieces & b.squares_to_block_check; //Get all attacking moves where they intersect with black pieces
 
-                passiveMoves = (whitePawnNoAttack[position] ^ (whitePawnNoAttack[position] & (b.BlackPieces | b.WhitePieces | b.Duck))) & b.squares_to_block_check; //Get all moves where no pieces intersect
+                passiveMoves = (whitePawnNoAttack[position] ^ (whitePawnNoAttack[position] & (b.BlackPieces | b.WhitePieces | b.Animals))) & b.squares_to_block_check; //Get all moves where no pieces intersect
 
                 //On the second row, there will be 2 moves upwards, if a piece is one above, the 2nd move up SHOULD NOT be returned
 
@@ -953,7 +953,7 @@ namespace ChessApp
             {
                 attackMoves = blackPawnAttack[position] & b.WhitePieces & b.squares_to_block_check; //Get all attacking moves where they intersect with white pieces
 
-                passiveMoves = (blackPawnNoAttack[position] ^ (blackPawnNoAttack[position] & (b.BlackPieces | b.WhitePieces | b.Duck))) & b.squares_to_block_check; //Get all moves where no pieces intersect
+                passiveMoves = (blackPawnNoAttack[position] ^ (blackPawnNoAttack[position] & (b.BlackPieces | b.WhitePieces | b.Animals))) & b.squares_to_block_check; //Get all moves where no pieces intersect
 
                 //On the seventh row, there will be 2 moves fowards(down, >>8), if a piece is one above(below), the 2nd move up SHOULD NOT be returned
 
@@ -1004,12 +1004,12 @@ namespace ChessApp
             ulong mypieces;
             if (s == Side.White)
             {
-                mypieces = b.WhitePieces | b.Duck;
+                mypieces = b.WhitePieces | b.Animals;
                 theirpieces = b.BlackPieces;
             }
             else
             {
-                mypieces = b.BlackPieces | b.Duck;
+                mypieces = b.BlackPieces | b.Animals;
                 theirpieces = b.WhitePieces;
             }
 
@@ -1122,13 +1122,13 @@ namespace ChessApp
             ulong oppositeking;
             if (s == Side.White)
             {
-                blockers = b.WhitePieces | b.B_King | b.Duck;
+                blockers = b.WhitePieces | b.B_King | b.Animals;
                 blockers |= (b.BlackPieces ^ b.B_King);
                 oppositeking = b.B_King;
             }
             else
             {
-                blockers = b.BlackPieces | b.W_King | b.Duck;
+                blockers = b.BlackPieces | b.W_King | b.Animals;
                 blockers |= (b.WhitePieces ^ b.W_King);
                 oppositeking = b.W_King;
             }
