@@ -235,7 +235,7 @@ namespace ChessApp
                 }
                 else if (VariantSelector.SelectedIndex == 2) //Duck duck goose
                 {
-                    FEN = "rnbqkbnr/pppppppp/G6D/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    FEN = "rnbqkbnr/pppppppp/7D/8/3G4/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
                 }

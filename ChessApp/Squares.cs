@@ -228,7 +228,7 @@ namespace ChessApp
                 }
                 else
                 {
-                    mustMoveDuck = false; //We will need to mvoe a piece
+                    mustMoveDuck = false; //We will need to move a piece
                     //Dont change hasturn
                 }
             }

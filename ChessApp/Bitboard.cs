@@ -20,7 +20,8 @@ namespace ChessApp
         public ulong B_Queen;  //Black Queens
         public ulong B_King;   //Black King
 
-        public ulong Duck; //Quack
+        public ulong Duck;  //Quack
+        public ulong Goose; //QUACCKKK
 
         public ulong w_xrays;
         public ulong b_xrays;
@@ -331,6 +332,7 @@ namespace ChessApp
                 B_Rook = this.B_Rook,
 
                 Duck = this.Duck,
+                Goose = this.Goose,
 
                 B_KingsideCastle = this.B_KingsideCastle,
                 W_KingsideCastle = this.W_KingsideCastle,
@@ -350,6 +352,10 @@ namespace ChessApp
                 if (piece.pieceType == PieceType.Duck)
                 {
                     bitboard.Duck |= 1ul << piece.position;
+                }
+                if (piece.pieceType == PieceType.Goose)
+                {
+                    bitboard.Goose |= 1ul << piece.position;
                 }
                 if (piece.side == Side.White)
                 {
@@ -657,6 +663,12 @@ namespace ChessApp
             {
                 Duck ^= startpos;
                 Duck ^= endpos;
+            }
+
+            if (pieceType == PieceType.Goose)
+            {
+                Goose ^= startpos;
+                Goose ^= endpos;
             }
             BoardData boardData = new BoardData(startlocation, endlocation, pieceType, side, takenpiece, W_KingsideCastle, B_KingsideCastle, W_QueensideCastle, B_QueensideCastle, enpassant, enpassanttake);
 
@@ -1001,6 +1013,11 @@ namespace ChessApp
             {
                 Duck ^= 1ul << old.startlocation;
                 Duck ^= 1ul << old.endlocation;
+            }
+            if (old.pieceType == PieceType.Goose)
+            {
+                Goose ^= 1ul << old.startlocation;
+                Goose ^= 1ul << old.endlocation;
             }
             if (old.pieceType == PieceType.Pawn)
             {
