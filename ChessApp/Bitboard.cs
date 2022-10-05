@@ -997,7 +997,11 @@ namespace ChessApp
                         break;
                 }
             }
-
+            if (old.pieceType == PieceType.Duck)
+            {
+                Duck ^= 1ul << old.startlocation;
+                Duck ^= 1ul << old.endlocation;
+            }
             if (old.pieceType == PieceType.Pawn)
             {
                 if (old.side == Side.White && old.endlocation / 8 == 7) //Promoted on last row?

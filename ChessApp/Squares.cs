@@ -218,9 +218,26 @@ namespace ChessApp
                 return;
             }
             board.bitboard.UndoMove(undomoves.Last());
+            if (gameType == GameType.StandardDuck) 
+            {
+                if (undomoves.Last().pieceType == PieceType.Duck) //Moving duck switches turns
+                {
+                    board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+                    mustMoveDuck = true; //We need to move the duck again
+                }
+                else
+                {
+                    mustMoveDuck = false; //We will need to mvoe a piece
+                    //Dont change hasturn
+                }
+            }
+            else
+            {
+                board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
+
+            }
             undomoves.Remove(undomoves.Last());
 
-            board.hasturn = board.hasturn == Side.White ? Side.Black : Side.White;
             board.Reload();
         }
         public Square this[int index]
