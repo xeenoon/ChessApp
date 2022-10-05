@@ -407,6 +407,10 @@ namespace ChessApp
                     Pieces.Add(new Piece(piecetype, Side.Black, position));
                 }
             }
+            if (bitboard.Duck != 0) //Placing a duck?
+            {
+                Pieces.Add(new Piece(PieceType.Duck, Side.ImmortalDuck, BitOperations.TrailingZeros(bitboard.Duck)-1));
+            }
         }
     }
 }
