@@ -114,6 +114,10 @@ namespace ChessApp
 
         public static SideSquare SquareAt(Point mouseposition)
         {
+            if (allsquares == null)
+            {
+                return null;
+            }
             foreach (var square in allsquares)
             {
                 if (square.realLocation.Contains(mouseposition))

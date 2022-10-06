@@ -10,7 +10,11 @@ namespace ChessApp
     {
         private static ulong GetMoves(Bitboard b)
         {
-            return ~(b.WhitePieces | b.BlackPieces | b.Animals);
+            if (b.Goose == 0)
+            {
+                return ~(b.WhitePieces | b.BlackPieces | b.Animals);
+            }
+            return ~(b.WhitePieces | b.BlackPieces | b.Animals) & (~MoveGenerator.king[BitOperations.TrailingZeros(b.Goose)-1]);
         }
         public static List<byte> DuckPositions(Bitboard b)
         {

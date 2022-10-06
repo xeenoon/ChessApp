@@ -61,6 +61,17 @@ namespace ChessApp
             DrawEdit(g);
             DrawArrows(g);
 
+            if (gameType == GameType.StandardDuck && !edit)
+            {
+                if (SideSquare.requiresetup)
+                {
+                    SideSquare.SetupAll(g, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                }
+                else
+                {
+                    SideSquare.DrawSquares(g);
+                }
+            }
         }
 
         internal void Paint(Graphics graphics)
@@ -72,13 +83,16 @@ namespace ChessApp
                 square.Paint();
             }
             DrawArrows(graphics);
-            if (SideSquare.requiresetup)
+            if (gameType == GameType.StandardDuck && !edit) 
             {
-                SideSquare.SetupAll(graphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
-            }
-            else
-            {
-                SideSquare.DrawSquares(graphics);
+                if (SideSquare.requiresetup)
+                {
+                    SideSquare.SetupAll(graphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                }
+                else
+                {
+                    SideSquare.DrawSquares(graphics);
+                }
             }
         }
 
