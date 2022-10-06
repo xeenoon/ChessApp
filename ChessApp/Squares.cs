@@ -61,7 +61,7 @@ namespace ChessApp
             DrawEdit(g);
             DrawArrows(g);
 
-            if (gameType == GameType.StandardDuck && !edit)
+            if ((gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose) && !edit)
             {
                 if (SideSquare.requiresetup)
                 {
@@ -74,24 +74,24 @@ namespace ChessApp
             }
         }
 
-        internal void Paint(Graphics graphics)
+        internal void Paint(Graphics g)
         {
-            DrawEdit(graphics);
+            DrawEdit(g);
             foreach (var square in squares)
             {
-                square.g = graphics;
+                square.g = g;
                 square.Paint();
             }
-            DrawArrows(graphics);
-            if (gameType == GameType.StandardDuck && !edit) 
+            DrawArrows(g);
+            if ((gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose) && !edit)
             {
                 if (SideSquare.requiresetup)
                 {
-                    SideSquare.SetupAll(graphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                    SideSquare.SetupAll(g, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                 }
                 else
                 {
-                    SideSquare.DrawSquares(graphics);
+                    SideSquare.DrawSquares(g);
                 }
             }
         }

@@ -193,6 +193,7 @@ namespace ChessApp
                     if (squares.mustMoveDuck)
                     {
                         squares.mustMoveDuck = false;
+                        squares.GooseChase(location);
                     }
 
                     squares.board.Reload();
