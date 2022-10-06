@@ -36,7 +36,7 @@ namespace ChessApp
             Invalidate();
         }
 
-        const int SQUARESIZE = 45;
+        public const int SQUARESIZE = 45;
 
         System.Timers.Timer checkmateDelay;
         bool checkmated = false;
@@ -104,6 +104,13 @@ namespace ChessApp
                     clicked.Click();
                     Invalidate();
                 }
+                SideSquare sidesquare = SideSquare.SquareAt(mouse.Location);
+                if (sidesquare != null)
+                {
+                    sidesquare.Click();
+                    Invalidate();
+                }
+
                 EditSquare editSquare = squares.EditSquareAt(mouse.Location);
                 if (editSquare != null)
                 {

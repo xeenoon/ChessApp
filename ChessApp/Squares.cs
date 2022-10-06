@@ -44,7 +44,6 @@ namespace ChessApp
             this.select = select;
             this.move = move;
             this.parent = parent;
-
             Reload(g);
         }
 
@@ -61,6 +60,7 @@ namespace ChessApp
             }
             DrawEdit(g);
             DrawArrows(g);
+
         }
 
         internal void Paint(Graphics graphics)
@@ -72,6 +72,14 @@ namespace ChessApp
                 square.Paint();
             }
             DrawArrows(graphics);
+            if (SideSquare.requiresetup)
+            {
+                SideSquare.SetupAll(graphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+            }
+            else
+            {
+                SideSquare.DrawSquares(graphics);
+            }
         }
 
         internal Square SquareAt(Point location)
