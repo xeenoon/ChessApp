@@ -182,7 +182,6 @@ namespace ChessApp
 
                     piece = toplace;
                     lastmove = true;
-                    squares.movehighlights.Clear();
                     squares.movehighlights.Add(this);
                     if (squares.selected_edit == null && squares.edit)
                     {
