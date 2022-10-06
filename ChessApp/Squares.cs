@@ -203,6 +203,10 @@ namespace ChessApp
 
         internal void GooseChase(int tochase)
         {
+            if (gameType != GameType.DuckDuckGoose)
+            {
+                return;
+            }
             Square goose = this[BitOperations.TrailingZeros(board.bitboard.Goose)-1];
 
             Point gooseloc = new Point(goose.location % 8, goose.location / 8);
@@ -325,6 +329,8 @@ namespace ChessApp
 
         public Square arrowStart;
         public List<Arrow> arrows = new List<Arrow>();
+        public Piece selectedplace;
+
         private void DrawArrows(Graphics g)
         {
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

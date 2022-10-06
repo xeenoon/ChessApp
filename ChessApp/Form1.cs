@@ -108,6 +108,14 @@ namespace ChessApp
                 if (sidesquare != null)
                 {
                     sidesquare.Click();
+                    if (sidesquare.selected)
+                    {
+                        squares.selectedplace = new Piece(sidesquare.toplace, sidesquare.side, -1);
+                    }
+                    else
+                    {
+                        squares.selectedplace = null;
+                    }
                     Invalidate();
                 }
 
@@ -236,7 +244,7 @@ namespace ChessApp
                 }
                 else if (VariantSelector.SelectedIndex == 1) //Standard duck
                 {
-                    FEN = "rnbqkbnr/pppppppp/7D/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
                 }

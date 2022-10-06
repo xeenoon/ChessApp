@@ -152,6 +152,7 @@ namespace ChessApp
                     squares.GooseChase(location);
                 }
                 squares.highlight.Move(location);
+
                 lastmove = true;
                 squares.highlight.lastmove = true;
                 squares.movehighlights.Add(this);
@@ -161,6 +162,43 @@ namespace ChessApp
                     squares.board.bitboard = Bitboard.FromBoard(squares.board);
                     ((Form1)(Form1.ActiveForm)).WriteFEN();
                 }
+            }
+            if (squares.selectedplace != null) //Are we moving here?
+            {
+                if (squares.selectedplace.pieceType == PieceType.Duck && !squares.mustMoveDuck)
+                {
+
+                }
+                else
+                {
+                    SideSquare.Place(squares.selectedplace.pieceType, squares.selectedplace.side);
+                    if (squares.selectedplace.pieceType == PieceType.Duck)
+                    {
+                        squares.selectedplace.side = Side.Animal;
+                    }
+                    Piece toplace = new Piece(squares.selectedplace.pieceType, squares.selectedplace.side, location);
+                    squares.board.Pieces.Add(toplace);
+                    squares.board.bitboard.Add(squares.selectedplace.pieceType, squares.selectedplace.side, location); //Add the piece to the bitboard
+
+                    piece = toplace;
+                    lastmove = true;
+                    squares.movehighlights.Clear();
+                    squares.movehighlights.Add(this);
+                    if (squares.selected_edit == null && squares.edit)
+                    {
+                        squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                        ((Form1)(Form1.ActiveForm)).WriteFEN();
+                    }
+                    squares.board.hasturn = squares.board.hasturn == Side.White ? Side.Black : Side.White;
+                    if (squares.mustMoveDuck)
+                    {
+                        squares.mustMoveDuck = false;
+                    }
+
+                    squares.board.Reload();
+                }
+                squares.selectedplace = null;
+                SideSquare.DeselectAll();
             }
             squares.moveSquares.Clear();
 

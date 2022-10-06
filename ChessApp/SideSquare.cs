@@ -102,8 +102,14 @@ namespace ChessApp
 
         public void Click()
         {
-            selected = !selected;
-            
+            if (amount == 0)
+            {
+                selected = false;
+            }
+            else
+            {
+                selected = !selected;
+            }
         }
 
         public static SideSquare SquareAt(Point mouseposition)
@@ -116,6 +122,24 @@ namespace ChessApp
                 }
             }
             return null;
+        }
+
+        internal static void DeselectAll()
+        {
+            foreach (var square in allsquares)
+            {
+                square.selected = false;
+            }
+        }
+        internal static void Place(PieceType pieceType, Side original)
+        {
+            foreach (var square in allsquares)
+            {
+                if (square.toplace == pieceType && square.side == original)
+                {
+                    square.amount--;
+                }
+            }
         }
     }
 }

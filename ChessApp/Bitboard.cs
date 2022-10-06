@@ -1140,5 +1140,61 @@ namespace ChessApp
 
             this.enpassent = old.enpassant;
         }
+
+        internal void Add(PieceType pieceType, Side side, int location)
+        {
+            if (pieceType == PieceType.Duck)
+            {
+                Duck |= (1ul << location);
+            }
+            if (side == Side.White)
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        W_Pawn |= (1ul<<location);
+                        break;
+                    case PieceType.Rook:
+                        W_Rook |= (1ul << location);
+                        break;
+                    case PieceType.Knight:
+                        W_Knight |= (1ul << location);
+                        break;
+                    case PieceType.Bishop:
+                        W_Bishop |= (1ul << location);
+                        break;
+                    case PieceType.Queen:
+                        W_Queen |= (1ul << location);
+                        break;
+                    case PieceType.King:
+                        W_King |= (1ul << location);
+                        break;
+                }
+            }
+            else
+            {
+                switch (pieceType)
+                {
+                    case PieceType.Pawn:
+                        B_Pawn |= (1ul << location);
+                        break;
+                    case PieceType.Rook:
+                        B_Rook |= (1ul << location);
+                        break;
+                    case PieceType.Knight:
+                        B_Knight |= (1ul << location);
+                        break;
+                    case PieceType.Bishop:
+                        B_Bishop |= (1ul << location);
+                        break;
+                    case PieceType.Queen:
+                        B_Queen |= (1ul << location);
+                        break;
+                    case PieceType.King:
+                        B_King |= (1ul << location);
+                        break;
+                }
+            }
+        }
     }
 }
