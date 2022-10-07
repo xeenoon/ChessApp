@@ -165,7 +165,7 @@ namespace ChessApp
             }
             if (squares.selectedplace != null) //Are we moving here?
             {
-                if (squares.selectedplace.pieceType == PieceType.Duck && !squares.mustMoveDuck)
+                if ((squares.selectedplace.pieceType == PieceType.Duck && !squares.mustMoveDuck) || ((DuckMoves.GetMoves(squares.board.bitboard) & (1ul<<location)) == 0))
                 {
 
                 }

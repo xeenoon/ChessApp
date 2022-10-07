@@ -8,7 +8,7 @@ namespace ChessApp
 {
     public class DuckMoves
     {
-        private static ulong GetMoves(Bitboard b)
+        public static ulong GetMoves(Bitboard b)
         {
             if (b.Goose == 0)
             {
