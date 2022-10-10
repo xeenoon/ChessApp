@@ -95,9 +95,12 @@ namespace ChessApp
             g.DrawString(amount.ToString(), new Font("Arial", 10, FontStyle.Regular), new Pen(Color.Black).Brush, realLocation);
         }
 
-        private void AddPiece(PieceType pieceType, Side side) //Add sidepiece to the board. This can be a duck or a crazyhouse capture
+        public static void AddPiece(PieceType pieceType, Side side) //Add sidepiece to the board. This can be a duck or a crazyhouse capture
         {
-            
+            if (allsquares.Length==1)
+            {
+                allsquares[0,0].amount++;
+            }
         }
 
         public void Click()

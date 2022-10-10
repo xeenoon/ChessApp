@@ -272,7 +272,16 @@ namespace ChessApp
             {
                 return;
             }
-            board.bitboard.UndoMove(undomoves.Last());
+            var last = undomoves.Last();
+            if (last.isplacing)
+            {
+                board.bitboard.UndoPlace(undomoves.Last());
+                SideSquare.AddPiece(last.pieceType, last.side);
+            }
+            else
+            {
+                board.bitboard.UndoMove(undomoves.Last());
+            }
             if (gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose) 
             {
                 if (undomoves.Last().pieceType == PieceType.Duck) //Moving duck switches turns

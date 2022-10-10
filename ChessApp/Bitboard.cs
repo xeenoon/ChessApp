@@ -449,6 +449,8 @@ namespace ChessApp
             public int enpassant;
             public bool enpassant_take;
 
+            public bool isplacing;
+
             public BoardData(byte startlocation, byte endlocation, PieceType pieceType, Side side, PieceType takenPiece, bool w_KingsideCastle, bool b_KingsideCastle, bool w_QueensideCastle, bool b_QueensideCastle, int enpassant, bool enpassant_take)
             {
                 this.startlocation = startlocation;
@@ -462,6 +464,27 @@ namespace ChessApp
                 B_QueensideCastle = b_QueensideCastle;
                 this.enpassant = enpassant;
                 this.enpassant_take = enpassant_take;
+
+                isplacing = false;
+            }
+
+            public BoardData(byte endLocation, PieceType pieceType, Side side, bool w_KingsideCastle, bool b_KingsideCastle, bool w_QueensideCastle, bool b_QueensideCastle)
+            {
+                this.startlocation = 0;
+                this.endlocation = endLocation;
+                this.pieceType = pieceType;
+                this.side = side;
+
+                this.takenPiece = 0;
+                W_KingsideCastle = w_KingsideCastle;
+                B_KingsideCastle = b_KingsideCastle;
+                W_QueensideCastle = w_QueensideCastle;
+                B_QueensideCastle = b_QueensideCastle;
+
+                isplacing = true;
+
+                this.enpassant = -2;
+                this.enpassant_take = false;
             }
         }
         public BoardData Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
@@ -1139,6 +1162,62 @@ namespace ChessApp
             this.B_QueensideCastle = old.B_QueensideCastle; //Reset the castle options
 
             this.enpassent = old.enpassant;
+        }
+        public void UndoPlace(BoardData old)
+        {
+            var location = old.endlocation;
+            if (old.pieceType == PieceType.Duck)
+            {
+                Duck ^= (1ul << location);
+            }
+            if (old.side == Side.White)
+            {
+                switch (old.pieceType)
+                {
+                    case PieceType.Pawn:
+                        W_Pawn ^= (1ul << location);
+                        break;
+                    case PieceType.Rook:
+                        W_Rook ^= (1ul << location);
+                        break;
+                    case PieceType.Knight:
+                        W_Knight ^= (1ul << location);
+                        break;
+                    case PieceType.Bishop:
+                        W_Bishop ^= (1ul << location);
+                        break;
+                    case PieceType.Queen:
+                        W_Queen ^= (1ul << location);
+                        break;
+                    case PieceType.King:
+                        W_King ^= (1ul << location);
+                        break;
+                }
+            }
+            else
+            {
+                switch (old.pieceType)
+                {
+                    case PieceType.Pawn:
+                        B_Pawn ^= (1ul << location);
+                        break;
+                    case PieceType.Rook:
+                        B_Rook ^= (1ul << location);
+                        break;
+                    case PieceType.Knight:
+                        B_Knight ^= (1ul << location);
+                        break;
+                    case PieceType.Bishop:
+                        B_Bishop ^= (1ul << location);
+                        break;
+                    case PieceType.Queen:
+                        B_Queen ^= (1ul << location);
+                        break;
+                    case PieceType.King:
+                        B_King ^= (1ul << location);
+                        break;
+                }
+            }
         }
 
         internal void Add(PieceType pieceType, Side side, int location)

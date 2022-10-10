@@ -194,7 +194,7 @@ namespace ChessApp
                         squares.mustMoveDuck = false;
                         squares.GooseChase(location);
                     }
-
+                    squares.undomoves.Add(new Bitboard.BoardData((byte)location, piece.pieceType, piece.side, squares.board.bitboard.W_KingsideCastle, squares.board.bitboard.B_KingsideCastle, squares.board.bitboard.W_QueensideCastle, squares.board.bitboard.B_QueensideCastle));
                     squares.board.Reload();
                 }
                 squares.selectedplace = null;
