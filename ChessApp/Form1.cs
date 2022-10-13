@@ -91,7 +91,7 @@ namespace ChessApp
                     }
                     if (squares.gameType  == GameType.Crazyhouse)
                     {
-                        MessageBox.Show("AHHHH MY KINGS DEAD");
+                        MessageBox.Show(string.Format("{0}'s king was captured", squares.board.hasturn));
                     }
                 }
             }
