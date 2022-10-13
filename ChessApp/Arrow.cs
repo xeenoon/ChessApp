@@ -39,8 +39,8 @@ namespace ChessApp
                 perpindicular_scale.x_scale = 0;
                 perpindicular_scale.y_scale = 1;
             }
-            PointF bottom_right = location.Start.AddScale(perpindicular_scale, width);
-            PointF bottom_left = location.Start.AddScale(perpindicular_scale, -width); //Go in the opposite direction
+            PointF bottom_right = location.Start.AddScale(perpindicular_scale, width/1.5);
+            PointF bottom_left = location.Start.AddScale(perpindicular_scale, -width/1.5); //Go in the opposite direction
 
             //Now we find the points above
             double scale = location.magnitude - arrow_height; //'1-' means we find the length of the handle of the arrow
