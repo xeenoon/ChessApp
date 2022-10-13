@@ -72,16 +72,27 @@ namespace ChessApp
             checkmateDelay.Stop();
             var copy = squares.board.bitboard.Copy();
             copy.SetupSquareAttacks();
-            if (!squares.mustMoveDuck && !squares.edit && (copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate?
+            if (!squares.mustMoveDuck && !squares.edit) //an we run
             {
-                checkmated = true;
-                if (squares.gameType == GameType.StandardDuck)
+                if ((copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate
                 {
-                    MessageBox.Show("Quackmate");
+                    if (squares.gameType == GameType.Standard)
+                    {
+                        checkmated = true;
+                        MessageBox.Show(String.Format("{0} Checkmated {1}", squares.board.hasturn == Side.White ? Side.Black : Side.White, copy.doublecheck ? "Like a boss" : squares.board.hasturn.ToString()));
+                    }
                 }
-                else
+                else if (copy.W_King == 0 || copy.B_King == 0 || (copy.W_King&copy.BlackPieces) != 0 || (copy.B_King&copy.WhitePieces) != 0) //King captured
                 {
-                    MessageBox.Show(String.Format("{0} Checkmated {1}", squares.board.hasturn == Side.White ? Side.Black : Side.White, copy.doublecheck ? "Like a boss" : squares.board.hasturn.ToString()));
+                    checkmated = true;
+                    if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
+                    {
+                        MessageBox.Show("Quackmate");
+                    }
+                    if (squares.gameType  == GameType.Crazyhouse)
+                    {
+                        MessageBox.Show("AHHHH MY KINGS DEAD");
+                    }
                 }
             }
             running = false;

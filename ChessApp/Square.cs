@@ -219,7 +219,6 @@ namespace ChessApp
                 switch (squares.gameType)
                 {
                     case GameType.Standard:
-                    case GameType.Crazyhouse:
                         board = squares.board.bitboard.Copy();
                         board.SetupSquareAttacks();
 
@@ -255,6 +254,18 @@ namespace ChessApp
                                 moves ^= 1ul << lsb;
                                 squares[lsb].MoveHighlight();
                             }
+                        }
+                        break;
+                    case GameType.Crazyhouse:
+                        board = squares.board.bitboard.Copy();
+                        board.squares_to_block_check = ulong.MaxValue;
+
+                        moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
+                        while (moves != 0ul)
+                        {
+                            byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                            moves ^= 1ul << lsb;
+                            squares[lsb].MoveHighlight();
                         }
                         break;
                 }
