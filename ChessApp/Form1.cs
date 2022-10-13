@@ -143,6 +143,7 @@ namespace ChessApp
             B_KingsideCastle.Checked = chessboard.blackCastles.Kingside;
             B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
 
+            reload = true;
             Invalidate();
 
             panel1.Visible = enabled;

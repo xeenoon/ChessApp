@@ -22,6 +22,7 @@ namespace ChessApp
 
         private Square[] squares = new Square[64];
         Point offset;
+        Point originaloffset;
         Point edit_offset;
         int size;
         public Chessboard board;
@@ -37,6 +38,7 @@ namespace ChessApp
         public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move, Form1 parent)
         {
             this.offset = offset;
+            this.originaloffset = offset;
             DrawEdit(g);
             this.size = size;
             this.board = board;
@@ -50,6 +52,19 @@ namespace ChessApp
 
         public void Reload(Graphics g)
         {
+            if (gameType == GameType.Crazyhouse && offset.Y == originaloffset.Y && !edit)
+            {
+                offset.Y += Form1.SQUARESIZE;
+            }
+            else if (gameType != GameType.Standard && offset.Y != originaloffset.Y)
+            {
+                offset.Y -= Form1.SQUARESIZE;
+                offset.X -= (size + Horizontal_Indent);
+                SetupEdit(edit);
+            }
+
+
+            DrawEdit(g);
             for (int i = 0; i < 64; ++i) //Draw all the squares
             {
                 int xpos = (i % 8);
@@ -59,7 +74,6 @@ namespace ChessApp
                 squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
-            DrawEdit(g);
             DrawArrows(g);
 
             if ((gameType != GameType.Standard) && !edit)
@@ -84,6 +98,11 @@ namespace ChessApp
 
         internal void Paint(Graphics g)
         {
+            if (gameType == GameType.Crazyhouse && offset.Y == originaloffset.Y && !edit)
+            {
+                offset.Y += Form1.SQUARESIZE;
+            }
+
             DrawEdit(g);
             foreach (var square in squares)
             {
