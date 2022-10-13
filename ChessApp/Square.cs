@@ -142,11 +142,11 @@ namespace ChessApp
 
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
-                if (piece != null && squares.gameType == GameType.Crazyhouse)
+                if (piece != null && (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck))
                 {
                     SideSquare.AddPiece(piece.pieceType, piece.side == Side.White ? Side.Black : Side.White);
                 }
-                if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
+                if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose || squares.gameType == GameType.CrazyDuck)
                 {
                     squares.mustMoveDuck = true;
                 }
@@ -270,6 +270,31 @@ namespace ChessApp
                             byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
                             moves ^= 1ul << lsb;
                             squares[lsb].MoveHighlight();
+                        }
+                        break;
+                    case GameType.CrazyDuck:
+                        if (squares.mustMoveDuck || squares.edit)
+                        {
+                            if (piece.pieceType == PieceType.Duck)
+                            {
+                                foreach (var move in DuckMoves.DuckPositions(squares.board.bitboard))
+                                {
+                                    squares[move].MoveHighlight();
+                                }
+                            }
+                        }
+                        else //Normal move
+                        {
+                            board = squares.board.bitboard.Copy();
+                            board.squares_to_block_check = ulong.MaxValue;
+
+                            moves = MoveGenerator.Moves(piece.pieceType, piece.side, (byte)location, board);
+                            while (moves != 0ul)
+                            {
+                                byte lsb = (byte)(BitOperations.TrailingZeros(moves) - 1);
+                                moves ^= 1ul << lsb;
+                                squares[lsb].MoveHighlight();
+                            }
                         }
                         break;
                 }

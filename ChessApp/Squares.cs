@@ -13,7 +13,8 @@ namespace ChessApp
         Standard,
         StandardDuck,
         DuckDuckGoose,
-        Crazyhouse
+        Crazyhouse,
+        CrazyDuck
     }
     internal class Squares
     {
@@ -52,7 +53,7 @@ namespace ChessApp
 
         public void Reload(Graphics g)
         {
-            if (gameType == GameType.Crazyhouse && offset.Y == originaloffset.Y && !edit)
+            if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
                 offset.Y += Form1.SQUARESIZE;
             }
@@ -84,6 +85,10 @@ namespace ChessApp
                     {
                         SideSquare.SetupAll(g, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
+                    else if (gameType == GameType.CrazyDuck)
+                    {
+                        SideSquare.SetupAll(g, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                    }
                     else
                     {
                         SideSquare.SetupAll(g, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
@@ -98,7 +103,7 @@ namespace ChessApp
 
         internal void Paint(Graphics g)
         {
-            if (gameType == GameType.Crazyhouse && offset.Y == originaloffset.Y && !edit)
+            if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
                 offset.Y += Form1.SQUARESIZE;
             }
@@ -117,6 +122,10 @@ namespace ChessApp
                     if (gameType == GameType.Crazyhouse)
                     {
                         SideSquare.SetupAll(g, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                    }
+                    else if (gameType == GameType.CrazyDuck)
+                    {
+                        SideSquare.SetupAll(g, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                     else
                     {

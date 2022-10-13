@@ -72,7 +72,7 @@ namespace ChessApp
             checkmateDelay.Stop();
             var copy = squares.board.bitboard.Copy();
             copy.SetupSquareAttacks();
-            if (!squares.mustMoveDuck && !squares.edit) //an we run
+            if (!squares.edit) //an we run
             {
                 if ((copy.check || copy.doublecheck) && MoveGenerator.MoveCount(copy, squares.board.hasturn) == 0 && checkmated == false) //Checkmate
                 {
@@ -85,7 +85,7 @@ namespace ChessApp
                 else if (copy.W_King == 0 || copy.B_King == 0 || (copy.W_King&copy.BlackPieces) != 0 || (copy.B_King&copy.WhitePieces) != 0) //King captured
                 {
                     checkmated = true;
-                    if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
+                    if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose || squares.gameType == GameType.CrazyDuck)
                     {
                         MessageBox.Show("Quackmate");
                     }
@@ -266,7 +266,13 @@ namespace ChessApp
                     squares.board = new Chessboard(FEN);
                     reload = true;
                 }
-                else if (VariantSelector.SelectedIndex == 3) //Duck duck goose
+                else if (VariantSelector.SelectedIndex == 3) //Crazyhouse
+                {
+                    FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    squares.board = new Chessboard(FEN);
+                    reload = true;
+                }
+                else if (VariantSelector.SelectedIndex == 3) //CrazyDuck
                 {
                     FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
