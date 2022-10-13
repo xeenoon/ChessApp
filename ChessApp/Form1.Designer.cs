@@ -248,7 +248,8 @@
             this.VariantSelector.Items.AddRange(new object[] {
             "Standard",
             "Standard duck",
-            "Duck Duck GOOSE"});
+            "Duck Duck GOOSE",
+            "Crazyhouse"});
             this.VariantSelector.Location = new System.Drawing.Point(15, 173);
             this.VariantSelector.Name = "VariantSelector";
             this.VariantSelector.Size = new System.Drawing.Size(121, 21);

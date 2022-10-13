@@ -36,6 +36,20 @@ namespace ChessApp
                 allsquares[0, 1] = new SideSquare(PieceType.Duck, Side.Black, 1, false, squares, new Rectangle((boardleft + boardright) / 2, boardtop, Form1.SQUARESIZE, Form1.SQUARESIZE));
                 //Create a duck for white and a duck for black
             }
+            if (options == DrawOptions.Crazyhouse)
+            {
+                allsquares = new SideSquare[1, 5]; //Allow a duck for white and black
+                int offset = 0;
+                allsquares[0, 0] = new SideSquare(PieceType.Pawn, Side.White, 1, false, squares, new Rectangle(boardleft + offset, boardbottom, Form1.SQUARESIZE, Form1.SQUARESIZE));
+                offset += Form1.SQUARESIZE;
+                allsquares[0, 1] = new SideSquare(PieceType.Rook, Side.White, 1, false, squares, new Rectangle(boardleft + offset, boardbottom, Form1.SQUARESIZE, Form1.SQUARESIZE));
+                offset += Form1.SQUARESIZE;
+                allsquares[0, 2] = new SideSquare(PieceType.Knight, Side.White, 1, false, squares, new Rectangle(boardleft + offset, boardbottom, Form1.SQUARESIZE, Form1.SQUARESIZE));
+                offset += Form1.SQUARESIZE;
+                allsquares[0, 3] = new SideSquare(PieceType.Bishop, Side.White, 1, false, squares, new Rectangle(boardleft + offset, boardbottom, Form1.SQUARESIZE, Form1.SQUARESIZE));
+                offset += Form1.SQUARESIZE;
+                allsquares[0, 4] = new SideSquare(PieceType.Queen, Side.White, 1, false, squares, new Rectangle(boardleft + offset, boardbottom, Form1.SQUARESIZE, Form1.SQUARESIZE));
+            }
             DrawSquares(g);
             requiresetup = false;
         }

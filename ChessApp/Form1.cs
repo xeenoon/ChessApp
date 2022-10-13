@@ -254,6 +254,12 @@ namespace ChessApp
                     squares.board = new Chessboard(FEN);
                     reload = true;
                 }
+                else if (VariantSelector.SelectedIndex == 3) //Duck duck goose
+                {
+                    FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                    squares.board = new Chessboard(FEN);
+                    reload = true;
+                }
                 squares.gameType = (GameType)VariantSelector.SelectedIndex;
                 Invalidate();
             }
