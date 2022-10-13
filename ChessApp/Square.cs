@@ -142,6 +142,10 @@ namespace ChessApp
 
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
+                if (piece != null)
+                {
+                    SideSquare.AddPiece(piece.pieceType, piece.side == Side.White ? Side.Black : Side.White);
+                }
                 if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
                 {
                     squares.mustMoveDuck = true;

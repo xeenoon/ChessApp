@@ -138,7 +138,10 @@ namespace ChessApp
             }
             location.X = location.X - offset.X;
             location.Y = location.Y - offset.Y;
-
+            if (location.Y < 0 || location.X < 0)
+            {
+                return null;
+            }
             location.X /= size;
             location.Y /= size;
 
