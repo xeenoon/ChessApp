@@ -142,7 +142,7 @@ namespace ChessApp
 
             if (squares.moveSquares.Contains(this)) //Are we moving here?
             {
-                if (piece != null)
+                if (piece != null && squares.gameType == GameType.Crazyhouse)
                 {
                     SideSquare.AddPiece(piece.pieceType, piece.side == Side.White ? Side.Black : Side.White);
                 }
