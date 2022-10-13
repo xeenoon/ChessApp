@@ -219,6 +219,7 @@ namespace ChessApp
                 switch (squares.gameType)
                 {
                     case GameType.Standard:
+                    case GameType.Crazyhouse:
                         board = squares.board.bitboard.Copy();
                         board.SetupSquareAttacks();
 
