@@ -29,11 +29,14 @@ namespace ChessApp
             else
             {
                 g.DrawRectangle(new Pen(Color.Gray), realworld);
+                g.FillRectangle(new Pen(Color.FromArgb(240,240,240)).Brush, realworld);
             }
             g.DrawImage(new Piece(pieceType, side, -1).IMG, realworld);
         }
         public void Click()
         {
+            requiresrepaint = true;
+            
             if (squares.selected_edit != this)
             {
                 if (squares.selected_edit != null)

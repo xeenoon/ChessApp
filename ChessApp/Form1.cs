@@ -169,6 +169,7 @@ namespace ChessApp
                 if (editSquare != null)
                 {
                     editSquare.Click();
+                    Invalidate();
                 }
             }
         }
