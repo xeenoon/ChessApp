@@ -19,9 +19,12 @@ namespace ChessApp
         public Form1()
         {
             InitializeComponent();
+            SQUARESIZE = (this.Size.Height - 60) / 11;
+
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
+            drawing = new Bitmap(Size.Width, Size.Height);
         }
         public void WriteFEN()
         {
@@ -36,28 +39,31 @@ namespace ChessApp
             Invalidate();
         }
 
-        public const int SQUARESIZE = 45;
+        public static int SQUARESIZE = 45;
 
         System.Timers.Timer checkmateDelay;
         bool checkmated = false;
         bool running = false;
         bool reload = false;
+        Bitmap drawing;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            Graphics g = Graphics.FromImage(drawing);
+
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), e.Graphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), g, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
                 squares.AI_can_move = PlayComputer.Checked;
                 comboBox1.SelectedIndex = comboBox1.SelectedIndex;
             }
             else if (reload)
             {
                 reload = false;
-                squares.Reload(e.Graphics);
+                squares.Reload(g);
             }
             else
             {
-                squares.Paint(e.Graphics);
+                squares.Paint(g);
                 if (!checkmated && !running)
                 {
                     running = true;
@@ -66,11 +72,18 @@ namespace ChessApp
                     checkmateDelay.Start();
                 }
             }
+
+            e.Graphics.DrawImage(drawing, 0, 0);
         }
 
         private void CheckMateTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             checkmateDelay.Stop();
+            if (squares == null)
+            {
+                running = false;
+                return;
+            }
             var copy = squares.board.bitboard.Copy();
             copy.SetupSquareAttacks();
             if (!squares.edit) //an we run
@@ -114,7 +127,6 @@ namespace ChessApp
                 if (clicked != null)
                 {
                     clicked.Click();
-                    Invalidate();
                 }
                 SideSquare sidesquare = SideSquare.SquareAt(mouse.Location);
                 if (sidesquare != null)
@@ -128,14 +140,12 @@ namespace ChessApp
                     {
                         squares.selectedplace = null;
                     }
-                    Invalidate();
                 }
 
                 EditSquare editSquare = squares.EditSquareAt(mouse.Location);
                 if (editSquare != null)
                 {
                     editSquare.Click();
-                    Invalidate();
                 }
             }
         }
@@ -156,6 +166,7 @@ namespace ChessApp
             B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
 
             reload = true;
+            drawing = new Bitmap(Size.Width, Size.Height);
             Invalidate();
 
             panel1.Visible = enabled;
@@ -282,6 +293,38 @@ namespace ChessApp
                 SideSquare.requiresetup = true;
                 squares.gameType = (GameType)VariantSelector.SelectedIndex;
                 Invalidate();
+            }
+        }
+        bool resizing = false;
+        int lastwidth = 0;
+        int lastheight = 0;
+        private void Form1_ResizeBegin(object sender, EventArgs e)
+        {
+            resizing = true;
+            lastwidth = 0;
+            lastheight = 0;
+        }
+
+        private void Form1_ResizeEnd(object sender, EventArgs e)
+        {
+            resizing = false;
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (Size.Width <= lastwidth - 5 || Size.Width >= lastwidth + 5)
+            {
+                //Change the width of the graphics
+                lastwidth = this.Size.Width;
+            }
+            if (Size.Height <= lastheight - 5 || Size.Height >= lastheight + 5)
+            {
+                SQUARESIZE = (this.Size.Height-60) / 11;
+                squares = null;
+                drawing = new Bitmap(Size.Width, Size.Height);
+                Invalidate();
+
+                lastheight = this.Size.Height;
             }
         }
     }

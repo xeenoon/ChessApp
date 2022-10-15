@@ -235,7 +235,7 @@
             this.panel1.Controls.Add(this.BlackCastlingOptions);
             this.panel1.Controls.Add(this.W_QueensideCastle);
             this.panel1.Controls.Add(this.W_KingsideCastle);
-            this.panel1.Location = new System.Drawing.Point(489, 47);
+            this.panel1.Location = new System.Drawing.Point(582, 47);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(155, 207);
             this.panel1.TabIndex = 15;
@@ -283,10 +283,13 @@
             this.Name = "Form1";
             this.Text = "Chess UI";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResizeBegin += new System.EventHandler(this.Form1_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.Click += new System.EventHandler(this.Form1_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

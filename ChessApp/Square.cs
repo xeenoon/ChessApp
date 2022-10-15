@@ -25,6 +25,8 @@ namespace ChessApp
         public static Filter move_filter = new Filter(0, 50, 0);
         public bool lastmove;
 
+        public bool requiresPaint = true;
+
         public Square(Rectangle bounds, Piece piece, Color color, int location, ulong bitboard_location, Graphics g, Squares squares, Color selectcolor, Color movecolor)
         {
             this.realworld = bounds;
@@ -85,11 +87,9 @@ namespace ChessApp
             {
                 g.FillRectangle(new Pen(color).Brush, realworld);
             }
-            if (piece != null) 
+            if (piece != null)
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.DrawImage(piece.IMG, realworld);
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
             if (squares.highlight == this && squares.canshowmove)
             {
@@ -107,6 +107,7 @@ namespace ChessApp
 
         internal void Click()
         {
+            requiresPaint = true;
             squares.cancelHighlights = true;
             squares.arrows.Clear();
             squares.arrowStart = null;
@@ -155,10 +156,6 @@ namespace ChessApp
                     squares.mustMoveDuck = false;
                     squares.GooseChase(location);
                 }
-                else
-                {
-                    squares.board.hasturn = squares.board.hasturn == Side.White ? Side.Black : Side.White;
-                }
                 squares.highlight.Move(location);
 
                 lastmove = true;
@@ -170,6 +167,7 @@ namespace ChessApp
                     squares.board.bitboard = Bitboard.FromBoard(squares.board);
                     ((Form1)(Form1.ActiveForm)).WriteFEN();
                 }
+                squares.highlight.requiresPaint = true;
             }
             if (squares.selectedplace != null) //Are we moving here?
             {
@@ -208,7 +206,7 @@ namespace ChessApp
                 squares.selectedplace = null;
                 SideSquare.DeselectAll();
             }
-            squares.moveSquares.Clear();
+            squares.ClearMoves();
 
             if (squares.highlight == this)
             {
@@ -217,6 +215,10 @@ namespace ChessApp
             }
             else
             {
+                if (squares.highlight != null)
+                {
+                    squares.highlight.requiresPaint = true;
+                }
                 squares.highlight = this;
             }
 
@@ -361,6 +363,7 @@ namespace ChessApp
         internal void MoveHighlight()
         {
             squares.moveSquares.Add(this);
+            requiresPaint = true;
         }
 
 

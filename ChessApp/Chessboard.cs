@@ -31,19 +31,19 @@ namespace ChessApp
     }
     public class Piece
     {
-        public static readonly Bitmap img_BLACK_PAWN   = Properties.Resources.BlackPawn;
-        public static readonly Bitmap img_BLACK_ROOK   = Properties.Resources.BlackRook;
-        public static readonly Bitmap img_BLACK_KNIGHT = Properties.Resources.BlackKnight;
-        public static readonly Bitmap img_BLACK_BISHOP = Properties.Resources.BlackBishop;
-        public static readonly Bitmap img_BLACK_KING   = Properties.Resources.BlackKing;
-        public static readonly Bitmap img_BLACK_QUEEN  = Properties.Resources.BlackQueen;
+        public static readonly Bitmap img_BLACK_PAWN   = Properties.Resources.bP;
+        public static readonly Bitmap img_BLACK_ROOK   = Properties.Resources.bR;
+        public static readonly Bitmap img_BLACK_KNIGHT = Properties.Resources.bN;
+        public static readonly Bitmap img_BLACK_BISHOP = Properties.Resources.bB;
+        public static readonly Bitmap img_BLACK_KING   = Properties.Resources.bK;
+        public static readonly Bitmap img_BLACK_QUEEN  = Properties.Resources.bQ;
                
-        public static readonly Bitmap img_WHITE_PAWN   = Properties.Resources.WhitePawn;
-        public static readonly Bitmap img_WHITE_ROOK   = Properties.Resources.WhiteRook;
-        public static readonly Bitmap img_WHITE_KNIGHT = Properties.Resources.WhiteKnight;
-        public static readonly Bitmap img_WHITE_BISHOP = Properties.Resources.WhiteBishop;
-        public static readonly Bitmap img_WHITE_KING   = Properties.Resources.WhiteKing;
-        public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.WhiteQueen;
+        public static readonly Bitmap img_WHITE_PAWN   = Properties.Resources.wP;
+        public static readonly Bitmap img_WHITE_ROOK   = Properties.Resources.wR;
+        public static readonly Bitmap img_WHITE_KNIGHT = Properties.Resources.wN;
+        public static readonly Bitmap img_WHITE_BISHOP = Properties.Resources.wB;
+        public static readonly Bitmap img_WHITE_KING   = Properties.Resources.wK;
+        public static readonly Bitmap img_WHITE_QUEEN  = Properties.Resources.wQ;
 
         public static readonly Bitmap img_DUCK  = Properties.Resources.Duck;
         public static readonly Bitmap img_GOOSE = Properties.Resources.Goose;

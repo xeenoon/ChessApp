@@ -21,7 +21,7 @@ namespace ChessApp
         public GameType gameType = GameType.Standard;
         public bool mustMoveDuck;
 
-        private Square[] squares = new Square[64];
+        public Square[] squares = new Square[64];
         Point offset;
         Point originaloffset;
         Point edit_offset;
@@ -112,7 +112,16 @@ namespace ChessApp
             foreach (var square in squares)
             {
                 square.g = g;
-                square.Paint();
+                if (square.requiresPaint)
+                {
+                    square.Paint();
+                    square.requiresPaint = false;
+                }
+                if (square.IsCheck())
+                {
+                    square.Paint();
+                    square.requiresPaint = true;
+                }
             }
             DrawArrows(g);
             if ((gameType != GameType.Standard) && !edit)
@@ -201,13 +210,20 @@ namespace ChessApp
         }
         public Square highlight;
         public List<Square> moveSquares = new List<Square>();
+        public void ClearMoves()
+        {
+            foreach (var move in moveSquares)
+            {
+                move.requiresPaint = true;
+            }
+            moveSquares.Clear();
+        }
         public bool edit;
         public static int Horizontal_Indent = 5;
         public static int Vertical_Indent = 5;
         internal void SetupEdit(bool indented)
         {
             edit = indented;
-            moveSquares.Clear();
 
             foreach (var square in squares)
             {
@@ -297,6 +313,7 @@ namespace ChessApp
             foreach (var square in movehighlights)
             {
                 square.lastmove = false;
+                square.requiresPaint = true;
             }
             movehighlights.Clear();
         }
