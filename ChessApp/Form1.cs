@@ -81,8 +81,8 @@ namespace ChessApp
             }
             
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-            e.Graphics.DrawImage(boardIMG, 0, 0);
-            e.Graphics.DrawImage(arrowsIMG, 0, 0);
+            e.Graphics.DrawImage(boardIMG, 15,55);
+            e.Graphics.DrawImage(arrowsIMG, 15, 55);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 

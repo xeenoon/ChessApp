@@ -71,7 +71,7 @@ namespace ChessApp
                 int xpos = (i % 8);
                 int ypos = 7 - (i / 8);
 
-                Rectangle bounds = new Rectangle(offset.X + xpos * size, offset.Y + ypos * size, size, size);
+                Rectangle bounds = new Rectangle(xpos * size, ypos * size, size, size);
                 squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
