@@ -426,6 +426,14 @@ namespace ChessApp
             }
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
         }
+        public void ClearArrows()
+        {
+            foreach (var arrow in arrows) 
+            {
+                RepaintEffected(arrow.startloc, arrow.endloc);
+            }
+            arrows.Clear();
+        }
 
         public void AddArrow(Square end, Color arrowcolor)
         {
@@ -452,8 +460,7 @@ namespace ChessApp
             {
                 return;
             }
-
-            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush);
+            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush, arrowStart.location, end.location);
             var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
             if (duplicate != null)
             {
@@ -464,6 +471,81 @@ namespace ChessApp
                 arrows.Add(item);
             }
             arrowStart = null;
+        }
+        public void RepaintEffected(int start, int end)
+        {
+            if ((MoveGenerator.upRight[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.upRight[start] | 1ul<<start;
+                if (start >= 8)
+                {
+                    torepaint |= MoveGenerator.upRight[start - 8];
+                    torepaint |= 1ul << (start - 8);
+                }
+                if (start <= 56)
+                {
+                    torepaint |= MoveGenerator.upRight[start + 8];
+                    torepaint |= 1ul << (start + 8);
+                }
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.upLeft[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.upLeft[start] | 1ul << start;
+                if (start >= 8)
+                {
+                    torepaint |= MoveGenerator.upLeft[start - 8];
+                    torepaint |= 1ul << (start - 8);
+                }
+                if (start <= 56)
+                {
+                    torepaint |= MoveGenerator.upLeft[start + 8];
+                    torepaint |= 1ul << (start + 8);
+                }
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.downLeft[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.downLeft[start] | 1ul << start;
+                if (start >= 8)
+                {
+                    torepaint |= MoveGenerator.downLeft[start - 8];
+                    torepaint |= 1ul << (start - 8);
+                }
+                if (start <= 56)
+                {
+                    torepaint |= MoveGenerator.downLeft[start + 8];
+                    torepaint |= 1ul << (start + 8);
+                }
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.downRight[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.downRight[start] | 1ul << start;
+                if (start >= 8)
+                {
+                    torepaint |= MoveGenerator.downRight[start - 8];
+                    torepaint |= 1ul << (start - 8);
+                }
+                if (start <= 56)
+                {
+                    torepaint |= MoveGenerator.downRight[start + 8];
+                    torepaint |= 1ul << (start + 8);
+                }
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
         }
     }
 }

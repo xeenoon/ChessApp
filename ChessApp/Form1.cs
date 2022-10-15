@@ -152,7 +152,7 @@ namespace ChessApp
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            squares.arrows.Clear();
+            squares.ClearArrows();
             squares.SetupEdit(checkBox1.Checked);
 
             bool enabled = checkBox1.Checked;

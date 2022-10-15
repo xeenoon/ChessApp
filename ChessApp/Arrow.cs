@@ -16,13 +16,19 @@ namespace ChessApp
 
         private PointF[] points = new PointF[7];
 
-        public Arrow(Vector location, double width, double arrow_height, Brush colour)
+        public int startloc;
+        public int endloc;
+
+        public Arrow(Vector location, double width, double arrow_height, Brush colour, int startloc, int endloc)
         {
             this.location = location;
             this.width = width;
             this.arrow_height = arrow_height;
             this.colour = colour;
             CalculatePoints();
+
+            this.startloc = startloc;
+            this.endloc = endloc;
         }
 
         public void CalculatePoints()

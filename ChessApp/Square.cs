@@ -109,7 +109,7 @@ namespace ChessApp
         {
             requiresPaint = true;
             squares.cancelHighlights = true;
-            squares.arrows.Clear();
+            squares.ClearArrows();
             squares.arrowStart = null;
             if (squares.selected_edit != null)
             {
@@ -388,6 +388,7 @@ namespace ChessApp
                 if (squares.arrowStart == null || squares.arrowStart == this)
                 {
                     RightClick();
+                    requiresPaint = true;
                 }
                 else
                 {
