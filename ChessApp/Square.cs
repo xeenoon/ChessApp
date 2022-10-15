@@ -102,7 +102,7 @@ namespace ChessApp
             if (squares.moveSquares.Contains(this) && squares.canshowmove)
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.FillEllipse(new Pen(Color.FromArgb(150,movecolor)).Brush, realworld.X + Form1.SQUARESIZE/6, realworld.Y + Form1.SQUARESIZE / 6, realworld.Width - Form1.SQUARESIZE / 3, realworld.Height - Form1.SQUARESIZE / 3);
+                g.FillEllipse(new Pen(Color.FromArgb(150,movecolor)).Brush, realworld.X + (Form1.SQUARESIZE/6), realworld.Y + (Form1.SQUARESIZE / 6), realworld.Width - (Form1.SQUARESIZE / 3), realworld.Height - (Form1.SQUARESIZE / 3));
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
             }
         }
