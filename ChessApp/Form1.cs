@@ -24,7 +24,6 @@ namespace ChessApp
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
-            drawing = new Bitmap(Size.Width, Size.Height);
         }
         public void WriteFEN()
         {
@@ -45,25 +44,33 @@ namespace ChessApp
         bool checkmated = false;
         bool running = false;
         bool reload = false;
-        Bitmap drawing;
+        Bitmap boardIMG;
+        Bitmap arrowsIMG;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = Graphics.FromImage(drawing);
+            arrowsIMG = new Bitmap(Size.Width, Size.Height);
+            if (squares == null)
+            {
+                boardIMG = new Bitmap(Size.Width, Size.Height);
+            }
+             
+            Graphics boardGraphics = Graphics.FromImage(boardIMG);
+            Graphics arrowGraphics = Graphics.FromImage(arrowsIMG);
 
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), g, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), boardGraphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
                 squares.AI_can_move = PlayComputer.Checked;
                 comboBox1.SelectedIndex = comboBox1.SelectedIndex;
             }
             else if (reload)
             {
                 reload = false;
-                squares.Reload(g);
+                squares.Reload(boardGraphics);
             }
             else
             {
-                squares.Paint(g);
+                squares.Paint(boardGraphics, arrowGraphics);
                 if (!checkmated && !running)
                 {
                     running = true;
@@ -72,8 +79,11 @@ namespace ChessApp
                     checkmateDelay.Start();
                 }
             }
-
-            e.Graphics.DrawImage(drawing, 0, 0);
+            
+            e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+            e.Graphics.DrawImage(boardIMG, 0, 0);
+            e.Graphics.DrawImage(arrowsIMG, 0, 0);
+            e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 
         private void CheckMateTick(object sender, System.Timers.ElapsedEventArgs e)
@@ -166,7 +176,7 @@ namespace ChessApp
             B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
 
             reload = true;
-            drawing = new Bitmap(Size.Width, Size.Height);
+            boardIMG = new Bitmap(Size.Width, Size.Height);
             Invalidate();
 
             panel1.Visible = enabled;
@@ -321,7 +331,6 @@ namespace ChessApp
             {
                 SQUARESIZE = (this.Size.Height-60) / 11;
                 squares = null;
-                drawing = new Bitmap(Size.Width, Size.Height);
                 Invalidate();
 
                 lastheight = this.Size.Height;

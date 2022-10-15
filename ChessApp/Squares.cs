@@ -101,17 +101,17 @@ namespace ChessApp
             }
         }
 
-        internal void Paint(Graphics g)
+        internal void Paint(Graphics boardGraphics, Graphics arrowGraphics)
         {
             if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
                 offset.Y += Form1.SQUARESIZE;
             }
 
-            DrawEdit(g);
+            DrawEdit(boardGraphics);
             foreach (var square in squares)
             {
-                square.g = g;
+                square.g = boardGraphics;
                 if (square.requiresPaint)
                 {
                     square.Paint();
@@ -123,27 +123,27 @@ namespace ChessApp
                     square.requiresPaint = true;
                 }
             }
-            DrawArrows(g);
+            DrawArrows(arrowGraphics);
             if ((gameType != GameType.Standard) && !edit)
             {
                 if (SideSquare.requiresetup)
                 {
                     if (gameType == GameType.Crazyhouse)
                     {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                     else if (gameType == GameType.CrazyDuck)
                     {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                     else
                     {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                 }
                 else
                 {
-                    SideSquare.DrawSquares(g);
+                    SideSquare.DrawSquares(boardGraphics);
                 }
             }
         }
@@ -428,10 +428,6 @@ namespace ChessApp
         }
         public void ClearArrows()
         {
-            foreach (var arrow in arrows) 
-            {
-                RepaintEffected(arrow.startloc, arrow.endloc);
-            }
             arrows.Clear();
         }
 
@@ -472,7 +468,7 @@ namespace ChessApp
             }
             arrowStart = null;
         }
-        public void RepaintEffected(int start, int end)
+     /*   public void RepaintEffected(int start, int end)
         {
             if ((MoveGenerator.upRight[start] & (1ul << end)) != 0)
             {
@@ -546,6 +542,38 @@ namespace ChessApp
                     squares[position].requiresPaint = true;
                 }
             }
-        }
+            else if ((MoveGenerator.down[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.down[start] | 1ul << start;
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.up[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.up[start] | 1ul << start;
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.left[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.left[start] | 1ul << start;
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+            else if ((MoveGenerator.right[start] & (1ul << end)) != 0)
+            {
+                ulong torepaint = MoveGenerator.right[start] | 1ul << start;
+                foreach (var position in BitOperations.Bitloop(torepaint))
+                {
+                    squares[position].requiresPaint = true;
+                }
+            }
+        }*/
     }
 }
