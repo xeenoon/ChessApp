@@ -10,6 +10,8 @@ namespace ChessApp
         public bool selected;
         public Squares squares;
 
+        public bool requiresrepaint = true;
+
         public EditSquare(PieceType pieceType, Side side, Rectangle rectangle, Squares squares)
         {
             this.pieceType = pieceType;

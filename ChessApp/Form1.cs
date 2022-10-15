@@ -46,20 +46,25 @@ namespace ChessApp
         bool reload = false;
         Bitmap boardIMG;
         Bitmap arrowsIMG;
+        Bitmap editIMG;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             arrowsIMG = new Bitmap(Size.Width, Size.Height);
             if (squares == null)
             {
                 boardIMG = new Bitmap(Size.Width, Size.Height);
+                editIMG = new Bitmap(Size.Width, Size.Height);
             }
              
             Graphics boardGraphics = Graphics.FromImage(boardIMG);
             Graphics arrowGraphics = Graphics.FromImage(arrowsIMG);
+            Graphics editGraphics  = Graphics.FromImage(editIMG);
 
             if (squares == null)
             {
-                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), boardGraphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this);
+                squares = new Squares(chessboard, new Point(15,55), SQUARESIZE, Color.FromArgb(234,233,210), Color.FromArgb(75,115,153), boardGraphics, Color.FromArgb(0,0,255), Color.FromArgb(50,50,50), this, editGraphics);
+                squares.SetupEdit(checkBox1.Checked, editGraphics);
+
                 squares.AI_can_move = PlayComputer.Checked;
                 comboBox1.SelectedIndex = comboBox1.SelectedIndex;
             }
@@ -70,7 +75,7 @@ namespace ChessApp
             }
             else
             {
-                squares.Paint(boardGraphics, arrowGraphics);
+                squares.Paint(boardGraphics, arrowGraphics, editGraphics);
                 if (!checkmated && !running)
                 {
                     running = true;
@@ -81,7 +86,15 @@ namespace ChessApp
             }
             
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-            e.Graphics.DrawImage(boardIMG, 15,55);
+            if (squares.edit)
+            {
+                e.Graphics.DrawImage(editIMG , 0, 0);
+                e.Graphics.DrawImage(boardIMG, 15 + SQUARESIZE + 5, 55);
+            }
+            else
+            {
+                e.Graphics.DrawImage(boardIMG, 15, 55);
+            }
             e.Graphics.DrawImage(arrowsIMG, 15, 55);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
@@ -163,7 +176,7 @@ namespace ChessApp
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             squares.ClearArrows();
-            squares.SetupEdit(checkBox1.Checked);
+            arrowsIMG = new Bitmap(Size.Width, Size.Height);
 
             bool enabled = checkBox1.Checked;
 
@@ -175,8 +188,7 @@ namespace ChessApp
             B_KingsideCastle.Checked = chessboard.blackCastles.Kingside;
             B_QueensideCastle.Checked = chessboard.blackCastles.Queenside;
 
-            reload = true;
-            boardIMG = new Bitmap(Size.Width, Size.Height);
+            squares.edit = checkBox1.Checked;
             Invalidate();
 
             panel1.Visible = enabled;

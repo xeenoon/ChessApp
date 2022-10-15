@@ -36,11 +36,11 @@ namespace ChessApp
         Form1 parent;
 
         public List<Bitboard.BoardData> undomoves = new List<Bitboard.BoardData>();
-        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move, Form1 parent)
+        public Squares(Chessboard board, Point offset, int size, Color light, Color dark, Graphics g, Color select, Color move, Form1 parent, Graphics editgraphics)
         {
             this.offset = offset;
             this.originaloffset = offset;
-            DrawEdit(g);
+            DrawEdit(editgraphics);
             this.size = size;
             this.board = board;
             this.light = light;
@@ -61,11 +61,9 @@ namespace ChessApp
             {
                 offset.Y -= Form1.SQUARESIZE;
                 offset.X -= (size + Horizontal_Indent);
-                SetupEdit(edit);
             }
 
 
-            DrawEdit(g);
             for (int i = 0; i < 64; ++i) //Draw all the squares
             {
                 int xpos = (i % 8);
@@ -75,7 +73,6 @@ namespace ChessApp
                 squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
                 squares[i].Paint();
             }
-            DrawArrows(g);
 
             if ((gameType != GameType.Standard) && !edit)
             {
@@ -101,14 +98,14 @@ namespace ChessApp
             }
         }
 
-        internal void Paint(Graphics boardGraphics, Graphics arrowGraphics)
+        internal void Paint(Graphics boardGraphics, Graphics arrowGraphics, Graphics editGraphics)
         {
             if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
                 offset.Y += Form1.SQUARESIZE;
             }
 
-            DrawEdit(boardGraphics);
+            DrawEdit(editGraphics);
             foreach (var square in squares)
             {
                 square.g = boardGraphics;
@@ -221,59 +218,52 @@ namespace ChessApp
         public bool edit;
         public static int Horizontal_Indent = 5;
         public static int Vertical_Indent = 5;
-        internal void SetupEdit(bool indented)
+        internal void SetupEdit(bool indented, Graphics editGraphics)
         {
             edit = indented;
 
-            foreach (var square in squares)
-            {
-                square.realworld = new Rectangle(square.realworld.X + (indented ? size+Horizontal_Indent : -(size+Horizontal_Indent)), square.realworld.Y, size, size);
-            }
-            if (indented) 
-            {
-                edit_offset = offset;
-                editSquares = new EditSquare[14];
-                Rectangle bounds = new Rectangle(this.offset.X, this.offset.Y, size, size);
-                editSquares[0] = new EditSquare(PieceType.King, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[1] = new EditSquare(PieceType.Queen, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[2] = new EditSquare(PieceType.Rook, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[3] = new EditSquare(PieceType.Bishop, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[4] = new EditSquare(PieceType.Knight, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[5] = new EditSquare(PieceType.Pawn, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[6] = new EditSquare(PieceType.None, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
+            edit_offset = offset;
+            editSquares = new EditSquare[14];
+            Rectangle bounds = new Rectangle(this.offset.X, this.offset.Y, size, size);
+            editSquares[0] = new EditSquare(PieceType.King, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[1] = new EditSquare(PieceType.Queen, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[2] = new EditSquare(PieceType.Rook, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[3] = new EditSquare(PieceType.Bishop, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[4] = new EditSquare(PieceType.Knight, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[5] = new EditSquare(PieceType.Pawn, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[6] = new EditSquare(PieceType.None, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
 
-                bounds.X = bounds.X + 9 * size + Horizontal_Indent * 2;
-                bounds.Y = offset.Y;
+            bounds.X = bounds.X + 9 * size + Horizontal_Indent * 2;
+            bounds.Y = offset.Y;
 
-                editSquares[7] = new EditSquare(PieceType.King, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[8] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[9] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[10] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[11] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[12] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
-                editSquares[13] = new EditSquare(PieceType.None, Side.Black, bounds, this);
-                bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[7] = new EditSquare(PieceType.King, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[8] = new EditSquare(PieceType.Queen, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[9] = new EditSquare(PieceType.Rook, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[10] = new EditSquare(PieceType.Bishop, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[11] = new EditSquare(PieceType.Knight, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[12] = new EditSquare(PieceType.Pawn, Side.White, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
+            editSquares[13] = new EditSquare(PieceType.None, Side.Black, bounds, this);
+            bounds.Y = bounds.Y + size + Vertical_Indent;
 
-                offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);
-            }
-            else
+            offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);
+
+
+            foreach (var square in editSquares)
             {
-                editSquares = null;
-                selected_edit = null;
-                offset = new Point(offset.X - (Horizontal_Indent + size), offset.Y);
+                square.Paint(editGraphics);
             }
         }
 
@@ -325,7 +315,11 @@ namespace ChessApp
             {
                 foreach (var sqr in editSquares)
                 {
-                    sqr.Paint(g);
+                    if (sqr.requiresrepaint)
+                    {
+                        sqr.Paint(g);
+                        sqr.requiresrepaint = false;
+                    }
                 }
             }
         }
