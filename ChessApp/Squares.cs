@@ -104,6 +104,10 @@ namespace ChessApp
             {
                 offset.Y += Form1.SQUARESIZE;
             }
+            else if ((gameType != GameType.Crazyhouse && gameType != GameType.CrazyDuck) && offset.Y != originaloffset.Y && !edit)
+            {
+                offset.Y -= Form1.SQUARESIZE;
+            }
 
             DrawEdit(editGraphics);
             foreach (var square in squares)
