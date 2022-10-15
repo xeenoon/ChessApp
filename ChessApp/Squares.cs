@@ -331,6 +331,8 @@ namespace ChessApp
                 return;
             }
             var last = undomoves.Last();
+            squares[last.startlocation].requiresPaint = true;
+            squares[last.endlocation].requiresPaint   = true;
             if (last.isplacing)
             {
                 board.bitboard.UndoPlace(undomoves.Last());
@@ -361,6 +363,12 @@ namespace ChessApp
             undomoves.Remove(undomoves.Last());
 
             board.Reload();
+
+            for (int i = 0; i < squares.Length; i++)
+            {
+                squares[i].piece = board.PieceAt(i);
+            }
+            ClearMoveHighlights();
         }
         public Square this[int index]
         {

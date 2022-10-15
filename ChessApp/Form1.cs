@@ -226,7 +226,6 @@ namespace ChessApp
         {
             squares.UndoMove();
             this.chessboard = squares.board;
-            reload = true;
             Invalidate();
         }
 
