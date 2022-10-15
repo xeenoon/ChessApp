@@ -279,6 +279,7 @@ namespace ChessApp
                     squares.board = new Chessboard(FEN);
                     reload = true;
                 }
+                SideSquare.requiresetup = true;
                 squares.gameType = (GameType)VariantSelector.SelectedIndex;
                 Invalidate();
             }

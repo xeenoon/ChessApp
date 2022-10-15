@@ -155,6 +155,10 @@ namespace ChessApp
                     squares.mustMoveDuck = false;
                     squares.GooseChase(location);
                 }
+                else
+                {
+                    squares.board.hasturn = squares.board.hasturn == Side.White ? Side.Black : Side.White;
+                }
                 squares.highlight.Move(location);
 
                 lastmove = true;
