@@ -100,7 +100,11 @@ namespace ChessApp
         {
             foreach (var square in allsquares)
             {
-                square.Draw(g);
+                if (square.requiresRepaint) 
+                {
+                    square.Draw(g);
+                    square.requiresRepaint = false;
+                }
             }
         }
 
@@ -109,6 +113,7 @@ namespace ChessApp
         public Side side;
         public int amount;
         public bool selected;
+        public bool requiresRepaint = true;
         Squares squares;
 
         public static SideSquare[,] allsquares;
@@ -138,7 +143,9 @@ namespace ChessApp
 
         private void Draw(Graphics g)
         {
+            g.FillRoundedRectangle(new Pen(Color.White).Brush, realLocation, 5);
             g.DrawImage(new Piece(toplace, side, -1).IMG, new Rectangle(realLocation.X + 5, realLocation.Y + 5, realLocation.Width - 8, realLocation.Height - 8));
+
             if (selected) 
             {
                 g.FillRoundedRectangle(new Pen(Color.FromArgb(100, Color.LightGreen)).Brush, realLocation, 5);
@@ -147,6 +154,7 @@ namespace ChessApp
             else
             {
                 g.FillRoundedRectangle(new Pen(Color.FromArgb(50, Color.Gray)).Brush, realLocation, 5);
+                g.DrawRoundedRectangle(new Pen(Color.FromArgb(240,240,240)), realLocation, 5);
             }
             g.DrawString(amount.ToString(), new Font("Arial", 10, FontStyle.Regular), new Pen(Color.Black).Brush, realLocation);
         }
@@ -157,11 +165,15 @@ namespace ChessApp
             {
                 return;
             }
-            allsquares.Cast<SideSquare>().ToList().Where(s => s.side == side && s.toplace == pieceType).FirstOrDefault().amount++;
+
+            SideSquare sideSquare = allsquares.Cast<SideSquare>().ToList().Where(s => s.side == side && s.toplace == pieceType).FirstOrDefault();
+            sideSquare.amount++;
+            sideSquare.requiresRepaint = true;
         }
 
         public void Click()
         {
+            requiresRepaint = true;
             if (amount == 0)
             {
                 selected = false;
@@ -192,7 +204,11 @@ namespace ChessApp
         {
             foreach (var square in allsquares)
             {
-                square.selected = false;
+                if (square.selected)
+                {
+                    square.selected = false;
+                    square.requiresRepaint = true;
+                }
             }
         }
         internal static void Place(PieceType pieceType, Side original)

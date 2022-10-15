@@ -176,6 +176,7 @@ namespace ChessApp
                     {
                         squares.selectedplace = null;
                     }
+                    Invalidate();
                 }
 
                 EditSquare editSquare = squares.EditSquareAt(mouse.Location);
