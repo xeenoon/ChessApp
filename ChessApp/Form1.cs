@@ -47,6 +47,7 @@ namespace ChessApp
         Bitmap boardIMG;
         Bitmap arrowsIMG;
         Bitmap editIMG;
+        Bitmap placeIMG;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             arrowsIMG = new Bitmap(Size.Width, Size.Height);
@@ -54,11 +55,13 @@ namespace ChessApp
             {
                 boardIMG = new Bitmap(Size.Width, Size.Height);
                 editIMG = new Bitmap(Size.Width, Size.Height);
+                placeIMG = new Bitmap(Size.Width, Size.Height);
             }
-             
+
             Graphics boardGraphics = Graphics.FromImage(boardIMG);
             Graphics arrowGraphics = Graphics.FromImage(arrowsIMG);
-            Graphics editGraphics  = Graphics.FromImage(editIMG);
+            Graphics editGraphics = Graphics.FromImage(editIMG);
+            Graphics placeGraphics = Graphics.FromImage(placeIMG);
 
             if (squares == null)
             {
@@ -75,7 +78,7 @@ namespace ChessApp
             }
             else
             {
-                squares.Paint(boardGraphics, arrowGraphics, editGraphics);
+                squares.Paint(boardGraphics, arrowGraphics, editGraphics, placeGraphics);
                 if (!checkmated && !running)
                 {
                     running = true;
@@ -90,6 +93,16 @@ namespace ChessApp
             {
                 e.Graphics.DrawImage(editIMG , 0, 0);
                 e.Graphics.DrawImage(boardIMG, 15 + SQUARESIZE + 5, 55);
+            }
+            else if (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck)
+            {
+                e.Graphics.DrawImage(placeIMG, 0, 0);
+                e.Graphics.DrawImage(boardIMG, 15, 55 + Form1.SQUARESIZE);
+            }
+            else if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
+            {
+                e.Graphics.DrawImage(placeIMG, 0, 0);
+                e.Graphics.DrawImage(boardIMG, 15, 55);
             }
             else
             {

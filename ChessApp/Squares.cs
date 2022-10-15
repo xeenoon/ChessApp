@@ -98,7 +98,7 @@ namespace ChessApp
             }
         }
 
-        internal void Paint(Graphics boardGraphics, Graphics arrowGraphics, Graphics editGraphics)
+        internal void Paint(Graphics boardGraphics, Graphics arrowGraphics, Graphics editGraphics, Graphics placeGraphics)
         {
             if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
@@ -127,20 +127,20 @@ namespace ChessApp
                 {
                     if (gameType == GameType.Crazyhouse)
                     {
-                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(placeGraphics, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                     else if (gameType == GameType.CrazyDuck)
                     {
-                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(placeGraphics, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                     else
                     {
-                        SideSquare.SetupAll(boardGraphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
+                        SideSquare.SetupAll(placeGraphics, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
                     }
                 }
                 else
                 {
-                    SideSquare.DrawSquares(boardGraphics);
+                    SideSquare.DrawSquares(placeGraphics);
                 }
             }
         }
