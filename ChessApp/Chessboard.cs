@@ -124,6 +124,10 @@ namespace ChessApp
             {
                 return "D";
             }
+            if (pieceType == PieceType.Goose)
+            {
+                return "G";
+            }
             if (side == Side.Black)
             {
                 switch (pieceType)

@@ -57,7 +57,7 @@ namespace ChessApp
             {
                 offset.Y += Form1.SQUARESIZE;
             }
-            else if (gameType != GameType.Standard && offset.Y != originaloffset.Y)
+            else if (edit && gameType != GameType.Standard && offset.Y != originaloffset.Y)
             {
                 offset.Y -= Form1.SQUARESIZE;
                 offset.X -= (size + Horizontal_Indent);
@@ -328,7 +328,7 @@ namespace ChessApp
             {
                 board.bitboard.UndoMove(undomoves.Last());
             }
-            if (gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose) 
+            if (gameType == GameType.StandardDuck || gameType == GameType.DuckDuckGoose || gameType == GameType.CrazyDuck) 
             {
                 if (undomoves.Last().pieceType == PieceType.Duck) //Moving duck switches turns
                 {
