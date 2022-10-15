@@ -153,6 +153,10 @@ namespace ChessApp
             }
             location.X = location.X - offset.X;
             location.Y = location.Y - offset.Y;
+            if (edit)
+            {
+                location.X -= (Form1.SQUARESIZE + 5);
+            }
             if (location.Y < 0 || location.X < 0)
             {
                 return null;
@@ -175,7 +179,7 @@ namespace ChessApp
         public EditSquare selected_edit;
         internal EditSquare EditSquareAt(Point location)
         {
-            if (editSquares == null)
+            if (editSquares == null || !edit)
             {
                 return null;
             }
@@ -257,9 +261,6 @@ namespace ChessApp
             bounds.Y = bounds.Y + size + Vertical_Indent;
             editSquares[13] = new EditSquare(PieceType.None, Side.Black, bounds, this);
             bounds.Y = bounds.Y + size + Vertical_Indent;
-
-            offset = new Point(offset.X + Horizontal_Indent + size, offset.Y);
-
 
             foreach (var square in editSquares)
             {

@@ -67,6 +67,8 @@ namespace ChessApp
         }
         public void Paint()
         {
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.Default;
+
             if (squares.cancelHighlights)
             {
                 dangerhighlight = false;
