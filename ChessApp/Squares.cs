@@ -342,7 +342,7 @@ namespace ChessApp
             if (last.isplacing)
             {
                 board.bitboard.UndoPlace(undomoves.Last());
-                SideSquare.AddPiece(last.pieceType, last.side);
+                SideSquare.AddPiece(last.pieceType, last.side == Side.Animal ? board.hasturn==Side.White ? Side.Black : Side.White : last.side);
             }
             else
             {

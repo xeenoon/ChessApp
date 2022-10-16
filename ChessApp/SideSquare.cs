@@ -167,6 +167,10 @@ namespace ChessApp
             }
 
             SideSquare sideSquare = allsquares.Cast<SideSquare>().ToList().Where(s => s.side == side && s.toplace == pieceType).FirstOrDefault();
+            if (sideSquare == null)
+            {
+                return;
+            }
             sideSquare.amount++;
             sideSquare.requiresRepaint = true;
         }

@@ -373,24 +373,32 @@ namespace ChessApp
                     FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
+                    placeIMG = new Bitmap(Size.Width, Size.Height);
+
                 }
                 else if (VariantSelector.SelectedIndex == 2) //Duck duck goose
                 {
                     FEN = "rnbqkbnr/pppppppp/8/8/3G4/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
+                    placeIMG = new Bitmap(Size.Width, Size.Height);
+
                 }
                 else if (VariantSelector.SelectedIndex == 3) //Crazyhouse
                 {
                     FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
+                    placeIMG = new Bitmap(Size.Width, Size.Height);
+
                 }
                 else if (VariantSelector.SelectedIndex == 3) //CrazyDuck
                 {
                     FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                     squares.board = new Chessboard(FEN);
                     reload = true;
+                    placeIMG = new Bitmap(Size.Width, Size.Height);
+
                 }
                 SideSquare.requiresetup = true;
                 squares.gameType = (GameType)VariantSelector.SelectedIndex;
