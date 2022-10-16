@@ -440,7 +440,7 @@ namespace ChessApp
             {
                 return;
             }
-            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), 8, 25, new Pen(Color.FromArgb(200,arrowcolor)).Brush, arrowStart.location, end.location);
+            Arrow item = new Arrow(new Vector(arrowStart.realworld.Center(), end.realworld.Center()), Form1.SQUARESIZE/5, Form1.SQUARESIZE/2, new Pen(Color.FromArgb(200,arrowcolor)).Brush, arrowStart.location, end.location);
             var duplicate = arrows.Where(a => a.location == item.location).FirstOrDefault();
             if (duplicate != null)
             {

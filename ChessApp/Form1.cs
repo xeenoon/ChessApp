@@ -139,6 +139,7 @@ namespace ChessApp
                 squares.Reload(boardGraphics); //Re-write the squares with the new squaresize
                 squares.SetupEdit(squares.edit, editGraphics);
                 SideSquare.requiresetup = true;
+                squares.ClearArrows();
                 squares.Paint(boardGraphics, arrowGraphics, editGraphics, placeGraphics);
             }
             else
@@ -422,7 +423,14 @@ namespace ChessApp
             }
             if (Size.Height <= lastheight - 5 || Size.Height >= lastheight + 5)
             {
-                SQUARESIZE = (this.Size.Height-60) / 11;
+                if (Size.Height <= Size.Width)
+                {
+                    SQUARESIZE = (this.Size.Height - 60) / 11;
+                }
+                else if (Size.Width <= Size.Height)
+                {
+                    SQUARESIZE = (this.Size.Width - 60) / 11;
+                }
                 Invalidate();
 
                 lastheight = this.Size.Height;
