@@ -223,6 +223,7 @@
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.panel1.Controls.Add(this.VariantSelector);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.CastlingOptionsTitle);
@@ -241,6 +242,9 @@
             this.panel1.Size = new System.Drawing.Size(155, 207);
             this.panel1.TabIndex = 15;
             this.panel1.Visible = false;
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MovingPanel);
+            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
             // VariantSelector
             // 
@@ -289,6 +293,7 @@
             this.Click += new System.EventHandler(this.Form1_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MovingPanel);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);

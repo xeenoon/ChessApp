@@ -408,6 +408,8 @@ namespace ChessApp
         bool resizing = false;
         int lastwidth = 0;
         int lastheight = 0;
+        private bool _capturingMoves;
+
         private void Form1_ResizeBegin(object sender, EventArgs e)
         {
             resizing = true;
@@ -447,6 +449,41 @@ namespace ChessApp
             {
                 reset = true;
                 Invalidate();
+            }
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || _capturingMoves)
+            {
+                return;
+            }
+
+            // Might want to pad these values a bit if the line is only 1px,
+            // might be hard for the user to hit directly
+
+
+            _capturingMoves = true;
+            lastpos = Cursor.Position;
+        }
+
+        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            _capturingMoves = false;
+        }
+
+        Point lastpos = new Point(0,0);
+        private void MovingPanel(object sender, MouseEventArgs e)
+        {
+            if (_capturingMoves)
+            {
+                var difference = new Point(Cursor.Position.X - lastpos.X, Cursor.Position.Y-lastpos.Y);
+                if (difference.X >= 10)
+                {
+
+                }
+                panel1.Location = new Point(difference.X+panel1.Location.X, difference.Y + panel1.Location.Y);
+                lastpos = Cursor.Position;
             }
         }
     }
