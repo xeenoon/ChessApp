@@ -143,18 +143,18 @@ namespace ChessApp
 
         private void Draw(Graphics g)
         {
-            g.FillRoundedRectangle(new Pen(Color.White).Brush, realLocation, 5);
-            g.DrawImage(new Piece(toplace, side, -1).IMG, new Rectangle(realLocation.X + 5, realLocation.Y + 5, realLocation.Width - 8, realLocation.Height - 8));
+            g.FillRoundedRectangle(new Pen(Color.White).Brush, realLocation, Form1.SQUARESIZE/9);
+            g.DrawImage(new Piece(toplace, side, -1).IMG, new Rectangle(realLocation.X + (Form1.SQUARESIZE / 9), realLocation.Y + (Form1.SQUARESIZE / 9), realLocation.Width - (Form1.SQUARESIZE / 5), realLocation.Height - (Form1.SQUARESIZE / 5)));
 
-            if (selected) 
+            if (selected)
             {
-                g.FillRoundedRectangle(new Pen(Color.FromArgb(100, Color.LightGreen)).Brush, realLocation, 5);
-                g.DrawRoundedRectangle(new Pen(Color.Black), realLocation, 5);
+                g.FillRoundedRectangle(new Pen(Color.FromArgb(100, Color.LightGreen)).Brush, realLocation, (Form1.SQUARESIZE / 9));
+                g.DrawRoundedRectangle(new Pen(Color.Black), realLocation, (Form1.SQUARESIZE / 9));
             }
             else
             {
-                g.FillRoundedRectangle(new Pen(Color.FromArgb(50, Color.Gray)).Brush, realLocation, 5);
-                g.DrawRoundedRectangle(new Pen(Color.FromArgb(240,240,240)), realLocation, 5);
+                g.FillRoundedRectangle(new Pen(Color.FromArgb(50, Color.Gray)).Brush, realLocation, (Form1.SQUARESIZE / 9));
+                g.DrawRoundedRectangle(new Pen(Color.FromArgb(240,240,240)), realLocation, (Form1.SQUARESIZE / 9));
             }
             g.DrawString(amount.ToString(), new Font("Arial", 10, FontStyle.Regular), new Pen(Color.Black).Brush, realLocation);
         }

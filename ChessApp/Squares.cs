@@ -22,10 +22,10 @@ namespace ChessApp
         public bool mustMoveDuck;
 
         public Square[] squares = new Square[64];
-        Point offset;
-        Point originaloffset;
+        public Point offset;
+        public Point originaloffset;
         Point edit_offset;
-        int size;
+        public int size;
         public Chessboard board;
 
         Color light;
@@ -51,7 +51,7 @@ namespace ChessApp
             Reload(g);
         }
 
-        public void Reload(Graphics g)
+        public void Reload(Graphics boardGraphics)
         {
             if ((gameType == GameType.Crazyhouse || gameType == GameType.CrazyDuck) && offset.Y == originaloffset.Y && !edit)
             {
@@ -70,31 +70,8 @@ namespace ChessApp
                 int ypos = 7 - (i / 8);
 
                 Rectangle bounds = new Rectangle(xpos * size, ypos * size, size, size);
-                squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, g, this, select, move);
+                squares[i] = new Square(bounds, board.PieceAt(i), (i + i / 8) % 2 == 1 ? light : dark, i, 1ul << i, boardGraphics, this, select, move);
                 squares[i].Paint();
-            }
-
-            if ((gameType != GameType.Standard) && !edit)
-            {
-                if (SideSquare.requiresetup)
-                {
-                    if (gameType == GameType.Crazyhouse)
-                    {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.Crazyhouse, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
-                    }
-                    else if (gameType == GameType.CrazyDuck)
-                    {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.CrazyDuck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
-                    }
-                    else
-                    {
-                        SideSquare.SetupAll(g, SideSquare.DrawOptions.Duck, offset.Y + (size * 8), offset.Y, offset.X, offset.X + (size * 8), this);
-                    }
-                }
-                else
-                {
-                    SideSquare.DrawSquares(g);
-                }
             }
         }
 
@@ -106,7 +83,7 @@ namespace ChessApp
             }
             else if ((gameType != GameType.Crazyhouse && gameType != GameType.CrazyDuck) && offset.Y != originaloffset.Y && !edit)
             {
-                offset.Y -= Form1.SQUARESIZE;
+                offset.Y = originaloffset.Y;
             }
 
             DrawEdit(editGraphics);
@@ -313,7 +290,7 @@ namespace ChessApp
             movehighlights.Clear();
         }
 
-        EditSquare[] editSquares;
+        public EditSquare[] editSquares;
         public void DrawEdit(Graphics g)
         {
             if (edit)

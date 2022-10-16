@@ -44,12 +44,41 @@ namespace ChessApp
         bool checkmated = false;
         bool running = false;
         bool reload = false;
+        bool reset = false;
         Bitmap boardIMG;
         Bitmap arrowsIMG;
         Bitmap editIMG;
         Bitmap placeIMG;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            if (resizing)
+            {
+                e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                if (squares.edit)
+                {
+                    e.Graphics.DrawImage(editIMG, 0, 0, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 20 + SQUARESIZE, SQUARESIZE+10, Size.Width, Size.Height);
+                }
+                else if (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck)
+                {
+                    e.Graphics.DrawImage(placeIMG, 0, 0, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 15, Form1.SQUARESIZE+55, Size.Width, Size.Height);
+                }
+                else if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
+                {
+                    e.Graphics.DrawImage(placeIMG, 0, 0, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
+                }
+                else
+                {
+                    e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
+                }
+                e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+                e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+                return;
+            }
+
             arrowsIMG = new Bitmap(Size.Width, Size.Height);
             if (squares == null)
             {
@@ -75,6 +104,42 @@ namespace ChessApp
             {
                 reload = false;
                 squares.Reload(boardGraphics);
+            }
+            else if (reset)
+            {
+                reset = false;
+
+                boardIMG  = new Bitmap(Size.Width, Size.Height);
+                editIMG   = new Bitmap(Size.Width, Size.Height);
+                placeIMG  = new Bitmap(Size.Width, Size.Height);
+                arrowsIMG = new Bitmap(Size.Width, Size.Height);
+
+                boardGraphics = Graphics.FromImage(boardIMG);
+                arrowGraphics = Graphics.FromImage(arrowsIMG);
+                editGraphics  = Graphics.FromImage(editIMG);
+                placeGraphics = Graphics.FromImage(placeIMG);
+
+                foreach (var editsquare in squares.editSquares)
+                {
+                    editsquare.requiresrepaint = true;
+                }
+                if (SideSquare.allsquares != null) 
+                {
+                    foreach (var sidesquare in SideSquare.allsquares)
+                    {
+                        if (sidesquare != null) 
+                        {
+                            sidesquare.requiresRepaint = true;
+                        }
+                    }
+                }
+
+                squares.size = SQUARESIZE;
+                squares.offset = squares.originaloffset;
+                squares.Reload(boardGraphics); //Re-write the squares with the new squaresize
+                squares.SetupEdit(squares.edit, editGraphics);
+                SideSquare.requiresetup = true;
+                squares.Paint(boardGraphics, arrowGraphics, editGraphics, placeGraphics);
             }
             else
             {
@@ -344,6 +409,8 @@ namespace ChessApp
         private void Form1_ResizeEnd(object sender, EventArgs e)
         {
             resizing = false;
+            reset = true;
+            Invalidate();
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -356,10 +423,14 @@ namespace ChessApp
             if (Size.Height <= lastheight - 5 || Size.Height >= lastheight + 5)
             {
                 SQUARESIZE = (this.Size.Height-60) / 11;
-                squares = null;
                 Invalidate();
 
                 lastheight = this.Size.Height;
+            }
+            if (!resizing)
+            {
+                reset = true;
+                Invalidate();
             }
         }
     }
