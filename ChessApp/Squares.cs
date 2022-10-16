@@ -273,6 +273,8 @@ namespace ChessApp
 
             int newloc = gooseloc.X + xdistance + (gooseloc.Y + ydistance) * 8;
             squares[newloc].piece = goose.piece;
+            squares[newloc].requiresPaint = true;
+            squares[gooseloc.X + gooseloc.Y*8].requiresPaint = true;
             squares[newloc].piece.position = newloc;
             goose.piece = null;
 
@@ -314,6 +316,29 @@ namespace ChessApp
             var last = undomoves.Last();
             squares[last.startlocation].requiresPaint = true;
             squares[last.endlocation].requiresPaint   = true;
+            if (last.pieceType == PieceType.King && Math.Abs(last.startlocation-last.endlocation) >= 2) //Castling?
+            {
+                if (last.endlocation == 2)
+                {
+                    squares[0].requiresPaint = true;
+                    squares[3].requiresPaint = true;
+                }
+                else if (last.endlocation == 6)
+                {
+                    squares[5].requiresPaint = true;
+                    squares[7].requiresPaint = true;
+                }
+                else if (last.endlocation == 58)
+                {
+                    squares[56].requiresPaint = true;
+                    squares[59].requiresPaint = true;
+                }
+                else if (last.endlocation == 62)
+                {
+                    squares[63].requiresPaint = true;
+                    squares[61].requiresPaint = true;
+                }
+            }
             if (last.isplacing)
             {
                 board.bitboard.UndoPlace(undomoves.Last());
@@ -383,6 +408,9 @@ namespace ChessApp
 
                     squares[move.last].lastmove = true;
                     squares[move.current].lastmove = true;
+                    squares[move.last].requiresPaint = true;
+                    squares[move.current].requiresPaint = true;
+
                     foreach (var square in squares)
                     {
                         square.piece = board.PieceAt(square.location);
@@ -452,112 +480,5 @@ namespace ChessApp
             }
             arrowStart = null;
         }
-     /*   public void RepaintEffected(int start, int end)
-        {
-            if ((MoveGenerator.upRight[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.upRight[start] | 1ul<<start;
-                if (start >= 8)
-                {
-                    torepaint |= MoveGenerator.upRight[start - 8];
-                    torepaint |= 1ul << (start - 8);
-                }
-                if (start <= 56)
-                {
-                    torepaint |= MoveGenerator.upRight[start + 8];
-                    torepaint |= 1ul << (start + 8);
-                }
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.upLeft[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.upLeft[start] | 1ul << start;
-                if (start >= 8)
-                {
-                    torepaint |= MoveGenerator.upLeft[start - 8];
-                    torepaint |= 1ul << (start - 8);
-                }
-                if (start <= 56)
-                {
-                    torepaint |= MoveGenerator.upLeft[start + 8];
-                    torepaint |= 1ul << (start + 8);
-                }
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.downLeft[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.downLeft[start] | 1ul << start;
-                if (start >= 8)
-                {
-                    torepaint |= MoveGenerator.downLeft[start - 8];
-                    torepaint |= 1ul << (start - 8);
-                }
-                if (start <= 56)
-                {
-                    torepaint |= MoveGenerator.downLeft[start + 8];
-                    torepaint |= 1ul << (start + 8);
-                }
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.downRight[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.downRight[start] | 1ul << start;
-                if (start >= 8)
-                {
-                    torepaint |= MoveGenerator.downRight[start - 8];
-                    torepaint |= 1ul << (start - 8);
-                }
-                if (start <= 56)
-                {
-                    torepaint |= MoveGenerator.downRight[start + 8];
-                    torepaint |= 1ul << (start + 8);
-                }
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.down[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.down[start] | 1ul << start;
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.up[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.up[start] | 1ul << start;
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.left[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.left[start] | 1ul << start;
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-            else if ((MoveGenerator.right[start] & (1ul << end)) != 0)
-            {
-                ulong torepaint = MoveGenerator.right[start] | 1ul << start;
-                foreach (var position in BitOperations.Bitloop(torepaint))
-                {
-                    squares[position].requiresPaint = true;
-                }
-            }
-        }*/
     }
 }

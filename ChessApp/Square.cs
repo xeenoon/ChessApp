@@ -332,14 +332,18 @@ namespace ChessApp
             {
                 var kingsiderook = squares.board.PieceAt(location + 1);
                 squares[location + 1].piece = null;
+                squares[location + 1].requiresPaint = true;
                 squares[location - 1].piece = kingsiderook;
+                squares[location - 1].requiresPaint = true;
                 kingsiderook.position = location - 1;
             }
             if (piece.pieceType == PieceType.King && (location - this.location) == -2) //Queenside castle?
             {
                 var kingsiderook = squares.board.PieceAt(location - 2);
                 squares[location - 2].piece = null;
+                squares[location - 2].requiresPaint = true;
                 squares[location + 1].piece = kingsiderook;
+                squares[location + 1].requiresPaint = true;
                 kingsiderook.position = location + 1;
             }
 
