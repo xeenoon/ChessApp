@@ -256,10 +256,22 @@ namespace ChessApp
         {
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
+            textparse = textparse.RemoveChars('+');
+            textparse = textparse.RemoveChars('#');
             string FEN = textparse.Substring(textparse.IndexOf("1"));
             Move normalMove = new Move();
 
-            var lastnumber = int.Parse(FEN[FEN.LastIndexOf('.') - 1].ToString()); //Find the last number
+            int v = FEN.LastIndexOf('.');
+            string num = FEN[v - 1].ToString();
+            if (char.IsNumber(FEN[v-2]))
+            {
+                num = num.Insert(0,FEN[v - 2].ToString());
+            }
+            if (char.IsNumber(FEN[v - 3]))
+            {
+                num = num.Insert(0, FEN[v - 3].ToString());
+            }
+            var lastnumber = int.Parse(num); //Find the last number
             for (int i = 1; i < lastnumber + 1; ++i)
             {
                 int nextidx = FEN.IndexOf((i + 1).ToString() + ".");
@@ -318,6 +330,11 @@ namespace ChessApp
 
                         if (char.IsNumber(FEN_data[idx]) && FEN_data[idx + 1] == ' ') //End of move?
                         {
+                            while (char.IsNumber(normalData[0]))
+                            {
+                                normalData = normalData.Substring(1);
+                            }
+
                             char piecetype_text = normalData[0];
                             PieceType pieceType = PieceType.None;
                             if (char.IsLower(piecetype_text)) //Pawn?
@@ -404,7 +421,7 @@ namespace ChessApp
                             {
 
                             }
-                            if ((idx+2 <= FEN_data.Length && FEN_data[idx+2] == '{')) //Have we missed a comment?
+                            if ((idx+3 <= FEN_data.Length && FEN_data[idx+2] == '{')) //Have we missed a comment?
                             {
                                 continue;
                             }

@@ -11,7 +11,27 @@ namespace ChessApp
 {
     internal static class Extensions
     {
-
+        public static string RemoveChars(this string s, char toremove)
+        {
+            string result = "";
+            bool insidecomment = false;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                if (s[i] == '{')
+                {
+                    insidecomment = true;
+                }
+                else if (s[i] == '}')
+                {
+                    insidecomment = false;
+                }
+                else if (s[i] != toremove && !insidecomment)
+                {
+                    result += s[i];
+                }
+            }
+            return result;
+        }
         public static int GetFileNum(this char c)
         {
             switch (c)
