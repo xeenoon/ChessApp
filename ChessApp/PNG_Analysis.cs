@@ -346,6 +346,14 @@ namespace ChessApp
                                 }
                                 normalData = normalData.Substring(1); //Remove the leading letter
                             }
+                            if (pieceType == PieceType.Pawn && normalData[1] == 'x') //Are we taking?
+                            {
+                                normalData = normalData.Substring(2); //Taking is autosimulated, just ignore it
+                            }
+                            else if(normalData[0] == 'x') //Just something normal taking?
+                            {
+                                normalData = normalData.Substring(1); //Again, taking is done automatically, ignore the X
+                            }
                             //Piecetype has been assigned, lets see what we can find out about the original location
                             int startrow = -1;
                             int startcol = -1;
