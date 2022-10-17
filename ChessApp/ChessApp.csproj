@@ -78,6 +78,7 @@
     <Compile Include="MoveGenerator.cs" />
     <Compile Include="DuckMoves.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="PNG_Analysis.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SideSquare.cs" />

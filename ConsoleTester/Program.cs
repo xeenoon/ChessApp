@@ -11,6 +11,13 @@ namespace EngineTester
         static string input;
         static void Main(string[] args)
         {
+            string PGN = Console.ReadLine();
+            PNG png = new PNG(PGN);
+            foreach (var move in png.data)
+            {
+                Console.WriteLine(move.ToString());
+            }
+            return;
             Console.Write("Search depth: ");
 
             while (true)

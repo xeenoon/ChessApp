@@ -486,5 +486,12 @@ namespace ChessApp
                 lastpos = Cursor.Position;
             }
         }
+
+        Bitmap pngIMG;
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+       //     var pnggraphics = Graphics.FromImage(pngIMG);
+       //     e.Graphics.DrawImage(pngIMG, 0,0, panel2.Width, panel2.Height);
+        }
     }
 }
