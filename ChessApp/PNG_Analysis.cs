@@ -297,7 +297,7 @@ namespace ChessApp
 
                         startpos.Reload();
 
-                        if (!secondmove && (FEN_data[idx+2] == 'T' || FEN_data[idx + 2] == '1' || FEN_data[idx + 2] == '0' || FEN_data[idx + 2] == 'R'))
+                        if (!secondmove && ((idx+2 < FEN_data.Length)&&((FEN_data[idx+2] == 'T' || FEN_data[idx + 2] == '1' || FEN_data[idx + 2] == '0' || FEN_data[idx + 2] == 'R'))))
                         {
                             return; ///Game over
                         }
@@ -396,7 +396,7 @@ namespace ChessApp
                             {
 
                             }
-                            if ((!secondmove && char.IsLetter(FEN_data[FEN_data.IndexOf('}')+2]) || char.IsNumber(FEN_data[FEN_data.IndexOf('}') + 2])) || (secondmove && FEN_data.Substring(idx).Contains('{'))) //Have we missed a comment?
+                            if ((idx+2 <= FEN_data.Length && FEN_data[idx+2] == '{')) //Have we missed a comment?
                             {
                                 continue;
                             }
