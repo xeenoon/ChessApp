@@ -124,7 +124,7 @@ namespace ChessApp
                     skiptimes = 1; //a1=Q, Remove the 'Q' at the end. Automatically cancelled
                     continue;
                 }
-                else if (insidecomment)
+                else
                 {
                     result += s[i];
                 }
