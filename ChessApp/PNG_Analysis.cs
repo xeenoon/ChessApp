@@ -258,18 +258,21 @@ namespace ChessApp
 
             textparse = textparse.RemoveChars('+');
             textparse = textparse.RemoveChars('#');
+
+            textparse = textparse.RemoveCastles();
+
             string FEN = textparse.Substring(textparse.IndexOf("1"));
             Move normalMove = new Move();
 
             int v = FEN.LastIndexOf('.');
             string num = FEN[v - 1].ToString();
-            if (char.IsNumber(FEN[v-2]))
+            if (v>= 2 && char.IsNumber(FEN[v-2]))
             {
                 num = num.Insert(0,FEN[v - 2].ToString());
-            }
-            if (char.IsNumber(FEN[v - 3]))
-            {
-                num = num.Insert(0, FEN[v - 3].ToString());
+                if (v >= 3 && char.IsNumber(FEN[v - 3]))
+                {
+                    num = num.Insert(0, FEN[v - 3].ToString());
+                }
             }
             var lastnumber = int.Parse(num); //Find the last number
             for (int i = 1; i < lastnumber + 1; ++i)
@@ -365,7 +368,7 @@ namespace ChessApp
                             }
                             if (pieceType == PieceType.Pawn && normalData[1] == 'x') //Are we taking?
                             {
-                                normalData = normalData.Substring(2); //Taking is autosimulated, just ignore it
+                                normalData = normalData.Substring(2).Insert(0, normalData[0].ToString()); //Taking is autosimulated, just ignore it
                             }
                             else if(normalData[0] == 'x') //Just something normal taking?
                             {
@@ -385,10 +388,12 @@ namespace ChessApp
                                 if (char.IsLetter(normalData[0])) //Reading file
                                 {
                                     startcol = normalData[0].GetFileNum();
+                                    normalData = normalData.Substring(1);
                                 }
                                 else if (char.IsNumber(normalData[0]))
                                 {
                                     startrow = int.Parse(normalData[0].ToString()) - 1;
+                                    normalData = normalData.Substring(1);
                                 }
                             }
                             //We collected the data we know, now try to find the start position

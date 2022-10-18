@@ -32,6 +32,65 @@ namespace ChessApp
             }
             return result;
         }
+        public static string RemoveCastles(this string s)
+        {
+            string result = "";
+            bool insidecomment = false;
+            int skiptimes = 0;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                if (skiptimes >= 1)
+                {
+                    --skiptimes;
+                    continue;
+                }
+                if (s[i] == '{')
+                {
+                    insidecomment = true;
+                }
+                else if (s[i] == '}')
+                {
+                    insidecomment = false;
+                }
+                else if (!insidecomment)
+                {
+                    var c = s[i];
+                    if (c == 'O') //Castling
+                    {
+                        if (s[i - 2] == '.') //White?
+                        {
+                            if (i + 5 <= s.Length && s[i + 4] == 'O' && s[i+3] == '-') //-O-O Last O will be 4 indexes after the first one
+                            {
+                                skiptimes = 5;
+                                result += "Kc1 ";
+                            }
+                            else //Kingside
+                            {
+                                skiptimes = 3; //-O Last O will be two indexes after
+                                result += "Kg1 ";
+                            }
+                        }
+                        else
+                        {
+                            if (i + 5 <= s.Length && s[i + 4] == 'O' && s[i + 3] == '-') //-O-O Last O will be 4 indexes after the first one
+                            {
+                                skiptimes = 5;
+                                result += "Kc8 ";
+                            }
+                            else //Kingside
+                            {
+                                skiptimes = 3; //-O Last O will be two indexes after
+                                result += "Kg8 ";
+
+                            }
+                        }
+                        continue;
+                    }
+                    result += s[i];
+                }
+            }
+            return result;
+        }
         public static int GetFileNum(this char c)
         {
             switch (c)
