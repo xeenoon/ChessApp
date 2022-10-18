@@ -258,6 +258,7 @@ namespace ChessApp
 
             textparse = textparse.RemoveChars('+');
             textparse = textparse.RemoveChars('#');
+            textparse = textparse.RemoveChars('x');
 
             textparse = textparse.RemoveCastles();
             textparse = textparse.RemovePromotions();
@@ -366,14 +367,6 @@ namespace ChessApp
                                         break;
                                 }
                                 normalData = normalData.Substring(1); //Remove the leading letter
-                            }
-                            if (pieceType == PieceType.Pawn && normalData[1] == 'x') //Are we taking?
-                            {
-                                normalData = normalData.Substring(2).Insert(0, normalData[0].ToString()); //Taking is autosimulated, just ignore it
-                            }
-                            else if(normalData[0] == 'x') //Just something normal taking?
-                            {
-                                normalData = normalData.Substring(1); //Again, taking is done automatically, ignore the X
                             }
                             //Piecetype has been assigned, lets see what we can find out about the original location
                             int startrow = -1;
