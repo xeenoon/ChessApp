@@ -487,7 +487,7 @@ namespace ChessApp
                 this.enpassant_take = false;
             }
         }
-        public BoardData Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side)
+        public BoardData Move(byte startlocation, byte endlocation, ulong startpos, ulong endpos, PieceType pieceType, Side side, PieceType promotion = PieceType.Queen)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -622,12 +622,40 @@ namespace ChessApp
                 if (side == Side.White)
                 {
                     W_Pawn ^= startpos;
-                    W_Queen ^= endpos;
+                    switch (promotion)
+                    {
+                        case PieceType.Rook:
+                            W_Rook ^= endpos;
+                            break;
+                        case PieceType.Knight:
+                            W_Knight ^= endpos;
+                            break;
+                        case PieceType.Bishop:
+                            W_Bishop ^= endpos;
+                            break;
+                        case PieceType.Queen:
+                            W_Queen ^= endpos;
+                            break;
+                    }
                 }
                 else
                 {
                     B_Pawn ^= startpos;
-                    B_Queen ^= endpos;
+                    switch (promotion)
+                    {
+                        case PieceType.Rook:
+                            B_Rook ^= endpos;
+                            break;
+                        case PieceType.Knight:
+                            B_Knight ^= endpos;
+                            break;
+                        case PieceType.Bishop:
+                            B_Bishop ^= endpos;
+                            break;
+                        case PieceType.Queen:
+                            B_Queen ^= endpos;
+                            break;
+                    }
                 }
             }
             else if (side == Side.White)

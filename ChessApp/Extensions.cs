@@ -99,8 +99,10 @@ namespace ChessApp
             }
             return result;
         }
-        public static string RemovePromotions(this string s)
+        public static string RemovePromotions(this string s, out List<PieceType> promotions)
         {
+            promotions = new List<PieceType>();
+
             string result = "";
             bool insidecomment = false;
             int skiptimes = 0;
@@ -108,6 +110,21 @@ namespace ChessApp
             {
                 if (skiptimes >= 1)
                 {
+                    switch (s[i])
+                    {
+                        case 'Q':
+                            promotions.Add(PieceType.Queen);
+                            break;
+                        case 'R':
+                            promotions.Add(PieceType.Rook);
+                            break;
+                        case 'B':
+                            promotions.Add(PieceType.Bishop);
+                            break;
+                        case 'N':
+                            promotions.Add(PieceType.Knight);
+                            break;
+                    }
                     --skiptimes;
                     continue;
                 }

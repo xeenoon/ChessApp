@@ -261,7 +261,10 @@ namespace ChessApp
             textparse = textparse.RemoveChars('x');
 
             textparse = textparse.RemoveCastles();
-            textparse = textparse.RemovePromotions();
+
+            List<PieceType> promotions = new List<PieceType>();
+
+            textparse = textparse.RemovePromotions(out promotions);
 
             string FEN = textparse.Substring(textparse.IndexOf("1"));
             Move normalMove = new Move();
@@ -309,8 +312,14 @@ namespace ChessApp
 
                         comment = "";
                         normalData = "";
-
-                        startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White);
+                        PieceType promotion = PieceType.Queen;
+                        if (normalMove.pieceType == PieceType.Pawn && normalMove.current/8 == 0 || normalMove.current/8 == 7)
+                        {
+                            //We are promoting
+                            promotion = promotions.First();
+                            promotions.RemoveAt(0);
+                        }
+                        startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
 
                         startpos.Reload();
 
@@ -437,7 +446,14 @@ namespace ChessApp
                                 secondmove = true;
                                 normalData = "";
 
-                                startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White);
+                                PieceType promotion = PieceType.Queen;
+                                if (normalMove.pieceType == PieceType.Pawn && normalMove.current / 8 == 0 || normalMove.current / 8 == 7)
+                                {
+                                    //We are promoting
+                                    promotion = promotions.First();
+                                    promotions.RemoveAt(0);
+                                }
+                                startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
 
                                 startpos.Reload();
                             }
