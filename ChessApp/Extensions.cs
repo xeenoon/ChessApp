@@ -99,6 +99,38 @@ namespace ChessApp
             }
             return result;
         }
+        public static string RemovePromotions(this string s)
+        {
+            string result = "";
+            bool insidecomment = false;
+            int skiptimes = 0;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                if (skiptimes >= 1)
+                {
+                    --skiptimes;
+                    continue;
+                }
+                if (s[i] == '{')
+                {
+                    insidecomment = true;
+                }
+                else if (s[i] == '}')
+                {
+                    insidecomment = false;
+                }
+                else if (s[i] == '=' && !insidecomment)
+                {
+                    skiptimes = 1; //a1=Q, Remove the 'Q' at the end. Automatically cancelled
+                    continue;
+                }
+                else if (insidecomment)
+                {
+                    result += s[i];
+                }
+            }
+            return result;
+        }
         public static int GetFileNum(this char c)
         {
             switch (c)

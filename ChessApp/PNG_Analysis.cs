@@ -260,6 +260,7 @@ namespace ChessApp
             textparse = textparse.RemoveChars('#');
 
             textparse = textparse.RemoveCastles();
+            textparse = textparse.RemovePromotions();
 
             string FEN = textparse.Substring(textparse.IndexOf("1"));
             Move normalMove = new Move();
