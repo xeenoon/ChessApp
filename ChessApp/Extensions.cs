@@ -29,6 +29,10 @@ namespace ChessApp
                 {
                     result += s[i];
                 }
+                else if (insidecomment)
+                {
+                    result += s[i];
+                }
             }
             return result;
         }
@@ -86,6 +90,10 @@ namespace ChessApp
                         }
                         continue;
                     }
+                    result += s[i];
+                }
+                else if (insidecomment)
+                {
                     result += s[i];
                 }
             }
