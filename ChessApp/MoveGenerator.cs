@@ -912,7 +912,7 @@ namespace ChessApp
 
                 //On the second row, there will be 2 moves upwards, if a piece is one above, the 2nd move up SHOULD NOT be returned
 
-                if (passiveMoves >> 16 == 1ul << position && (b.BlackPieces & (1ul << 8 + position)) != 0ul) //Is there one remaining two rows above
+                if (passiveMoves >> 16 == 1ul << position && ((b.WhitePieces | b.BlackPieces) & (1ul << 8 + position)) != 0ul) //Is there one remaining two rows above
                                                            //This means that there is a piece above the pawn
                 {
                     passiveMoves = 0ul; //There shouldn't be any moves here
@@ -957,7 +957,7 @@ namespace ChessApp
 
                 //On the seventh row, there will be 2 moves fowards(down, >>8), if a piece is one above(below), the 2nd move up SHOULD NOT be returned
 
-                if (passiveMoves << 16 == 1ul << position && (b.WhitePieces&(1ul<<position-8)) != 0ul) //Is there one remaining two rows below
+                if (passiveMoves << 16 == 1ul << position && ((b.WhitePieces | b.BlackPieces) & (1ul<<position-8)) != 0ul) //Is there one remaining two rows below
                                                            //This means that there is a piece above the pawn
                 {
                     passiveMoves = 0ul; //There shouldn't be any moves here

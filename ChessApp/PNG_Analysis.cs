@@ -393,7 +393,10 @@ namespace ChessApp
                             //We collected the data we know, now try to find the start position
                             var endposition = normalData[0].GetFileNum() + (int.Parse(normalData[1].ToString()) - 1) * 8;
                             List<Move> possibleMoves = new List<Move>();
-                            foreach (var _move in MoveGenerator.CalculateAll(startpos.bitboard, currmove))
+
+                            var copy = startpos.bitboard.Copy();
+                            copy.SetupSquareAttacks();
+                            foreach (var _move in MoveGenerator.CalculateAll(copy, currmove))
                             {
                                 if (_move.pieceType == pieceType && _move.current == endposition) //Is this the right move?
                                 {
