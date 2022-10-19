@@ -291,6 +291,7 @@ namespace ChessApp
 
         private void button2_Click(object sender, EventArgs e)
         {
+            squares.highlight.Click(); //Deselct the square we have selected
             squares.UndoMove();
             this.chessboard = squares.board;
             Invalidate();
