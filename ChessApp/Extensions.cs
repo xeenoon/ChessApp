@@ -11,6 +11,30 @@ namespace ChessApp
 {
     internal static class Extensions
     {
+        public static string RemovePretext(this string s)
+        {
+            string result = "";
+            bool insidepretext = false;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                var c = s[i];
+                if (c == '[')
+                {
+                    insidepretext = true;
+                    continue;
+                }
+                if (c == ']')
+                {
+                    insidepretext = false;
+                    continue;
+                }
+                if (!insidepretext)
+                {
+                    result += c;
+                }
+            }
+            return result;
+        }
         public static string RemoveChars(this string s, char toremove)
         {
             string result = "";

@@ -1,5 +1,6 @@
 ﻿using ChessApp;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace EngineTester
 {
@@ -9,13 +10,76 @@ namespace EngineTester
         static bool iswaiting;
         static Stopwatch stopwatch = new Stopwatch();
         static string input;
+
+        public static string RemovePretext(string s)
+        {
+            string result = "";
+            bool insidepretext = false;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                var c = s[i];
+                if (c == '[')
+                {
+                    insidepretext = true;
+                    continue;
+                }
+                if (c == ']')
+                {
+                    insidepretext = false;
+                    continue;
+                }
+                if (!insidepretext)
+                {
+                    result += c;
+                }
+            }
+            return result;
+        }
+
         static void Main(string[] args)
         {
-            string PGN = Console.ReadLine();
-            PNG png = new PNG(PGN);
-            foreach (var move in png.data)
+            string mode = Console.ReadLine().ToLower();
+            switch (mode)
             {
-                Console.WriteLine(move.ToString());
+                case "file":
+                    string path = Console.ReadLine();
+                    var file = File.ReadAllText(path);
+                    var games = file.Split("[Event \"Aimchess Rapid Prelim\"]");
+                    foreach (var data in games)
+                    {
+                        if (data == "")
+                        {
+                            continue;
+                        }
+                        var game = RemovePretext(Regex.Replace(data, "\n", " "));
+                        
+                        PNG png = new PNG(game);
+                        if (png.failed)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Failed with PNG: ");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine(game);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Success");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                    }
+                    break;
+                case "pgn":
+                    while (true)
+                    {
+                        var pgn = Console.ReadLine();
+                        var game = new PNG(pgn);
+                        foreach (var move in game.data)
+                        {
+                            Console.WriteLine(move.ToString());
+                        }
+                    }
+                    break;
             }
             return;
             Console.Write("Search depth: ");

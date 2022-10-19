@@ -493,5 +493,15 @@ namespace ChessApp
        //     var pnggraphics = Graphics.FromImage(pngIMG);
        //     e.Graphics.DrawImage(pngIMG, 0,0, panel2.Width, panel2.Height);
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var PGN = textBox1.Text;
+            var board = new PNG(PGN).finalresult;
+            squares.board.bitboard = board;
+            squares.board.Reload();
+            reload = true;
+            Invalidate();
+        }
     }
 }

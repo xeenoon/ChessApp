@@ -32,6 +32,7 @@ namespace ChessApp
         string strvalue;
 
         public List<PNGMove> data = new List<PNGMove>();
+        public Bitboard finalresult;
 
         public struct PNGMove
         {
@@ -68,7 +69,6 @@ namespace ChessApp
         public PNG(string textparse)
         {
             this.textparse = textparse;
-            this.textparse = Regex.Replace(textparse, "\n", "");
             ParseNormal();
         }
         public void ParseDuck()
@@ -252,6 +252,7 @@ namespace ChessApp
                 }
             }
         }
+        public bool failed;
         public void ParseNormal()
         {
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -342,7 +343,7 @@ namespace ChessApp
                             normalData += FEN_data[idx];
                         }
 
-                        if (char.IsNumber(FEN_data[idx]) && FEN_data[idx + 1] == ' ') //End of move?
+                        if (char.IsNumber(FEN_data[idx]) && (idx >= FEN_data.Length - 2 || FEN_data[idx + 1] == ' ')) //End of move?
                         {
                             while (char.IsNumber(normalData[0]))
                             {
@@ -428,9 +429,15 @@ namespace ChessApp
                             {
                                 normalMove = same[0];
                             }
+                            else if (samerow.Count() == 1)
+                            {
+                                normalMove = samerow[0];
+                            }
                             else
                             {
-
+                                failed = true;
+                                finalresult = startpos.bitboard;
+                                return;
                             }
                             if ((idx+3 <= FEN_data.Length && FEN_data[idx+2] == '{')) //Have we missed a comment?
                             {
@@ -447,7 +454,7 @@ namespace ChessApp
                                 normalData = "";
 
                                 PieceType promotion = PieceType.Queen;
-                                if (normalMove.pieceType == PieceType.Pawn && normalMove.current / 8 == 0 || normalMove.current / 8 == 7)
+                                if (normalMove.pieceType == PieceType.Pawn && (normalMove.current / 8 == 0 || normalMove.current / 8 == 7))
                                 {
                                     //We are promoting
                                     promotion = promotions.First();

@@ -73,7 +73,7 @@ namespace ChessApp
             {
                 foreach (var ray in b.xrays)
                 {
-                    if ((bitpos & ray) != 0)
+                    if ((bitpos & ray) != 0 && ((ray & xrays)==ray)) //Make sure it is on our side, and that we intersect
                     {
                         result = result & ray;
                         break;
