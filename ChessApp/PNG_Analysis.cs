@@ -10,43 +10,43 @@ namespace ChessApp
 {
     public class PNG_Analysis
     {
-        public string PNG;
-        public Graphics graphics;
+        public PGN gamedata;
+        public Bitmap bitmap;
+        public string PGN_data;
 
-        public PNG_Analysis(string PNG, Graphics graphics)
+        public PNG_Analysis(string PGN, int height, int width)
         {
-            this.PNG = PNG;
-            this.graphics = graphics;
+            bitmap = new Bitmap(width, height);
+            this.PGN_data = PGN;
+            gamedata = new PGN(PGN);
         }
-        public void Paint(Graphics graphics = null)
+        public void Paint()
         {
-            if (graphics == null)
-            {
-                graphics = this.graphics; //Allow specific graphics to be set by the thing calling it, or be automatically set
-            }
+            var graphics = Graphics.FromImage(bitmap);
+            graphics.DrawString(PGN_data, new Font("Arial", 10, FontStyle.Regular), new Pen(Color.Black).Brush, new Point(0,0));
         }
     }
-    public class PNG
+    public class PGN
     {
         string textparse;
         string strvalue;
 
-        public List<PNGMove> data = new List<PNGMove>();
+        public List<PGNMove> data = new List<PGNMove>();
         public Bitboard finalresult;
 
-        public struct PNGMove
+        public struct PGNMove
         {
             Move normalmove;
             Move duckmove;
             string comment;
 
-            public PNGMove(Move normalmove, Move duckmove, string comment)
+            public PGNMove(Move normalmove, Move duckmove, string comment)
             {
                 this.normalmove = normalmove;
                 this.duckmove = duckmove;
                 this.comment = comment;
             }
-            public PNGMove(Move normalmove, string comment)
+            public PGNMove(Move normalmove, string comment)
             {
                 this.normalmove = normalmove;
                 this.duckmove = new Move(100, 100, PieceType.None);
@@ -66,8 +66,9 @@ namespace ChessApp
             }
         }
 
-        public PNG(string textparse)
+        public PGN(string textparse)
         {
+            textparse = Regex.Replace(textparse, "\n", " ");
             this.textparse = textparse;
             if (textparse.Contains('D')) //My duck piece identifier
             {
@@ -138,7 +139,7 @@ namespace ChessApp
                     else if (FEN_data[idx] == '}')
                     {
                         readingcomment = false;
-                        PNGMove m = new PNGMove(normalMove, comment);
+                        PGNMove m = new PGNMove(normalMove, comment);
                         data.Add(m);
                         currmove = currmove == Side.White ? Side.Black : Side.White;
 
@@ -274,7 +275,7 @@ namespace ChessApp
                             {
                                 continue;
                             }
-                            PNGMove move = new PNGMove(normalMove, comment);
+                            PGNMove move = new PGNMove(normalMove, comment);
                             data.Add(move);
                             bool contains = FEN_data.Substring(idx).Contains('{');
                             currmove = currmove == Side.White ? Side.Black : Side.White;
@@ -367,7 +368,7 @@ namespace ChessApp
                     else if (FEN_data[idx] == '}')
                     {
                         readingcomment = false;
-                        PNGMove m = new PNGMove(normalMove, comment);
+                        PGNMove m = new PGNMove(normalMove, comment);
                         data.Add(m);
                         currmove = currmove == Side.White ? Side.Black : Side.White;
 
@@ -509,7 +510,7 @@ namespace ChessApp
                             {
                                 continue;
                             }
-                            PNGMove move = new PNGMove(normalMove, comment);
+                            PGNMove move = new PGNMove(normalMove, comment);
                             data.Add(move);
                             bool contains = FEN_data.Substring(idx).Contains('{');
                             currmove = currmove == Side.White ? Side.Black : Side.White;
@@ -630,7 +631,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.White, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PGNMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
 
 
@@ -684,7 +685,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.Black, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PGNMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
             }
 
