@@ -720,8 +720,7 @@ namespace ChessApp
             }
             if (pieceType == PieceType.Duck)
             {
-                Duck ^= startpos;
-                Duck ^= endpos;
+                Duck = endpos;
             }
 
             if (pieceType == PieceType.Goose)
