@@ -84,10 +84,10 @@ namespace ChessApp
         }
 
         const ulong W_KINGSIDE_SQUARES = 96UL;
-        const ulong W_QUEENSIDE_SQUARES = 14UL;
+        const ulong W_QUEENSIDE_SQUARES = 12UL;
 
         const ulong B_KINGSIDE_SQUARES = 6917529027641081856UL;
-        const ulong B_QUEENSIDE_SQUARES = 1008806316530991104UL;
+        const ulong B_QUEENSIDE_SQUARES = 864691128455135232UL;
         private static ulong CastleMoves(Side side, Bitboard b)
         {
             if (b.check || b.doublecheck)
