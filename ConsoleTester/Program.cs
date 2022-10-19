@@ -55,7 +55,7 @@ namespace EngineTester
                         }
                         var game = RemovePretext(Regex.Replace(data, "\n", " "));
 
-                        PNG png = new PNG(game);
+                        PGN png = new PGN(game);
                         if (png.failed)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
@@ -92,7 +92,7 @@ namespace EngineTester
                             //var game = RemovePretext(Regex.Replace(data, "\n", " "));
                             var game = RemovePretext(data);
 
-                            PNG png = new PNG(game);
+                            PGN png = new PGN(game);
                             ++amount;
                             if (s.ElapsedMilliseconds % 1000 == 0) //1 second passed
                             {
@@ -120,7 +120,7 @@ namespace EngineTester
                     while (true)
                     {
                         var pgn = Console.ReadLine();
-                        var game = new PNG(pgn);
+                        var game = new PGN(pgn);
                         foreach (var move in game.data)
                         {
                             Console.WriteLine(move.ToString());
