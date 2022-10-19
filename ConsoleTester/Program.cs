@@ -54,7 +54,7 @@ namespace EngineTester
                             continue;
                         }
                         var game = RemovePretext(Regex.Replace(data, "\n", " "));
-                        
+
                         PNG png = new PNG(game);
                         if (png.failed)
                         {
@@ -89,7 +89,8 @@ namespace EngineTester
                             {
                                 continue;
                             }
-                            var game = RemovePretext(Regex.Replace(data, "\n", " "));
+                            //var game = RemovePretext(Regex.Replace(data, "\n", " "));
+                            var game = RemovePretext(data);
 
                             PNG png = new PNG(game);
                             ++amount;

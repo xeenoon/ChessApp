@@ -56,7 +56,7 @@ namespace ChessApp
             public override string ToString()
             {
                 var startpos = (normalmove.last % 8).GetFileLetter() + ((normalmove.last / 8) + 1).ToString();
-                var endpos   = (normalmove.current % 8).GetFileLetter() + ((normalmove.current / 8) + 1).ToString();
+                var endpos = (normalmove.current % 8).GetFileLetter() + ((normalmove.current / 8) + 1).ToString();
                 if (duckmove.current == 100)
                 {
                     return startpos + endpos + " " + comment;
@@ -69,7 +69,19 @@ namespace ChessApp
         public PNG(string textparse)
         {
             this.textparse = textparse;
-            ParseDuck();
+            if (textparse.Contains('D')) //My duck piece identifier
+            {
+                ParseNormalDuck();
+            }
+            else if (textparse.Contains(" .. ")) //Weird PGN4 notation
+            {
+                this.textparse = textparse.Shift3();
+                ParseDuck();
+            }
+            else //Just a normal game?
+            {
+                ParseNormal();
+            }
         }
         public bool failed;
         public void ParseNormal()
@@ -299,7 +311,7 @@ namespace ChessApp
                 }
             }
         }
-        public void ParseDuck()
+        public void ParseNormalDuck()
         {
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
@@ -343,7 +355,7 @@ namespace ChessApp
                 string comment = "";
 
                 string normalData = "";
-                string duckData   = "";
+                string duckData = "";
                 Side currmove = Side.White;
                 for (int idx = 0; idx < FEN_data.Length; ++idx)
                 {
@@ -394,8 +406,8 @@ namespace ChessApp
 
                         if (char.IsNumber(FEN_data[idx]) && (idx >= FEN_data.Length - 2 || FEN_data[idx + 1] == ' ')) //End of move?
                         {
-                            var duckdata = normalData.Substring(normalData.Length-2);
-                            normalData = normalData.Substring(0, normalData.Length-2);
+                            var duckdata = normalData.Substring(normalData.Length - 2);
+                            normalData = normalData.Substring(0, normalData.Length - 2);
                             while (char.IsNumber(normalData[0]))
                             {
                                 normalData = normalData.Substring(1);
@@ -515,7 +527,7 @@ namespace ChessApp
                                     promotions.RemoveAt(0);
                                 }
                                 startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
-                                startpos.bitboard.Move(0, duckMove.current, 0, 1ul<<duckMove.current, PieceType.Duck, Side.Animal);
+                                startpos.bitboard.Move(0, duckMove.current, 0, 1ul << duckMove.current, PieceType.Duck, Side.Animal);
                                 startpos.Reload();
                             }
                             else
@@ -532,6 +544,153 @@ namespace ChessApp
                         }
                     }
                 }
+            }
+        }
+        public void ParseDuck()
+        {
+            Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+            textparse = textparse.Replace(".. O-O-O", ".. Ke8-c8");
+            textparse = textparse.Replace(".. O-O", ".. Ke8-g8");
+            textparse = textparse.Replace(". O-O-O", ". Ke1-c1");
+            textparse = textparse.Replace(". O-O", ". Ke1-g1"); //Removing castling
+
+            List<PieceType> promotions = new List<PieceType>();
+
+            textparse = textparse.RemovePromotions(out promotions);
+
+            string FEN = textparse.Substring(textparse.IndexOf("1"));
+
+            int lastnumber = FEN.LastIndexor();
+
+            for (int i = 1; i < lastnumber + 1; ++i)
+            {
+                int nextidx = FEN.IndexOf((i + 1).ToString() + ".");
+                if (nextidx == -1)
+                {
+                    nextidx = FEN.Length;
+                }
+                int curridx = FEN.IndexOf(i.ToString() + ".");
+                string FEN_data = FEN.Substring(curridx, nextidx - curridx);
+
+                bool secondmove = false;
+                bool readingcomment = false;
+
+                string normalData = "";
+                string duckData = "";
+                Side currmove = Side.White;
+
+                var datas = FEN_data.Split(new string[] { " .. " }, StringSplitOptions.None);
+
+                //Whites move
+                var data = datas[0];
+                if (data == "R" || data == "T" || data == "")
+                {
+                    break;
+                }
+                data = data.Substring(data.IndexOf('.')+2);
+                char piecedata = data[0];
+                PieceType pieceType = PieceType.Pawn;
+                if (char.IsUpper(piecedata))
+                {
+                    switch (piecedata)
+                    {
+                        case 'K':
+                            pieceType = PieceType.King;
+                            break;
+                        case 'Q':
+                            pieceType = PieceType.Queen;
+                            break;
+                        case 'B':
+                            pieceType = PieceType.Bishop;
+                            break;
+                        case 'N':
+                            pieceType = PieceType.Knight;
+                            break;
+                        case 'R':
+                            pieceType = PieceType.Rook;
+                            break;
+                    }
+                    data = data.Substring(1); //Remove the piecetype from the string
+                }
+                string normalmovedata = data.Substring(0,5);
+                string[] movedata = normalmovedata.Split('-');
+                int startposition = movedata[0][0].GetFileNum() + (int.Parse(movedata[0][1].ToString())*8);
+                int endposition = movedata[1][0].GetFileNum() + (int.Parse(movedata[1][1].ToString()) * 8);
+
+                string duckdata = data.Substring(data.Length-2);
+                int duckposition = duckdata[0].GetFileNum() + (int.Parse(duckdata[1].ToString()) * 8);
+
+                PieceType promotion = PieceType.None;
+                if (pieceType == PieceType.Pawn && (endposition/8 == 0||endposition/8==7)) //Promoting?
+                {
+                    promotion = promotions.First();
+                    promotions.RemoveAt(0);
+                }
+
+                startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.White, promotion);
+                startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
+                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                startpos.Reload();
+
+
+
+
+
+                //Blacks move now
+                data = datas[1];
+                if (data == "R" || data == "T" || data == "")
+                {
+                    break;
+                }
+                piecedata = data[0];
+                pieceType = PieceType.Pawn;
+                if (char.IsUpper(piecedata))
+                {
+                    switch (piecedata)
+                    {
+                        case 'K':
+                            pieceType = PieceType.King;
+                            break;
+                        case 'Q':
+                            pieceType = PieceType.Queen;
+                            break;
+                        case 'B':
+                            pieceType = PieceType.Bishop;
+                            break;
+                        case 'N':
+                            pieceType = PieceType.Knight;
+                            break;
+                        case 'R':
+                            pieceType = PieceType.Rook;
+                            break;
+                    }
+                    data = data.Substring(1); //Remove the piecetype from the string
+                }
+                normalmovedata = data.Substring(0, 5);
+                movedata = normalmovedata.Split('-');
+                startposition = movedata[0][0].GetFileNum() + (int.Parse(movedata[0][1].ToString()) * 8);
+                endposition = movedata[1][0].GetFileNum() + (int.Parse(movedata[1][1].ToString()) * 8);
+
+                duckdata = data.Substring(data.Length - 3, 2);
+                duckposition = duckdata[0].GetFileNum() + (int.Parse(duckdata[1].ToString()) * 8);
+
+                promotion = PieceType.None;
+                if (pieceType == PieceType.Pawn && (endposition / 8 == 0 || endposition / 8 == 7)) //Promoting?
+                {
+                    promotion = promotions.First();
+                    promotions.RemoveAt(0);
+                }
+
+                startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.Black, promotion);
+                startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
+                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                startpos.Reload();
+            }
+
+            foreach (var move in data)
+            {
+                Console.WriteLine(move.ToString());
             }
         }
     }

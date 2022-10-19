@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,6 +12,123 @@ namespace ChessApp
 {
     internal static class Extensions
     {
+        public static int LastIndexor(this string s)
+        {
+            int skiptimes = 0;
+            int lastnumber = 0;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                if (skiptimes >= 1)
+                {
+                    --skiptimes;
+                    continue;
+                }
+                var c = s[i];
+                if (char.IsNumber(c))
+                {
+                    if (s[i + 1] == '.' && (i <= 0 || !char.IsNumber(s[i-1])) && (i <= 1 || !char.IsNumber(s[i - 2]))) //Single digit
+                    {
+                        lastnumber = int.Parse(s[i].ToString());
+                    }
+                    if (char.IsNumber(s[i + 1]) && s[i + 2] == '.' && (i <= 0 || !char.IsNumber(s[i - 1]))) //Double digit
+                    {
+                        lastnumber = int.Parse(s[i].ToString() + s[i + 1].ToString());
+                    }
+                    if (char.IsNumber(s[i + 1]) && char.IsNumber(s[i + 2]) && s[i + 3] == '.') //Triple digit
+                    {
+                        lastnumber = int.Parse(s[i].ToString() + s[i + 1].ToString() + s[i + 2].ToString());
+                    }
+                }
+            }
+            return lastnumber;
+        }
+        public static string Shift3(this string s)
+        {
+            int skiptimes = 0;
+            bool insidecomment = false;
+            string result = "";
+            for (int i = 0; i < s.Length; ++i)
+            {
+                if (skiptimes >= 1)
+                {
+                    --skiptimes;
+                    continue;
+                }
+                if (s[i] == '{')
+                {
+                    insidecomment = true;
+                }
+                else if (s[i] == '}')
+                {
+                    insidecomment = false;
+                }
+                else if (insidecomment)
+                {
+                    result += s[i];
+                }
+                else
+                {
+                    var c = s[i];
+                    char toadd = c;
+                    switch (c)
+                    {
+                        case 'd':
+                            toadd = 'a';
+                            break;
+                        case 'e':
+                            toadd = 'b';
+                            break;
+                        case 'f':
+                            toadd = 'c';
+                            break;
+                        case 'g':
+                            toadd = 'd';
+                            break;
+                        case 'h':
+                            toadd = 'e';
+                            break;
+                        case 'i':
+                            toadd = 'f';
+                            break;
+                        case 'j':
+                            toadd = 'g';
+                            break;
+                        case 'k':
+                            toadd = 'h';
+                            break;
+                    }
+                    if (i == 299)
+                    {
+
+                    }
+                    if (i<= s.Length-2 && i >= 2 && char.IsNumber(c) 
+                        && s[i+1] != '.' 
+                        && s[i-1] != '\n') //Number? but not an indexer
+                    {
+                        if (char.IsNumber(s[i + 1])) //Two digits?
+                        {
+                            skiptimes = 1;
+                            toadd = (int.Parse(c.ToString() + s[i+1].ToString()) - 3).ToString()[0];
+
+                        }
+                        else
+                        {
+                            toadd = (int.Parse(c.ToString()) - 3).ToString()[0];
+                        }
+                    }
+                    if (toadd == '+' || toadd == '#' || (i>=1 && s[i-1] == 'x' && char.IsUpper(c)))
+                    {
+                        continue;
+                    }
+                    if (toadd == 'x')
+                    {
+                        toadd = '-';
+                    }
+                    result += toadd;
+                }
+            }
+            return result;
+        }
         public static string RemovePretext(this string s)
         {
             string result = "";
