@@ -96,12 +96,13 @@ namespace EngineTester
                                 Console.WriteLine("Failed with PNG: ");
                                 Console.ForegroundColor = ConsoleColor.White;
                                 Console.WriteLine(game);
+                                Console.ReadLine();
                             }
                             else
                             {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("Success");
-                                Console.ForegroundColor = ConsoleColor.White;
+                      //          Console.ForegroundColor = ConsoleColor.Green;
+                      //          Console.WriteLine("Success");
+                      //          Console.ForegroundColor = ConsoleColor.White;
                             }
                         }
                     }

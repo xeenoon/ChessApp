@@ -195,12 +195,12 @@ namespace ChessApp
                         ++checks;
                         if (s == Side.White) //<<7 <<9 to attack
                         {
-                            if (((oppositeKing >> 9) & piece_bitboard) != 0)
+                            if ((((oppositeKing & MoveGenerator.NO_LEFT_COLLUMN) >> 9) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and left?
                                 squares_to_block_check = oppositeKing >> 9; //We can only take this pawn
                             }
-                            if (((oppositeKing >> 7) & piece_bitboard) != 0)
+                            if ((((oppositeKing & MoveGenerator.NO_RIGHT_COLLUMN) >> 7) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and right?
                                 squares_to_block_check = oppositeKing >> 7; //We can only take this pawn
@@ -208,12 +208,12 @@ namespace ChessApp
                         }
                         else //>>7 and  >>9 to attack
                         {
-                            if (((oppositeKing << 9) & piece_bitboard) != 0)
+                            if ((((oppositeKing & MoveGenerator.NO_RIGHT_COLLUMN) << 9) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and left?
                                 squares_to_block_check = oppositeKing << 9; //We can only take this pawn
                             }
-                            if (((oppositeKing << 7) & piece_bitboard) != 0)
+                            if ((((oppositeKing & MoveGenerator.NO_LEFT_COLLUMN) << 7) & piece_bitboard) != 0)
                             {
                                 //Is a pawn attacking up and right?
                                 squares_to_block_check = oppositeKing << 7; //We can only take this pawn
