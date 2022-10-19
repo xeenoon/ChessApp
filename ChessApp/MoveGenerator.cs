@@ -925,7 +925,7 @@ namespace ChessApp
                         if ((b.squares_to_block_check & (left_ep >> 8)) != 0) //Make sure it is legal?
                         {
                             var copy = b.CopyMove(position, (byte)(position+9), 1ul<<position, left_ep, PieceType.Pawn, side);
-                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            copy.BlackAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
                             if (!copy.check)
                             {
                                 attackMoves |= left_ep;
@@ -939,7 +939,7 @@ namespace ChessApp
                         if ((b.squares_to_block_check & (right_ep >> 8)) != 0) //Make sure it is legal?
                         {
                             var copy = b.CopyMove(position, (byte)(position+7), 1ul << position, right_ep, PieceType.Pawn, side);
-                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            copy.BlackAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
                             if (!copy.check)
                             {
                                 attackMoves |= right_ep;
@@ -971,7 +971,7 @@ namespace ChessApp
                         if ((b.squares_to_block_check & (left_ep << 8)) != 0) //Make sure it is legal?
                         {
                             var copy = b.CopyMove(position, (byte)(position-7), 1ul << position, left_ep, PieceType.Pawn, side);
-                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            copy.WhiteAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
                             if (!copy.check)
                             {
                                 attackMoves |= left_ep;
@@ -985,7 +985,8 @@ namespace ChessApp
                         if ((b.squares_to_block_check & (right_ep << 8)) != 0) //Make sure it is legal?
                         {
                             var copy = b.CopyMove(position, (byte)(position-9), 1ul << position, right_ep, PieceType.Pawn, side);
-                            copy.SetupSquareAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            copy.WhiteAttacks(); //This is the SLOWEST piece of code, however it will hardly ever get called, so meh
+                            //Only do white attacks because we are black, dont bother to see if we put out opponent in check
                             if (!copy.check)
                             {
                                 attackMoves |= right_ep;
