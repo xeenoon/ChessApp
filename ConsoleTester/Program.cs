@@ -74,7 +74,9 @@ namespace EngineTester
                 case "directory":
                     string directory = Console.ReadLine();
                     string[] files = System.IO.Directory.GetFiles(directory, "*.pgn");
-
+                    int amount = 0;
+                    Stopwatch s = new Stopwatch();
+                    s.Start();
                     foreach (var f_path in files)
                     {
                         var f_file = File.ReadAllText(f_path);
@@ -90,6 +92,11 @@ namespace EngineTester
                             var game = RemovePretext(Regex.Replace(data, "\n", " "));
 
                             PNG png = new PNG(game);
+                            ++amount;
+                            if (s.ElapsedMilliseconds % 1000 == 0) //1 second passed
+                            {
+                                Console.WriteLine("Processed " + amount + " pgn's");
+                            }
                             if (png.failed)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
@@ -106,6 +113,7 @@ namespace EngineTester
                             }
                         }
                     }
+                    Console.WriteLine("Successfully analyzed " + amount + "pgn's");
                     break;
                 case "pgn":
                     while (true)
