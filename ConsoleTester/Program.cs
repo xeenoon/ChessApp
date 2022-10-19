@@ -44,9 +44,11 @@ namespace EngineTester
                 case "file":
                     string path = Console.ReadLine();
                     var file = File.ReadAllText(path);
-                    var games = file.Split("[Event \"Aimchess Rapid Prelim\"]");
-                    foreach (var data in games)
+                    var games = file.Split("\n1. ");
+                    for (int i = 1; i < games.Length; i++)
                     {
+                        string? data = games[i];
+                        data = data.Insert(0, "1. ");
                         if (data == "")
                         {
                             continue;
@@ -66,6 +68,41 @@ namespace EngineTester
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Success");
                             Console.ForegroundColor = ConsoleColor.White;
+                        }
+                    }
+                    break;
+                case "directory":
+                    string directory = Console.ReadLine();
+                    string[] files = System.IO.Directory.GetFiles(directory, "*.pgn");
+
+                    foreach (var f_path in files)
+                    {
+                        var f_file = File.ReadAllText(f_path);
+                        var f_games = f_file.Split("\n1. ");
+                        for (int i = 1; i < f_games.Length; i++)
+                        {
+                            string? data = f_games[i];
+                            data = data.Insert(0, "1. ");
+                            if (data == "")
+                            {
+                                continue;
+                            }
+                            var game = RemovePretext(Regex.Replace(data, "\n", " "));
+
+                            PNG png = new PNG(game);
+                            if (png.failed)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Failed with PNG: ");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine(game);
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Success");
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
                         }
                     }
                     break;
