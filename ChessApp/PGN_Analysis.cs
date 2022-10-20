@@ -109,12 +109,53 @@ namespace ChessApp
                             piecetypestring = "K";
                             break;
                     }
-                    movestring = string.Format("{0}{1}{2} ", piecetypestring, rowcol, endposition);
+                    string promotionstring = "";
+                    if (move.normalmove.pieceType == PieceType.Pawn && (move.normalmove.current/8==0 || move.normalmove.current/8==7))
+                    {
+                        string promotionletter = "";
+                        switch (move.normalmove.promotion)
+                        {
+                            case PieceType.Rook:
+                                promotionletter = "R";
+                                break;
+                            case PieceType.Knight:
+                                promotionletter = "N";
+                                break;
+                            case PieceType.Bishop:
+                                promotionletter = "B";
+                                break;
+                            case PieceType.Queen:
+                                promotionletter = "Q";
+                                break;
+                        }
+                        promotionstring = "=" + promotionletter;
+                    }
+                    string istaking = "";
+                    if (hasturn == Side.White)
+                    {
+                        if ((b.BlackPieces & (1ul<<move.normalmove.current)) != 0) //Taking a piece
+                        {
+                            istaking = "x";
+                        }
+                    }
+                    if (hasturn == Side.Black)
+                    {
+                        if ((b.WhitePieces & (1ul << move.normalmove.current)) != 0) //Taking a piece
+                        {
+                            istaking = "x";
+                        }
+                    }
+                    if (istaking == "x" && move.normalmove.pieceType == PieceType.Pawn) //Pawn taking
+                    {
+                        //We must specify row-col
+                        rowcol = (move.normalmove.last % 8).GetFileLetter().ToString();
+                    }
+                    movestring = string.Format("{0}{1}{4}{2}{3} ", piecetypestring, rowcol, endposition, promotionstring, istaking);
                     pgn += movestring;
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
                 }
             }
-            return pgn;
+            return pgn + gameresult;
         }
         public struct PGNMove
         {
@@ -168,6 +209,7 @@ namespace ChessApp
             }
         }
         public bool failed;
+        string gameresult = "";
         public void ParseNormal()
         {
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -394,6 +436,7 @@ namespace ChessApp
                                 }
                                 else
                                 {
+                                    gameresult = FEN_data.Substring(idx+2);
                                     return;
                                 }
                             }
