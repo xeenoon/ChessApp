@@ -42,11 +42,15 @@ namespace ChessApp
             for (int i = 0; i< (data.Count()/2); ++i)
             {
                 pgn += string.Format("{0}. ", i+1); //Add the indexer
-                var move = data[i*2];
 
                 for (int j = 0; j < 2; ++j) //switch the sides
                 {
                     Side hasturn = j == 0 ? Side.White : Side.Black;
+                    if (data.Count() == i*2+j)
+                    {
+                        break;
+                    }
+                    var move = data[i * 2 + j];
                     var copy = b.Copy();
                     copy.SetupSquareAttacks();
                     List<int> possibleStartPositions = new List<int>();
@@ -60,7 +64,7 @@ namespace ChessApp
                     }
                     string movestring = "";
                     string rowcol = "";
-                    if (possibleStartPositions.Count() >= 1)
+                    if (possibleStartPositions.Distinct().Count() >= 2)
                     {
                         int startcol = move.normalmove.last % 8;
                         int startrow = move.normalmove.last / 8;
@@ -83,7 +87,7 @@ namespace ChessApp
                     }
 
                     var piecetypestring = "";
-                    string endposition = (move.normalmove.current / 8).GetFileLetter().ToString() + ((move.normalmove.current % 8) + 1).ToString();
+                    string endposition = (move.normalmove.current % 8).GetFileLetter().ToString() + ((move.normalmove.current / 8) + 1).ToString();
                     switch (move.normalmove.pieceType)
                     {
                         case PieceType.Pawn:
