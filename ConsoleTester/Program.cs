@@ -108,6 +108,7 @@ namespace EngineTester
                             }
                             else
                             {
+                                Console.WriteLine(png.ToString());
                       //          Console.ForegroundColor = ConsoleColor.Green;
                       //          Console.WriteLine("Success");
                       //          Console.ForegroundColor = ConsoleColor.White;

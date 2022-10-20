@@ -39,13 +39,14 @@ namespace ChessApp
             Bitboard b = startpos.bitboard;
 
             string pgn = "";
-            for (int i = 1; i< (data.Count()/2); ++i)
+            for (int i = 0; i< (data.Count()/2); ++i)
             {
                 pgn += string.Format("{0}. ", i+1); //Add the indexer
                 var move = data[i*2];
 
-                for (Side hasturn = Side.White; hasturn == Side.White; hasturn=Side.Black) //switch the sides
+                for (int j = 0; j < 2; ++j) //switch the sides
                 {
+                    Side hasturn = j == 0 ? Side.White : Side.Black;
                     var copy = b.Copy();
                     copy.SetupSquareAttacks();
                     List<int> possibleStartPositions = new List<int>();
@@ -104,12 +105,12 @@ namespace ChessApp
                             piecetypestring = "K";
                             break;
                     }
-                    movestring = string.Format("{0}{1}{2}", piecetypestring, rowcol, endposition);
-
+                    movestring = string.Format("{0}{1}{2} ", piecetypestring, rowcol, endposition);
+                    pgn += movestring;
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
                 }
             }
-            return "";
+            return pgn;
         }
         public struct PGNMove
         {
@@ -146,6 +147,7 @@ namespace ChessApp
         public PGN(string textparse)
         {
             textparse = Regex.Replace(textparse, "\n", " ");
+            textparse = Regex.Replace(textparse, "\r", "");
             this.textparse = textparse;
             if (textparse.Contains('D')) //My duck piece identifier
             {
@@ -169,7 +171,7 @@ namespace ChessApp
             textparse = textparse.RemoveChars('+');
             textparse = textparse.RemoveChars('#');
             textparse = textparse.RemoveChars('x');
-
+            textparse = Regex.Replace(textparse, "\r", " ");
             textparse = textparse.RemoveCastles();
 
             List<PieceType> promotions = new List<PieceType>();
@@ -192,7 +194,7 @@ namespace ChessApp
             var lastnumber = int.Parse(num); //Find the last number
             for (int i = 1; i < lastnumber + 1; ++i)
             {
-                int nextidx = FEN.IndexOf((i + 1).ToString() + ".");
+                int nextidx = FEN.IndexOf((i+1).ToString() + ".");
                 if (nextidx == -1)
                 {
                     nextidx = FEN.Length;
@@ -348,6 +350,10 @@ namespace ChessApp
                                 failed = true;
                                 finalresult = startpos.bitboard;
                                 return;
+                            }
+                            if (normalMove.current == 30)
+                            {
+
                             }
                             if ((idx + 3 <= FEN_data.Length && FEN_data[idx + 2] == '{')) //Have we missed a comment?
                             {
