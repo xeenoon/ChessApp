@@ -49,7 +49,7 @@ namespace ChessApp
         Bitmap arrowsIMG;
         Bitmap editIMG;
         Bitmap placeIMG;
-        PNG_Analysis pNG_Analysis;
+        PGN_Analysis pNG_Analysis;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (resizing)
@@ -507,7 +507,7 @@ namespace ChessApp
                 var pgn = File.ReadAllText(openFileDialog1.FileName);
                 pgn = pgn.RemovePretext();
 
-                pNG_Analysis = new PNG_Analysis(pgn, panel2.Height, panel2.Width);
+                pNG_Analysis = new PGN_Analysis(pgn, panel2.Height, panel2.Width);
                 panel2.Invalidate();
             }
         }

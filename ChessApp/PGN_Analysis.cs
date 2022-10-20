@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ChessApp
 {
-    public class PNG_Analysis
+    public class PGN_Analysis
     {
         public PGN gamedata;
         public Bitmap bitmap;
         public string PGN_data;
 
-        public PNG_Analysis(string PGN, int height, int width)
+        public PGN_Analysis(string PGN, int height, int width)
         {
             bitmap = new Bitmap(width, height);
             this.PGN_data = PGN;
@@ -111,7 +111,7 @@ namespace ChessApp
             }
             return "";
         }
-        public struct PNGMove
+        public struct PGNMove
         {
             public Move normalmove;
             Move duckmove;
@@ -216,7 +216,7 @@ namespace ChessApp
                     else if (FEN_data[idx] == '}')
                     {
                         readingcomment = false;
-                        PNGMove m = new PNGMove(normalMove, comment);
+                        PGNMove m = new PGNMove(normalMove, comment);
                         currmove = currmove == Side.White ? Side.Black : Side.White;
 
                         comment = "";
@@ -353,7 +353,7 @@ namespace ChessApp
                             {
                                 continue;
                             }
-                            PNGMove move = new PNGMove(normalMove, comment);
+                            PGNMove move = new PGNMove(normalMove, comment);
                             bool contains = FEN_data.Substring(idx).Contains('{');
                             currmove = currmove == Side.White ? Side.Black : Side.White;
                             if (idx + 2 >= FEN_data.Length || char.IsLetter(FEN_data[idx + 2])) //Is there another move?
@@ -711,7 +711,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.White, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PGNMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
 
 
@@ -765,7 +765,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.Black, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PGNMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
             }
 
