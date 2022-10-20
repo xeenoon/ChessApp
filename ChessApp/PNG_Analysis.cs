@@ -33,10 +33,87 @@ namespace ChessApp
 
         public List<PNGMove> data = new List<PNGMove>();
         public Bitboard finalresult;
+        public override string ToString()
+        {
+            Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Bitboard b = startpos.bitboard;
 
+            string pgn = "";
+            for (int i = 1; i< (data.Count()/2); ++i)
+            {
+                pgn += string.Format("{0}. ", i+1); //Add the indexer
+                var move = data[i*2];
+
+                for (Side hasturn = Side.White; hasturn == Side.White; hasturn=Side.Black) //switch the sides
+                {
+                    var copy = b.Copy();
+                    copy.SetupSquareAttacks();
+                    List<int> possibleStartPositions = new List<int>();
+                    
+                    foreach (var b_move in MoveGenerator.CalculateAll(copy, hasturn))
+                    {
+                        if (b_move.pieceType == move.normalmove.pieceType && b_move.last == move.normalmove.last)
+                        {
+                            possibleStartPositions.Add(b_move.last);
+                        }
+                    }
+                    string movestring = "";
+                    string rowcol = "";
+                    if (possibleStartPositions.Count() >= 1)
+                    {
+                        int startcol = move.normalmove.last % 8;
+                        int startrow = move.normalmove.last / 8;
+
+                        List<int> samecol = possibleStartPositions.Where(m => m % 8 == startcol).ToList();
+                        List<int> samerow = possibleStartPositions.Where(m => m / 8 == startrow).ToList();
+                        List<int> same = possibleStartPositions.Where(m => m / 8 == startrow && m % 8 == startcol).ToList();
+                        if (samecol.Count() == 1) //Just need to specify column?
+                        {
+                            rowcol = (samecol[0] / 8).GetFileLetter().ToString();
+                        }
+                        else if (samerow.Count() == 1) //Just need to specify column?
+                        {
+                            rowcol = ((samerow[0] % 8) + 1).ToString();
+                        }
+                        else if (same.Count() == 1) //Just need to specify column?
+                        {
+                            rowcol = (same[0] / 8).GetFileLetter().ToString() + ((same[0] % 8) + 1).ToString();
+                        }
+                    }
+
+                    var piecetypestring = "";
+                    string endposition = (move.normalmove.current / 8).GetFileLetter().ToString() + ((move.normalmove.current % 8) + 1).ToString();
+                    switch (move.normalmove.pieceType)
+                    {
+                        case PieceType.Pawn:
+                            piecetypestring = "";
+                            break;
+                        case PieceType.Rook:
+                            piecetypestring = "R";
+                            break;
+                        case PieceType.Knight:
+                            piecetypestring = "N";
+                            break;
+                        case PieceType.Bishop:
+                            piecetypestring = "B";
+                            break;
+                        case PieceType.Queen:
+                            piecetypestring = "Q";
+                            break;
+                        case PieceType.King:
+                            piecetypestring = "K";
+                            break;
+                    }
+                    movestring = string.Format("{0}{1}{2}", piecetypestring, rowcol, endposition);
+
+                    b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
+                }
+            }
+            return "";
+        }
         public struct PNGMove
         {
-            Move normalmove;
+            public Move normalmove;
             Move duckmove;
             string comment;
 
@@ -139,7 +216,6 @@ namespace ChessApp
                     {
                         readingcomment = false;
                         PNGMove m = new PNGMove(normalMove, comment);
-                        data.Add(m);
                         currmove = currmove == Side.White ? Side.Black : Side.White;
 
                         comment = "";
@@ -150,10 +226,12 @@ namespace ChessApp
                             //We are promoting
                             promotion = promotions.First();
                             promotions.RemoveAt(0);
+                            m.normalmove.promotion = promotion;
                         }
                         startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
 
                         startpos.Reload();
+                        data.Add(m);
 
                         if (!secondmove && ((idx + 2 < FEN_data.Length) && ((FEN_data[idx + 2] == 'T' || FEN_data[idx + 2] == '1' || FEN_data[idx + 2] == '0' || FEN_data[idx + 2] == 'R'))))
                         {
@@ -275,7 +353,6 @@ namespace ChessApp
                                 continue;
                             }
                             PNGMove move = new PNGMove(normalMove, comment);
-                            data.Add(move);
                             bool contains = FEN_data.Substring(idx).Contains('{');
                             currmove = currmove == Side.White ? Side.Black : Side.White;
                             if (idx + 2 >= FEN_data.Length || char.IsLetter(FEN_data[idx + 2])) //Is there another move?
@@ -290,13 +367,16 @@ namespace ChessApp
                                     //We are promoting
                                     promotion = promotions.First();
                                     promotions.RemoveAt(0);
+                                    move.normalmove.promotion = promotion;
                                 }
+                                data.Add(move);
                                 startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
 
                                 startpos.Reload();
                             }
                             else
                             {
+                                data.Add(move);
                                 if ((FEN_data[idx + 2] == '{'))
                                 {
                                     continue;
@@ -630,7 +710,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.White, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
 
 
@@ -684,7 +764,7 @@ namespace ChessApp
 
                 startpos.bitboard.Move((byte)startposition, (byte)endposition, 1ul << startposition, 1ul << endposition, pieceType, Side.Black, promotion);
                 startpos.bitboard.Move(0, (byte)duckposition, 0, 1ul << duckposition, PieceType.Duck, Side.Animal);
-                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType), new Move(0, (byte)duckposition, PieceType.Duck), ""));
+                this.data.Add(new PNGMove(new Move((byte)startposition, (byte)endposition, pieceType, promotion), new Move(0, (byte)duckposition, PieceType.Duck), ""));
                 startpos.Reload();
             }
 

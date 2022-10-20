@@ -1621,12 +1621,14 @@ namespace ChessApp
         public byte last;
         public byte current;
         public PieceType pieceType;
+        public PieceType promotion;
 
-        public Move(byte last, byte current, PieceType pieceType)
+        public Move(byte last, byte current, PieceType pieceType, PieceType promotion = PieceType.Queen)
         {
             this.last = last;
             this.current = current;
             this.pieceType = pieceType;
+            this.promotion = promotion;
         }
     }
 }
