@@ -49,6 +49,7 @@ namespace ChessApp
         Bitmap arrowsIMG;
         Bitmap editIMG;
         Bitmap placeIMG;
+        PNG_Analysis pNG_Analysis;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (resizing)
@@ -290,6 +291,7 @@ namespace ChessApp
 
         private void button2_Click(object sender, EventArgs e)
         {
+            squares.highlight.Click(); //Deselct the square we have selected
             squares.UndoMove();
             this.chessboard = squares.board;
             Invalidate();
@@ -490,18 +492,29 @@ namespace ChessApp
         Bitmap pngIMG;
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-       //     var pnggraphics = Graphics.FromImage(pngIMG);
-       //     e.Graphics.DrawImage(pngIMG, 0,0, panel2.Width, panel2.Height);
+            if (pNG_Analysis != null)
+            {
+                pNG_Analysis.Paint();
+                e.Graphics.DrawImage(pNG_Analysis.bitmap, 0, -panel2.Height);
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var PGN = textBox1.Text;
-            var board = new PNG(PGN).finalresult;
-            squares.board.bitboard = board;
-            squares.board.Reload();
-            reload = true;
-            Invalidate();
+            var result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK) //Chose a file
+            {
+                var pgn = File.ReadAllText(openFileDialog1.FileName);
+                pgn = pgn.RemovePretext();
+
+                pNG_Analysis = new PNG_Analysis(pgn, panel2.Height, panel2.Width);
+                panel2.Invalidate();
+            }
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
