@@ -33,6 +33,7 @@ namespace ChessApp
 
         public List<PGNMove> data = new List<PGNMove>();
         public List<string> strdata = new List<string>();
+        public List<Bitboard> boards = new List<Bitboard>();
         public Bitboard finalresult;
         public override string ToString()
         {
@@ -41,7 +42,7 @@ namespace ChessApp
             Bitboard b = startpos.bitboard;
 
             string pgn = "";
-            for (int i = 0; i< (data.Count()/2); ++i)
+            for (int i = 0; i< ((data.Count()+1)/2); ++i)
             {
                 pgn += string.Format("{0}. ", i+1); //Add the indexer
 
@@ -156,6 +157,7 @@ namespace ChessApp
                     pgn += movestring;
                     strdata.Add(movestring);
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
+                    boards.Add(b.Copy());
                 }
             }
             strdata.Add(gameresult);
@@ -480,6 +482,10 @@ namespace ChessApp
             var lastnumber = int.Parse(num); //Find the last number
             for (int i = 1; i < lastnumber + 1; ++i)
             {
+                if (i==lastnumber-1)
+                {
+
+                }
                 int nextidx = FEN.IndexOf((i + 1).ToString() + ".");
                 if (nextidx == -1)
                 {

@@ -54,16 +54,16 @@
             this.button3 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.Left = new System.Windows.Forms.PictureBox();
+            this.Right = new System.Windows.Forms.PictureBox();
+            this.FarRight = new System.Windows.Forms.PictureBox();
+            this.FarLeft = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Left)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Right)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FarRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -73,6 +73,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(94, 42);
             this.button1.TabIndex = 1;
+            this.button1.TabStop = false;
             this.button1.Text = "Import game";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -83,6 +84,7 @@
             this.FEN_TEXT.Name = "FEN_TEXT";
             this.FEN_TEXT.Size = new System.Drawing.Size(386, 20);
             this.FEN_TEXT.TabIndex = 2;
+            this.FEN_TEXT.TabStop = false;
             // 
             // checkBox1
             // 
@@ -91,6 +93,7 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(73, 17);
             this.checkBox1.TabIndex = 3;
+            this.checkBox1.TabStop = false;
             this.checkBox1.Text = "Edit mode";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -106,6 +109,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(73, 21);
             this.comboBox1.TabIndex = 4;
+            this.comboBox1.TabStop = false;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // button2
@@ -114,6 +118,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
+            this.button2.TabStop = false;
             this.button2.Text = "Undo";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -125,6 +130,7 @@
             this.PlayComputer.Name = "PlayComputer";
             this.PlayComputer.Size = new System.Drawing.Size(93, 17);
             this.PlayComputer.TabIndex = 4;
+            this.PlayComputer.TabStop = false;
             this.PlayComputer.Text = "Play computer";
             this.PlayComputer.UseVisualStyleBackColor = true;
             this.PlayComputer.CheckedChanged += new System.EventHandler(this.PlayComputerCheckChange);
@@ -173,6 +179,7 @@
             this.W_KingsideCastle.Name = "W_KingsideCastle";
             this.W_KingsideCastle.Size = new System.Drawing.Size(15, 14);
             this.W_KingsideCastle.TabIndex = 9;
+            this.W_KingsideCastle.TabStop = false;
             this.W_KingsideCastle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.W_KingsideCastle, "White Kingside");
             this.W_KingsideCastle.UseVisualStyleBackColor = true;
@@ -185,6 +192,7 @@
             this.W_QueensideCastle.Name = "W_QueensideCastle";
             this.W_QueensideCastle.Size = new System.Drawing.Size(15, 14);
             this.W_QueensideCastle.TabIndex = 10;
+            this.W_QueensideCastle.TabStop = false;
             this.W_QueensideCastle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.W_QueensideCastle, "White Queenside");
             this.W_QueensideCastle.UseVisualStyleBackColor = true;
@@ -197,6 +205,7 @@
             this.B_KingsideCastle.Name = "B_KingsideCastle";
             this.B_KingsideCastle.Size = new System.Drawing.Size(15, 14);
             this.B_KingsideCastle.TabIndex = 11;
+            this.B_KingsideCastle.TabStop = false;
             this.B_KingsideCastle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.B_KingsideCastle, "Black Kingside");
             this.B_KingsideCastle.UseVisualStyleBackColor = true;
@@ -209,6 +218,7 @@
             this.B_QueensideCastle.Name = "B_QueensideCastle";
             this.B_QueensideCastle.Size = new System.Drawing.Size(15, 14);
             this.B_QueensideCastle.TabIndex = 12;
+            this.B_QueensideCastle.TabStop = false;
             this.B_QueensideCastle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.B_QueensideCastle, "Black Queenside");
             this.B_QueensideCastle.UseVisualStyleBackColor = true;
@@ -274,6 +284,7 @@
             this.VariantSelector.Name = "VariantSelector";
             this.VariantSelector.Size = new System.Drawing.Size(121, 21);
             this.VariantSelector.TabIndex = 16;
+            this.VariantSelector.TabStop = false;
             this.VariantSelector.SelectedIndexChanged += new System.EventHandler(this.VariantSelector_SelectedIndexChanged);
             // 
             // label1
@@ -288,6 +299,8 @@
             // 
             // panel2
             // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoScroll = true;
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.panel2.Location = new System.Drawing.Point(582, 269);
@@ -298,10 +311,12 @@
             // 
             // button3
             // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Location = new System.Drawing.Point(749, 231);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(97, 23);
             this.button3.TabIndex = 1;
+            this.button3.TabStop = false;
             this.button3.Text = "Import PGN";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -312,55 +327,80 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.pictureBox4);
-            this.panel3.Controls.Add(this.pictureBox3);
-            this.panel3.Controls.Add(this.pictureBox2);
-            this.panel3.Controls.Add(this.pictureBox1);
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.Left);
+            this.panel3.Controls.Add(this.Right);
+            this.panel3.Controls.Add(this.FarRight);
+            this.panel3.Controls.Add(this.FarLeft);
             this.panel3.Location = new System.Drawing.Point(582, 517);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(269, 46);
             this.panel3.TabIndex = 17;
             // 
-            // pictureBox4
+            // Left
             // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(90, 3);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox4.TabIndex = 3;
-            this.pictureBox4.TabStop = false;
+            this.Left.Image = ((System.Drawing.Image)(resources.GetObject("Left.Image")));
+            this.Left.Location = new System.Drawing.Point(90, 3);
+            this.Left.Name = "Left";
+            this.Left.Size = new System.Drawing.Size(40, 40);
+            this.Left.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Left.TabIndex = 3;
+            this.Left.TabStop = false;
+            this.Left.Click += new System.EventHandler(this.ArrowClick);
+            this.Left.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseDown);
+            this.Left.MouseEnter += new System.EventHandler(this.FarLeft_MouseEnter);
+            this.Left.MouseLeave += new System.EventHandler(this.FarLeft_MouseLeave);
+            this.Left.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureboxMousemove);
+            this.Left.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseUp);
             // 
-            // pictureBox3
+            // Right
             // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(139, 3);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 2;
-            this.pictureBox3.TabStop = false;
+            this.Right.Image = ((System.Drawing.Image)(resources.GetObject("Right.Image")));
+            this.Right.Location = new System.Drawing.Point(139, 3);
+            this.Right.Name = "Right";
+            this.Right.Size = new System.Drawing.Size(40, 40);
+            this.Right.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Right.TabIndex = 2;
+            this.Right.TabStop = false;
+            this.Right.Click += new System.EventHandler(this.ArrowClick);
+            this.Right.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseDown);
+            this.Right.MouseEnter += new System.EventHandler(this.FarLeft_MouseEnter);
+            this.Right.MouseLeave += new System.EventHandler(this.FarLeft_MouseLeave);
+            this.Right.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureboxMousemove);
+            this.Right.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseUp);
             // 
-            // pictureBox2
+            // FarRight
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(188, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(76, 40);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
+            this.FarRight.Image = ((System.Drawing.Image)(resources.GetObject("FarRight.Image")));
+            this.FarRight.Location = new System.Drawing.Point(188, 3);
+            this.FarRight.Name = "FarRight";
+            this.FarRight.Size = new System.Drawing.Size(76, 40);
+            this.FarRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.FarRight.TabIndex = 1;
+            this.FarRight.TabStop = false;
+            this.FarRight.Click += new System.EventHandler(this.ArrowClick);
+            this.FarRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseDown);
+            this.FarRight.MouseEnter += new System.EventHandler(this.FarLeft_MouseEnter);
+            this.FarRight.MouseLeave += new System.EventHandler(this.FarLeft_MouseLeave);
+            this.FarRight.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureboxMousemove);
+            this.FarRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseUp);
             // 
-            // pictureBox1
+            // FarLeft
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(5, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(76, 40);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.FarLeft.BackColor = System.Drawing.SystemColors.Control;
+            this.FarLeft.Image = ((System.Drawing.Image)(resources.GetObject("FarLeft.Image")));
+            this.FarLeft.Location = new System.Drawing.Point(5, 3);
+            this.FarLeft.Name = "FarLeft";
+            this.FarLeft.Size = new System.Drawing.Size(76, 40);
+            this.FarLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.FarLeft.TabIndex = 0;
+            this.FarLeft.TabStop = false;
+            this.FarLeft.Click += new System.EventHandler(this.ArrowClick);
+            this.FarLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseDown);
+            this.FarLeft.MouseEnter += new System.EventHandler(this.FarLeft_MouseEnter);
+            this.FarLeft.MouseLeave += new System.EventHandler(this.FarLeft_MouseLeave);
+            this.FarLeft.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureboxMousemove);
+            this.FarLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseUp);
             // 
             // Form1
             // 
@@ -385,6 +425,7 @@
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.Click += new System.EventHandler(this.Form1_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MovingPanel);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
@@ -392,10 +433,10 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Left)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Right)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FarRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -426,10 +467,10 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox FarLeft;
+        private System.Windows.Forms.PictureBox FarRight;
+        private System.Windows.Forms.PictureBox Right;
+        private System.Windows.Forms.PictureBox Left;
     }
 }
 

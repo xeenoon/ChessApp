@@ -12,6 +12,34 @@ namespace ChessApp
 {
     internal static class Extensions
     {
+        public static bool MovesContains(this string s, string lookfor)
+        {
+            string result = "";
+            bool insidecomment = false;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                var c = s[i];
+                if (c == '{')
+                {
+                    insidecomment = true;
+                    continue;
+                }
+                else if (c == '}')
+                {
+                    insidecomment = false;
+                    continue;
+                }
+                if (!insidecomment)
+                {
+                    result += c;
+                    if (result.Contains(lookfor))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public static int LastIndexor(this string s)
         {
             int skiptimes = 0;

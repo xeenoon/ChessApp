@@ -105,6 +105,10 @@ namespace ChessApp
             {
                 reload = false;
                 squares.Reload(boardGraphics);
+                foreach (var squarepos in tohighlight)
+                {
+                    squares.movehighlights.Add(squares[squarepos]);
+                }
             }
             else if (reset)
             {
@@ -291,7 +295,10 @@ namespace ChessApp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            squares.highlight.Click(); //Deselct the square we have selected
+            if (squares.highlight != null)
+            {
+                squares.highlight.Click(); //Deselct the square we have selected
+            }
             squares.UndoMove();
             this.chessboard = squares.board;
             Invalidate();
@@ -492,17 +499,18 @@ namespace ChessApp
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
         }
-
+        PGN b_pgn;
         private void button3_Click(object sender, EventArgs e)
         {
             panel2.Controls.Clear();
+            FEN_TEXT.Enabled = false;
             var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK) //Chose a file
             {
                 var pgn = File.ReadAllText(openFileDialog1.FileName);
                 pgn = pgn.RemovePretext();
 
-                PGN b_pgn = new PGN(pgn);
+                b_pgn = new PGN(pgn);
                 b_pgn.ToString();
                 for (int i = 0; i < b_pgn.strdata.Count(); ++i)
                 {
@@ -524,6 +532,9 @@ namespace ChessApp
                     button.ForeColor = Color.White;
                     button.Text = b_pgn.strdata[i];
                     button.Font = new Font("Arial", 10, FontStyle.Bold);
+                    button.Name = "PGN_Button:" + i.ToString();
+                    button.Click += new EventHandler(PGN_ButtonClick);
+                    button.TabStop = false;
                     panel2.Controls.Add(button);
                 }
 
@@ -531,9 +542,160 @@ namespace ChessApp
             }
         }
 
+        Button lastclick;
+        private void PGN_ButtonClick(object sender, EventArgs e)
+        {
+            if (lastclick != null) 
+            {
+                lastclick.BackColor = panel2.BackColor;
+            }
+            var btn = ((Button)sender);
+            btn.BackColor = Color.Black;
+            lastclick = btn;
+
+            int idx = int.Parse(btn.Name.Split(':')[1]);
+            if (idx >= b_pgn.boards.Count())
+            {
+                return;
+            }
+            squares.board.bitboard = b_pgn.boards[idx];
+            squares.board.Reload();
+            squares.board.hasturn = idx % 2 == 1 ? Side.White : Side.Black;
+
+            var move = b_pgn.data[idx];
+            tohighlight.Add(move.normalmove.last);
+            tohighlight.Add(move.normalmove.current);
+            
+            reload = true;
+            Invalidate();
+        }
+        List<int> tohighlight = new List<int>();
+
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (b_pgn == null)
+            {
+                return;
+            }
+
+            int lastidx;
+            if (lastclick != null)
+            {
+                lastidx = int.Parse(lastclick.Name.Split(':')[1]);
+            }
+            else
+            {
+                lastidx = -1;
+            }
+            int modifidx = 0;
+            if (e.KeyCode == Keys.Right)
+            {
+                modifidx = lastidx + 1;
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                modifidx = lastidx - 1;
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                modifidx = b_pgn.boards.Count() - 1;
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                modifidx = 0;
+            }
+            try
+            {
+                var btn = (Button)panel2.Controls.Find("PGN_Button:" + modifidx, true).First();
+                PGN_ButtonClick(btn, null);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void ArrowClick(object sender, EventArgs e)
+        {
+            if (b_pgn == null)
+            {
+                return;
+            }
+            int lastidx;
+            if (lastclick != null)
+            {
+                lastidx = int.Parse(lastclick.Name.Split(':')[1]);
+            }
+            else
+            {
+                lastidx = -1;
+            }
+
+            var name = ((Control)sender).Name;
+            int modifidx = 0;
+
+            if (name == "Right")
+            {
+                modifidx = lastidx + 1;
+            }
+            else if (name == "Left")
+            {
+                modifidx = lastidx - 1;
+            }
+            else if (name == "FarRight")
+            {
+                modifidx = b_pgn.boards.Count() - 1;
+            }
+            else if (name == "FarLeft")
+            {
+                modifidx = 0;
+            }
+
+            try
+            {
+                var btn = (Button)panel2.Controls.Find("PGN_Button:" + modifidx, true).First();
+                PGN_ButtonClick(btn, null);
+            }
+            catch
+            {
+
+            }
+        }
+        private void PictureboxMousemove(object sender, MouseEventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+
+        }
+
+        private void FarLeft_MouseDown(object sender, MouseEventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            pictureBox.BackColor = Color.LightBlue;
+        }
+
+        private void FarLeft_MouseUp(object sender, MouseEventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            pictureBox.BackColor = Color.LightGray;
+        }
+
+        private void FarLeft_MouseEnter(object sender, EventArgs e)
+        {
+
+            PictureBox pictureBox = (PictureBox)sender;
+            pictureBox.BackColor = Color.LightGray;
+        }
+
+        private void FarLeft_MouseLeave(object sender, EventArgs e)
+        {
+
+            PictureBox pictureBox = (PictureBox)sender;
+            pictureBox.BackColor = this.BackColor;
         }
     }
 }

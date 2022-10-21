@@ -230,10 +230,25 @@
     <None Include="Resources\Goose.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\wQ.png" />
+    <None Include="Resources\bB1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\wR.png" />
+    <None Include="Resources\bK1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bN1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wB1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wP1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wQ1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wR1.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bB.png" />
@@ -264,6 +279,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\wP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wQ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wR.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
