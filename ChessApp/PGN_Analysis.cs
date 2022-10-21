@@ -32,9 +32,11 @@ namespace ChessApp
         string strvalue;
 
         public List<PGNMove> data = new List<PGNMove>();
+        List<string> strdata = new List<string>();
         public Bitboard finalresult;
         public override string ToString()
         {
+            strdata.Clear();
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             Bitboard b = startpos.bitboard;
 
@@ -152,9 +154,11 @@ namespace ChessApp
                     }
                     movestring = string.Format("{0}{1}{4}{2}{3} ", piecetypestring, rowcol, endposition, promotionstring, istaking);
                     pgn += movestring;
+                    strdata.Add(movestring);
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
                 }
             }
+            strdata.Add(gameresult);
             return pgn + gameresult;
         }
         public struct PGNMove
