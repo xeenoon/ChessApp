@@ -32,7 +32,7 @@ namespace ChessApp
         string strvalue;
 
         public List<PGNMove> data = new List<PGNMove>();
-        List<string> strdata = new List<string>();
+        public List<string> strdata = new List<string>();
         public Bitboard finalresult;
         public override string ToString()
         {

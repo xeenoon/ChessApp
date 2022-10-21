@@ -489,25 +489,44 @@ namespace ChessApp
             }
         }
 
-        Bitmap pngIMG;
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-            if (pNG_Analysis != null)
-            {
-                pNG_Analysis.Paint();
-                e.Graphics.DrawImage(pNG_Analysis.bitmap, 0, -panel2.Height);
-            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            panel2.Controls.Clear();
             var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK) //Chose a file
             {
                 var pgn = File.ReadAllText(openFileDialog1.FileName);
                 pgn = pgn.RemovePretext();
 
-                pNG_Analysis = new PGN_Analysis(pgn, panel2.Height, panel2.Width);
+                PGN b_pgn = new PGN(pgn);
+                b_pgn.ToString();
+                for (int i = 0; i < b_pgn.strdata.Count(); ++i)
+                {
+                    int x = 10;
+                    if (i%2 == 1) //White move?
+                    {
+                        x = 134;
+                    }
+
+                    int y = 8  + (i / 2) * 30;
+
+                    int width = 106;
+                    int height = 23;
+
+                    Button button = new Button();
+                    button.Location = new Point(x,y);
+                    button.Size = new Size(width, height);
+                    button.FlatStyle = FlatStyle.Flat;
+                    button.ForeColor = Color.White;
+                    button.Text = b_pgn.strdata[i];
+                    button.Font = new Font("Arial", 10, FontStyle.Bold);
+                    panel2.Controls.Add(button);
+                }
+
                 panel2.Invalidate();
             }
         }
