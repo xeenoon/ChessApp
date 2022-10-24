@@ -637,6 +637,10 @@ namespace ChessApp
             {
                 modifidx = 0;
             }
+            else
+            {
+                return;
+            }
             try
             {
                 var btn = (Button)panel2.Controls.Find("PGN_Button:" + modifidx, true).First();
