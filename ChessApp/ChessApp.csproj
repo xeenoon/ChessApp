@@ -84,6 +84,7 @@
     <Compile Include="SideSquare.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Squares.cs" />
+    <Compile Include="Stockfish.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
       <SubType>Designer</SubType>

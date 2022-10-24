@@ -22,6 +22,7 @@ namespace ChessApp
             SQUARESIZE = (this.Size.Height - 60) / 11;
 
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            Stockfish.Start();
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
         }
