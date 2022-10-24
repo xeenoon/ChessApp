@@ -104,11 +104,16 @@ namespace ChessApp
             else if (reload)
             {
                 reload = false;
+
                 squares.Reload(boardGraphics);
+                
                 foreach (var squarepos in tohighlight)
                 {
+                    squares[squarepos].lastmove = true;
                     squares.movehighlights.Add(squares[squarepos]);
                 }
+                tohighlight.Clear();
+                squares.Paint(boardGraphics, arrowGraphics, editGraphics, placeGraphics);
             }
             else if (reset)
             {
