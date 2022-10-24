@@ -67,7 +67,8 @@ namespace ChessApp
                     }
                     string movestring = "";
                     string rowcol = "";
-                    if (possibleStartPositions.Distinct().Count() >= 2)
+                    possibleStartPositions = possibleStartPositions.Distinct().ToList();
+                    if (possibleStartPositions.Count() >= 2)
                     {
                         int startcol = move.normalmove.last % 8;
                         int startrow = move.normalmove.last / 8;
@@ -153,11 +154,41 @@ namespace ChessApp
                         //We must specify row-col
                         rowcol = (move.normalmove.last % 8).GetFileLetter().ToString();
                     }
-                    movestring = string.Format("{0}{1}{4}{2}{3} ", piecetypestring, rowcol, endposition, promotionstring, istaking);
-                    pgn += movestring;
-                    strdata.Add(movestring);
+                    movestring = string.Format("{0}{1}{4}{2}{3}", piecetypestring, rowcol, endposition, promotionstring, istaking);
+                    switch (movestring)
+                    {
+                        case "Kg1":
+                            movestring = "O-O";
+                            break;
+                        case "Kg8":
+                            movestring = "O-O";
+                            break;
+                        case "Kc1":
+                            movestring = "O-O-O";
+                            break;
+                        case "Kc8":
+                            movestring = "O-O-O";
+                            break;
+                    }
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
-                    boards.Add(b.Copy());
+                    Bitboard b_copy = b.Copy();
+                    boards.Add(b_copy);
+                    b_copy.SetupSquareAttacks();
+
+                    if (b_copy.check || b_copy.doublecheck)
+                    {
+                        if (MoveGenerator.MoveCount(b_copy, hasturn==Side.White ? Side.Black : Side.White) == 0) //Checkmate?
+                        {
+                            movestring += "#";
+                        }
+                        else
+                        {
+                            movestring += "+";
+                        }
+                    }
+
+                    pgn += movestring + ' ';
+                    strdata.Add(movestring);
                 }
             }
             strdata.Add(gameresult);

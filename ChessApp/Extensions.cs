@@ -94,15 +94,15 @@ namespace ChessApp
 
                 if (!insidecomment && char.IsNumber(c))
                 {
-                    if (s[i + 1] == '.' && (i <= 1 || !char.IsNumber(s[i-1])) && (i <= 1 || !char.IsNumber(s[i - 2]))) //Single digit
+                    if (i <= s.Length-2 && s[i + 1] == '.' && (i <= 1 || !char.IsNumber(s[i-1])) && (i <= 1 || !char.IsNumber(s[i - 2]))) //Single digit
                     {
                         lastnumber = int.Parse(s[i].ToString());
                     }
-                    if (char.IsNumber(s[i + 1]) && s[i + 2] == '.' && (i <= 0 || !char.IsNumber(s[i - 1]))) //Double digit
+                    if (i <= s.Length - 3 && char.IsNumber(s[i + 1]) && s[i + 2] == '.' && (i <= 0 || !char.IsNumber(s[i - 1]))) //Double digit
                     {
                         lastnumber = int.Parse(s[i].ToString() + s[i + 1].ToString());
                     }
-                    if (char.IsNumber(s[i + 1]) && char.IsNumber(s[i + 2]) && s[i + 3] == '.') //Triple digit
+                    if (i <= s.Length - 4 && char.IsNumber(s[i + 1]) && char.IsNumber(s[i + 2]) && s[i + 3] == '.') //Triple digit
                     {
                         lastnumber = int.Parse(s[i].ToString() + s[i + 1].ToString() + s[i + 2].ToString());
                     }
