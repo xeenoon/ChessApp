@@ -59,8 +59,8 @@
             this.FarRight = new System.Windows.Forms.PictureBox();
             this.FarLeft = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Analysis = new System.Windows.Forms.TabPage();
+            this.Play = new System.Windows.Forms.TabPage();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Left)).BeginInit();
@@ -68,8 +68,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.FarRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.Analysis.SuspendLayout();
+            this.Play.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -394,7 +394,7 @@
             // 
             // FarLeft
             // 
-            this.FarLeft.BackColor = System.Drawing.SystemColors.Control;
+            this.FarLeft.BackColor = System.Drawing.Color.Transparent;
             this.FarLeft.Image = ((System.Drawing.Image)(resources.GetObject("FarLeft.Image")));
             this.FarLeft.Location = new System.Drawing.Point(5, 3);
             this.FarLeft.Name = "FarLeft";
@@ -413,40 +413,40 @@
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.Play);
+            this.tabControl1.Controls.Add(this.Analysis);
             this.tabControl1.Location = new System.Drawing.Point(534, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(357, 571);
             this.tabControl1.TabIndex = 18;
             // 
-            // tabPage1
+            // Analysis
             // 
-            this.tabPage1.Controls.Add(this.panel2);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.panel3);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(349, 545);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Analysis";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.Analysis.Controls.Add(this.panel2);
+            this.Analysis.Controls.Add(this.button3);
+            this.Analysis.Controls.Add(this.panel3);
+            this.Analysis.Location = new System.Drawing.Point(4, 22);
+            this.Analysis.Name = "Analysis";
+            this.Analysis.Padding = new System.Windows.Forms.Padding(3);
+            this.Analysis.Size = new System.Drawing.Size(349, 545);
+            this.Analysis.TabIndex = 0;
+            this.Analysis.Text = "Analysis";
+            this.Analysis.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // Play
             // 
-            this.tabPage2.Controls.Add(this.checkBox1);
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.panel1);
-            this.tabPage2.Controls.Add(this.PlayComputer);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(349, 545);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Play";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.Play.Controls.Add(this.checkBox1);
+            this.Play.Controls.Add(this.button2);
+            this.Play.Controls.Add(this.panel1);
+            this.Play.Controls.Add(this.PlayComputer);
+            this.Play.Location = new System.Drawing.Point(4, 22);
+            this.Play.Name = "Play";
+            this.Play.Padding = new System.Windows.Forms.Padding(3);
+            this.Play.Size = new System.Drawing.Size(349, 545);
+            this.Play.TabIndex = 1;
+            this.Play.Text = "Play";
+            this.Play.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -477,9 +477,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.FarRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.Analysis.ResumeLayout(false);
+            this.Play.ResumeLayout(false);
+            this.Play.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -515,8 +515,8 @@
         private System.Windows.Forms.PictureBox Right;
         private System.Windows.Forms.PictureBox Left;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage Analysis;
+        private System.Windows.Forms.TabPage Play;
     }
 }
 

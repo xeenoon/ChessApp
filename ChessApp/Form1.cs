@@ -606,7 +606,7 @@ namespace ChessApp
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (b_pgn == null)
+            if (b_pgn == null || tabControl1.SelectedTab != tabControl1.TabPages["Analysis"])
             {
                 return;
             }
@@ -723,7 +723,7 @@ namespace ChessApp
         {
 
             PictureBox pictureBox = (PictureBox)sender;
-            pictureBox.BackColor = this.BackColor;
+            pictureBox.BackColor = Color.Transparent;
         }
     }
 }
