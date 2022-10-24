@@ -200,11 +200,11 @@ namespace ChessApp
             textparse = Regex.Replace(textparse, "\n", " ");
             textparse = Regex.Replace(textparse, "\r", "");
             this.textparse = textparse;
-            if (textparse.Contains('D')) //My duck piece identifier
+            if (textparse.MovesContains("D")) //My duck piece identifier
             {
                 ParseNormalDuck();
             }
-            else if (textparse.Contains(" .. ")) //Weird PGN4 notation
+            else if (textparse.MovesContains(" .. ")) //Weird PGN4 notation
             {
                 this.textparse = textparse.Shift3();
                 ParseDuck();
@@ -230,28 +230,21 @@ namespace ChessApp
 
             textparse = textparse.RemovePromotions(out promotions);
 
-            string FEN = textparse.Substring(textparse.IndexOf("1"));
+            string FEN = textparse.Substring(textparse.MovesIndexOf("1"));
             Move normalMove = new Move();
 
-            int v = FEN.LastIndexOf('.');
-            string num = FEN[v - 1].ToString();
-            if (v >= 2 && char.IsNumber(FEN[v - 2]))
-            {
-                num = num.Insert(0, FEN[v - 2].ToString());
-                if (v >= 3 && char.IsNumber(FEN[v - 3]))
-                {
-                    num = num.Insert(0, FEN[v - 3].ToString());
-                }
-            }
-            var lastnumber = int.Parse(num); //Find the last number
+            var lastnumber = FEN.LastIndexor(); //Find the last number
             for (int i = 1; i < lastnumber + 1; ++i)
             {
-                int nextidx = FEN.IndexOf((i+1).ToString() + ".");
+                if (i==7)
+                {
+                }
+                int nextidx = FEN.MovesIndexOf((i+1).ToString() + ".");
                 if (nextidx == -1)
                 {
                     nextidx = FEN.Length;
                 }
-                int curridx = FEN.IndexOf(i.ToString() + ".");
+                int curridx = FEN.MovesIndexOf(i.ToString() + ".");
                 string FEN_data = FEN.Substring(curridx, nextidx - curridx);
 
                 bool secondmove = false;
@@ -276,7 +269,7 @@ namespace ChessApp
                         comment = "";
                         normalData = "";
                         PieceType promotion = PieceType.Queen;
-                        if (normalMove.pieceType == PieceType.Pawn && normalMove.current / 8 == 0 || normalMove.current / 8 == 7)
+                        if (normalMove.pieceType == PieceType.Pawn && (normalMove.current / 8 == 0 || normalMove.current / 8 == 7))
                         {
                             //We are promoting
                             promotion = promotions.First();
@@ -288,7 +281,7 @@ namespace ChessApp
                         startpos.Reload();
                         data.Add(m);
 
-                        if (!secondmove && ((idx + 2 < FEN_data.Length) && ((FEN_data[idx + 2] == 'T' || FEN_data[idx + 2] == '1' || FEN_data[idx + 2] == '0' || FEN_data[idx + 2] == 'R'))))
+                        if (!secondmove && i == lastnumber)
                         {
                             return; ///Game over
                         }

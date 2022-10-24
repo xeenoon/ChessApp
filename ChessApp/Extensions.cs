@@ -40,21 +40,61 @@ namespace ChessApp
             }
             return false;
         }
+        public static int MovesIndexOf(this string s, string lookfor)
+        {
+            string result = "";
+            bool insidecomment = false;
+            for (int i = 0; i < s.Length; ++i)
+            {
+                var c = s[i];
+                if (c == '{')
+                {
+                    insidecomment = true;
+                    continue;
+                }
+                else if (c == '}')
+                {
+                    insidecomment = false;
+                    continue;
+                }
+                if (!insidecomment)
+                {
+                    result += c;
+                    if (result.Contains(lookfor))
+                    {
+                        return i-lookfor.Length;
+                    }
+                }
+            }
+            return -1;
+        }
         public static int LastIndexor(this string s)
         {
             int skiptimes = 0;
             int lastnumber = 0;
+            bool insidecomment = false;
             for (int i = 0; i < s.Length; ++i)
             {
+                var c = s[i];
                 if (skiptimes >= 1)
                 {
                     --skiptimes;
                     continue;
                 }
-                var c = s[i];
-                if (char.IsNumber(c))
+                if (c == '{')
                 {
-                    if (s[i + 1] == '.' && (i <= 0 || !char.IsNumber(s[i-1])) && (i <= 1 || !char.IsNumber(s[i - 2]))) //Single digit
+                    insidecomment = true;
+                    continue;
+                }
+                else if (c == '}')
+                {
+                    insidecomment = false;
+                    continue;
+                }
+
+                if (!insidecomment && char.IsNumber(c))
+                {
+                    if (s[i + 1] == '.' && (i <= 1 || !char.IsNumber(s[i-1])) && (i <= 1 || !char.IsNumber(s[i - 2]))) //Single digit
                     {
                         lastnumber = int.Parse(s[i].ToString());
                     }
@@ -184,6 +224,7 @@ namespace ChessApp
         public static string RemoveChars(this string s, char toremove)
         {
             string result = "";
+            string nocomment = "";
             bool insidecomment = false;
             for (int i = 0; i < s.Length; ++i)
             {
@@ -195,13 +236,24 @@ namespace ChessApp
                 {
                     insidecomment = false;
                 }
-                else if (s[i] != toremove && !insidecomment)
+                else if (s[i] == toremove && !insidecomment)
                 {
-                    result += s[i];
+                    continue;
                 }
-                else if (insidecomment)
+
+                if (nocomment != "" && nocomment.Last() == ' ' && s[i] == ' ' && !insidecomment) //Double space?
                 {
-                    result += s[i];
+                    continue;
+                }
+                result += s[i];
+                if (!insidecomment)
+                {
+                    nocomment += s[i];
+                    if (i<= s.Length-1 && s[i] == '.' && s[i+1] != ' ')
+                    {
+                        result += ' ';
+                        nocomment += ' ';
+                    }
                 }
             }
             return result;
@@ -221,10 +273,12 @@ namespace ChessApp
                 if (s[i] == '{')
                 {
                     insidecomment = true;
+                    result += s[i];
                 }
                 else if (s[i] == '}')
                 {
                     insidecomment = false;
+                    result += s[i];
                 }
                 else if (!insidecomment)
                 {
@@ -301,10 +355,12 @@ namespace ChessApp
                 if (s[i] == '{')
                 {
                     insidecomment = true;
+                    result += s[i];
                 }
                 else if (s[i] == '}')
                 {
                     insidecomment = false;
+                    result += s[i];
                 }
                 else if (s[i] == '=' && !insidecomment)
                 {
