@@ -390,6 +390,14 @@ namespace ChessApp
                     result += used.ToString();
                 }
             }
+            for (int j = 0; j < (set.Count() == 0 ? 8 : set.Last().position/8); ++j)
+            {
+                result += "/8";
+            }
+            if (set.Count() == 0)
+            {
+                result = result.Substring(1);
+            }
             result += String.Format(" {0} ", hasturn == Side.White ? "w" : "b");
             result += whiteCastles.ToString();
             result += blackCastles.ToString(whiteCastles);

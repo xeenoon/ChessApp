@@ -1,5 +1,6 @@
 ﻿using ColorExtensions;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -113,7 +114,7 @@ namespace ChessApp
             squares.cancelHighlights = true;
             squares.ClearArrows();
             squares.arrowStart = null;
-            if (squares.selected_edit != null)
+            if (squares.selected_edit != null && squares.edit)
             {
                 if (piece != null && piece.pieceType != PieceType.Duck)
                 {
@@ -139,6 +140,7 @@ namespace ChessApp
                 piece = new Piece(squares.selected_edit.pieceType, squares.selected_edit.side, location);
                 squares.board.Pieces.Add(piece);
                 squares.board.bitboard = Bitboard.FromBoard(squares.board);
+                squares.ClearMoves();
                 ((Form1)(Form1.ActiveForm)).WriteFEN();
                 return;
             }

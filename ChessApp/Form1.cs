@@ -586,6 +586,7 @@ namespace ChessApp
             }
             squares.board.bitboard = b_pgn.boards[idx];
             squares.board.Reload();
+            FEN_TEXT.Text = squares.board.GetFEN();
             squares.board.hasturn = idx % 2 == 1 ? Side.White : Side.Black;
             squares.ClearArrows();
             
@@ -728,6 +729,16 @@ namespace ChessApp
 
             PictureBox pictureBox = (PictureBox)sender;
             pictureBox.BackColor = Color.Transparent;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            squares.board = new Chessboard("8/8/8/8/8/8/8/8 w - - 0 1");
+            squares.board.Reload();
+            chessboard = squares.board;
+            FEN_TEXT.Text = squares.board.GetFEN();
+            reload = true;
+            Invalidate();
         }
     }
 }
