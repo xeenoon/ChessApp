@@ -542,6 +542,15 @@ namespace ChessApp
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (!msg.HWnd.Equals(this.Handle) &&
+                (keyData == Keys.Left || keyData == Keys.Right ||
+                keyData == Keys.Up || keyData == Keys.Down))
+                return true;
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         Button lastclick;
         private void PGN_ButtonClick(object sender, EventArgs e)
         {
@@ -567,6 +576,7 @@ namespace ChessApp
             tohighlight.Add(move.normalmove.current);
             
             reload = true;
+            panel2.ScrollControlIntoView(btn);
             Invalidate();
         }
         List<int> tohighlight = new List<int>();

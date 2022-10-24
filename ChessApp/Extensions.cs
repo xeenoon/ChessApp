@@ -258,6 +258,7 @@ namespace ChessApp
             }
             return result;
         }
+
         public static string RemoveCastles(this string s)
         {
             string result = "";
