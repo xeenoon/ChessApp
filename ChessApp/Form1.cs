@@ -509,7 +509,6 @@ namespace ChessApp
         private void button3_Click(object sender, EventArgs e)
         {
             panel2.Controls.Clear();
-            FEN_TEXT.Enabled = false;
             var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK) //Chose a file
             {
@@ -521,12 +520,24 @@ namespace ChessApp
                 for (int i = 0; i < b_pgn.strdata.Count(); ++i)
                 {
                     int x = 10;
+                    int y = 8 + (i / 2) * 30;
+
                     if (i%2 == 1) //White move?
                     {
-                        x = 134;
+                        x = 160;
+                    }
+                    else
+                    {
+                        Label label = new Label();
+                        label.Location = new Point(0, y);
+                        label.Font = new Font("Arial", 15, FontStyle.Bold);
+                        label.Text = ((i / 2) + 1).ToString();
+                        label.AutoSize = true;
+                        panel2.Controls.Add(label);
+
+                        x = 35;
                     }
 
-                    int y = 8  + (i / 2) * 30;
 
                     int width = 106;
                     int height = 23;

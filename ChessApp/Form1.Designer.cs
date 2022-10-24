@@ -58,29 +58,35 @@
             this.Right = new System.Windows.Forms.PictureBox();
             this.FarRight = new System.Windows.Forms.PictureBox();
             this.FarLeft = new System.Windows.Forms.PictureBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Left)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Right)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button1.Location = new System.Drawing.Point(13, 8);
+            this.button1.Location = new System.Drawing.Point(28, 203);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(94, 42);
             this.button1.TabIndex = 1;
             this.button1.TabStop = false;
-            this.button1.Text = "Import game";
+            this.button1.Text = "Import FEN";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FEN_TEXT
             // 
-            this.FEN_TEXT.Location = new System.Drawing.Point(126, 20);
+            this.FEN_TEXT.Location = new System.Drawing.Point(12, 12);
             this.FEN_TEXT.Name = "FEN_TEXT";
             this.FEN_TEXT.Size = new System.Drawing.Size(386, 20);
             this.FEN_TEXT.TabIndex = 2;
@@ -89,7 +95,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(609, 22);
+            this.checkBox1.Location = new System.Drawing.Point(8, 67);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(73, 17);
             this.checkBox1.TabIndex = 3;
@@ -114,7 +120,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(519, 18);
+            this.button2.Location = new System.Drawing.Point(6, 13);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -126,7 +132,7 @@
             // PlayComputer
             // 
             this.PlayComputer.AutoSize = true;
-            this.PlayComputer.Location = new System.Drawing.Point(695, 21);
+            this.PlayComputer.Location = new System.Drawing.Point(87, 17);
             this.PlayComputer.Name = "PlayComputer";
             this.PlayComputer.Size = new System.Drawing.Size(93, 17);
             this.PlayComputer.TabIndex = 4;
@@ -250,6 +256,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.panel1.Controls.Add(this.VariantSelector);
             this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.CastlingOptionsTitle);
             this.panel1.Controls.Add(this.QueensideCastleLabel);
             this.panel1.Controls.Add(this.comboBox1);
@@ -261,9 +268,9 @@
             this.panel1.Controls.Add(this.BlackCastlingOptions);
             this.panel1.Controls.Add(this.W_QueensideCastle);
             this.panel1.Controls.Add(this.W_KingsideCastle);
-            this.panel1.Location = new System.Drawing.Point(582, 47);
+            this.panel1.Location = new System.Drawing.Point(6, 90);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(155, 207);
+            this.panel1.Size = new System.Drawing.Size(155, 254);
             this.panel1.TabIndex = 15;
             this.panel1.Visible = false;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
@@ -303,16 +310,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoScroll = true;
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.panel2.Location = new System.Drawing.Point(582, 269);
+            this.panel2.Location = new System.Drawing.Point(30, 35);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(269, 242);
+            this.panel2.Size = new System.Drawing.Size(303, 446);
             this.panel2.TabIndex = 16;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(749, 231);
+            this.button3.Location = new System.Drawing.Point(64, 6);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(97, 23);
             this.button3.TabIndex = 1;
@@ -332,7 +339,7 @@
             this.panel3.Controls.Add(this.Right);
             this.panel3.Controls.Add(this.FarRight);
             this.panel3.Controls.Add(this.FarLeft);
-            this.panel3.Location = new System.Drawing.Point(582, 517);
+            this.panel3.Location = new System.Drawing.Point(64, 487);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(269, 46);
             this.panel3.TabIndex = 17;
@@ -402,20 +409,52 @@
             this.FarLeft.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureboxMousemove);
             this.FarLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FarLeft_MouseUp);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(534, 1);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(357, 571);
+            this.tabControl1.TabIndex = 18;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.panel2);
+            this.tabPage1.Controls.Add(this.button3);
+            this.tabPage1.Controls.Add(this.panel3);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(349, 545);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Analysis";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.checkBox1);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.panel1);
+            this.tabPage2.Controls.Add(this.PlayComputer);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(349, 545);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Play";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(892, 575);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.PlayComputer);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.FEN_TEXT);
-            this.Controls.Add(this.button1);
             this.DoubleBuffered = true;
             this.KeyPreview = true;
             this.Name = "Form1";
@@ -437,6 +476,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.Right)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FarLeft)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -471,6 +514,9 @@
         private System.Windows.Forms.PictureBox FarRight;
         private System.Windows.Forms.PictureBox Right;
         private System.Windows.Forms.PictureBox Left;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }
 
