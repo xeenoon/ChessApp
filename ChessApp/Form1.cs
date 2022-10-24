@@ -234,6 +234,12 @@ namespace ChessApp
                 if (clicked != null)
                 {
                     clicked.Click();
+                    foreach (var square in squares.squares.Where(s=>s.dangerhighlight)) //Find all the highlighted squares
+                    {
+                        //Mark them to repaint
+                        square.requiresPaint = true;
+                    }
+                    Invalidate();
                 }
                 SideSquare sidesquare = SideSquare.SquareAt(mouse.Location);
                 if (sidesquare != null)
@@ -570,7 +576,8 @@ namespace ChessApp
             squares.board.bitboard = b_pgn.boards[idx];
             squares.board.Reload();
             squares.board.hasturn = idx % 2 == 1 ? Side.White : Side.Black;
-
+            squares.ClearArrows();
+            
             var move = b_pgn.data[idx];
             tohighlight.Add(move.normalmove.last);
             tohighlight.Add(move.normalmove.current);
