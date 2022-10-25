@@ -12,9 +12,16 @@ namespace ChessApp
     public class Stockfish
     {
         public int depth;
+        public Form1 mainform;
         public List<Move> bestmoves = new List<Move>(20);
 
         Process process = new Process();
+
+        public Stockfish(Form1 mainform)
+        {
+            this.mainform = mainform;
+        }
+
         public void Start()
         {
             bestmoves = new List<Move>(20);
@@ -56,7 +63,11 @@ namespace ChessApp
 
                     Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
                     int index = int.Parse(line.Split(' ').Last()) - 1;
-
+                    if (index >= 3)
+                    {
+                        mainform.DrawStockfish(bestmoves);
+                        continue;
+                    }
                     if (bestmoves.Count() <= index)
                     {
                         bestmoves.Add(move);
@@ -65,20 +76,57 @@ namespace ChessApp
                     {
                         bestmoves[index] = move;
                     }
-                    MessageBox.Show(movedata);
+                }
+                if (line.StartsWith("bestmove "))
+                {
+                    var movedata = line.Substring(9,4);
+                    var startcol = movedata[0].GetFileNum();
+                    var startrow = int.Parse(movedata[1].ToString()) - 1;
+                    int startpos = startrow * 8 + startcol;
+
+                    var endcol = movedata[2].GetFileNum();
+                    var endrow = int.Parse(movedata[3].ToString()) - 1;
+                    int endpos = endrow * 8 + endcol;
+                    Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
+
+                    if (bestmoves.Count() == 0)
+                    {
+                        bestmoves.Add(move);
+                    }
+                    else
+                    {
+                        bestmoves[0] = move;
+                    }
+                    mainform.DrawStockfish(bestmoves);
                 }
                 // do something with line
             }   
         }
+        string lastFEN = @"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         private void WriteData()
         {
-            Thread.Sleep(1000);
-            process.StandardInput.WriteLine("go");
+            process.StandardInput.WriteLine("stop");
+            process.StandardInput.WriteLine("position fen " + lastFEN);
+            process.StandardInput.WriteLine("go movetime 100");
+            Thread.Sleep(200);
+            process.StandardInput.WriteLine("go infinite");
         }
 
         public Move GetMove()
         {
             return new Move(4, 12, PieceType.Pawn);
+        }
+
+        internal void UpdateFEN(Chessboard board)
+        {
+            if (lastFEN != board.GetFEN())
+            {
+                bestmoves.Clear();
+                lastFEN = board.GetFEN();
+
+                Thread asyncwrite = new Thread(new ThreadStart(WriteData));
+                asyncwrite.Start();
+            }
         }
     }
 }

@@ -12,6 +12,15 @@ namespace ChessApp
 {
     internal static class Extensions
     {
+        public static List<T> Copy<T>(this List<T> list)
+        {
+            List<T> result = new List<T>();
+            foreach(var item in list)
+            {
+                result.Add(item);
+            }
+            return result;
+        }
         public static bool MovesContains(this string s, string lookfor)
         {
             string result = "";

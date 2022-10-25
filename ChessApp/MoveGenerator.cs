@@ -1630,5 +1630,22 @@ namespace ChessApp
             this.pieceType = pieceType;
             this.promotion = promotion;
         }
+
+        public static bool operator ==(Move a, Move b)
+        {
+            if (a.last == b.last && a.current == b.current)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool operator !=(Move a, Move b)
+        {
+            if (a.last != b.last || a.current != b.current)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

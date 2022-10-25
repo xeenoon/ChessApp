@@ -15,14 +15,14 @@ namespace ChessApp
     {
         Chessboard chessboard;
         Squares squares;
-
+        Stockfish stockfish;
         public Form1()
         {
             InitializeComponent();
             SQUARESIZE = (this.Size.Height - 60) / 11;
 
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-            Stockfish stockfish = new Stockfish();
+            stockfish = new Stockfish(this);
             stockfish.Start();
             chessboard = new Chessboard(FEN);
             FEN_TEXT.Text = FEN;
@@ -37,6 +37,28 @@ namespace ChessApp
             chessboard = new Chessboard(FEN_TEXT.Text);
             squares = null;
 
+            Invalidate();
+        }
+
+        Bitmap stockfisharrowsIMG;
+        List<Move> lastmoves = new List<Move>();
+        public void DrawStockfish(List<Move> moves)
+        {
+            if (moves.Count() == 3 && lastmoves.Count() == 3 && lastmoves[0] == moves[0] && lastmoves[1] == moves[1] && lastmoves[2] == moves[2])
+            {
+                return;
+            }
+            lastmoves = moves.Copy();
+            stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
+            var graphics = Graphics.FromImage(stockfisharrowsIMG);
+            for (int i = 0; i < moves.Count(); ++i)
+            {
+                int endlocation = moves[i].current;
+                int startlocation = moves[i].last;
+                
+                Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), (Form1.SQUARESIZE / 5)*((3-i)/2f), Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
+                arrow.Draw(graphics);
+            }
             Invalidate();
         }
 
@@ -77,6 +99,7 @@ namespace ChessApp
                     e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
                 }
                 e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+                e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
                 return;
@@ -88,6 +111,7 @@ namespace ChessApp
                 boardIMG = new Bitmap(Size.Width, Size.Height);
                 editIMG = new Bitmap(Size.Width, Size.Height);
                 placeIMG = new Bitmap(Size.Width, Size.Height);
+                stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
             }
 
             Graphics boardGraphics = Graphics.FromImage(boardIMG);
@@ -123,7 +147,8 @@ namespace ChessApp
 
                 boardIMG  = new Bitmap(Size.Width, Size.Height);
                 editIMG   = new Bitmap(Size.Width, Size.Height);
-                placeIMG  = new Bitmap(Size.Width, Size.Height);
+                placeIMG = new Bitmap(Size.Width, Size.Height);
+                stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
                 arrowsIMG = new Bitmap(Size.Width, Size.Height);
 
                 boardGraphics = Graphics.FromImage(boardIMG);
@@ -186,7 +211,8 @@ namespace ChessApp
             {
                 e.Graphics.DrawImage(boardIMG, 15, 55);
             }
-            e.Graphics.DrawImage(arrowsIMG, 15, 55);
+            e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE+10);
+            e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 
@@ -269,6 +295,8 @@ namespace ChessApp
                     editSquare.Click();
                     Invalidate();
                 }
+
+                stockfish.UpdateFEN(squares.board);
             }
         }
 
