@@ -100,6 +100,8 @@ namespace ChessApp
                 }
                 e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+                e.Graphics.DrawImage(stockfish.Draw(100,100), 15, SQUARESIZE*10, 100, 100);
+
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
                 return;
@@ -213,6 +215,7 @@ namespace ChessApp
             }
             e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE+10);
             e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+            e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 10, 100, 100);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 

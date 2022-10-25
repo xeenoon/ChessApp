@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
+using System.Drawing;
 
 namespace ChessApp
 {
@@ -14,6 +15,7 @@ namespace ChessApp
         public int depth;
         public Form1 mainform;
         public List<Move> bestmoves = new List<Move>(20);
+        public Bitmap data;
 
         Process process = new Process();
 
@@ -33,6 +35,7 @@ namespace ChessApp
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
             process.Start();
 
             Thread asyncread = new Thread(new ThreadStart(ReadData));
@@ -42,6 +45,7 @@ namespace ChessApp
             asyncwrite.Start();
         }
 
+        string lasteval = "0";
         private void ReadData()
         {
             while (!process.StandardOutput.EndOfStream)
@@ -79,25 +83,56 @@ namespace ChessApp
                 }
                 if (line.StartsWith("bestmove "))
                 {
-                    var movedata = line.Substring(9,4);
-                    var startcol = movedata[0].GetFileNum();
-                    var startrow = int.Parse(movedata[1].ToString()) - 1;
-                    int startpos = startrow * 8 + startcol;
-
-                    var endcol = movedata[2].GetFileNum();
-                    var endrow = int.Parse(movedata[3].ToString()) - 1;
-                    int endpos = endrow * 8 + endcol;
-                    Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
-
-                    if (bestmoves.Count() == 0)
+                    try
                     {
-                        bestmoves.Add(move);
+                        var movedata = line.Substring(9, 4);
+                        var startcol = movedata[0].GetFileNum();
+                        var startrow = int.Parse(movedata[1].ToString()) - 1;
+                        int startpos = startrow * 8 + startcol;
+
+                        var endcol = movedata[2].GetFileNum();
+                        var endrow = int.Parse(movedata[3].ToString()) - 1;
+                        int endpos = endrow * 8 + endcol;
+                        Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
+
+                        if (bestmoves.Count() == 0)
+                        {
+                            bestmoves.Add(move);
+                        }
+                        else
+                        {
+                            bestmoves[0] = move;
+                        }
+                        mainform.DrawStockfish(bestmoves);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                if (line.Contains("score cp"))
+                {
+                    string s = line.Substring(line.IndexOf("score cp ") + 9).Split(' ')[0];
+                    if (s[0] == '+')
+                    {
+                        s = s.Substring(1);
+                    }
+                    var score = float.Parse(s);
+                    score = score / 100;
+                    lasteval = score.ToString();
+                }
+                else if (line.Contains("score mate "))
+                {
+                    string s = line.Substring(line.IndexOf("score mate ") + 11).Split(' ')[0];
+                    if (s[0] == '-')
+                    {
+                        lasteval = "-M" + s.Substring(1);
                     }
                     else
                     {
-                        bestmoves[0] = move;
+                        lasteval = "M" + s;
                     }
-                    mainform.DrawStockfish(bestmoves);
+
                 }
                 // do something with line
             }   
@@ -109,6 +144,8 @@ namespace ChessApp
             process.StandardInput.WriteLine("position fen " + lastFEN);
             process.StandardInput.WriteLine("go movetime 100");
             Thread.Sleep(200);
+            process.StandardInput.WriteLine("eval");
+            mainform.Invalidate();
             process.StandardInput.WriteLine("go infinite");
         }
 
@@ -116,17 +153,45 @@ namespace ChessApp
         {
             return new Move(4, 12, PieceType.Pawn);
         }
-
+        Side currside = Side.White;
         internal void UpdateFEN(Chessboard board)
         {
             if (lastFEN != board.GetFEN())
             {
+                currside = board.hasturn;
                 bestmoves.Clear();
                 lastFEN = board.GetFEN();
 
                 Thread asyncwrite = new Thread(new ThreadStart(WriteData));
                 asyncwrite.Start();
             }
+        }
+
+        public Bitmap Draw(int width, int height)
+        {
+            Bitmap bmp = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(bmp);
+            //Draw top move at 1/3 of the height
+            var movesize = height/3;
+            for (int i = 0; i < bestmoves.Count(); ++i)
+            {
+                var eval = lasteval;
+                if (currside == Side.Black)
+                {
+                    if (eval[0] != '-')
+                    {
+                        eval = eval.Insert(0,"-");
+                    }
+                    else
+                    {
+                        eval = eval.Substring(1);
+                    }
+                }
+                Color boxcolour = eval[0]=='-' ? Color.Black : Color.White;
+                g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0,0,width, 20));
+                g.DrawString(eval.ToString(), new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0,0));
+            }
+            return bmp;
         }
     }
 }
