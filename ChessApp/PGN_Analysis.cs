@@ -60,7 +60,7 @@ namespace ChessApp
                     
                     foreach (var b_move in MoveGenerator.CalculateAll(copy, hasturn))
                     {
-                        if (b_move.pieceType == move.normalmove.pieceType && b_move.last == move.normalmove.last)
+                        if (b_move.pieceType == move.normalmove.pieceType && b_move.current == move.normalmove.current)
                         {
                             possibleStartPositions.Add(b_move.last);
                         }

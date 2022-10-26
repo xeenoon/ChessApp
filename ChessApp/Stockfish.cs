@@ -153,12 +153,19 @@ namespace ChessApp
         {
             return new Move(4, 12, PieceType.Pawn);
         }
-        Side currside = Side.White;
+        Side hasturn = Side.White;
+        public Bitboard b;
         internal void UpdateFEN(Chessboard board)
         {
             if (lastFEN != board.GetFEN())
             {
-                currside = board.hasturn;
+                if (board.bitboard.W_King == 0 || board.bitboard.B_King == 0)
+                {
+                    return;
+                }
+
+                hasturn = board.hasturn;
+                b = board.bitboard.Copy();
                 bestmoves.Clear();
                 lastFEN = board.GetFEN();
 
@@ -170,13 +177,17 @@ namespace ChessApp
         public Bitmap Draw(int width, int height)
         {
             Bitmap bmp = new Bitmap(width, height);
+            if (b.W_King == 0 || b.B_King == 0)
+            {
+                return bmp;
+            }
             Graphics g = Graphics.FromImage(bmp);
             //Draw top move at 1/3 of the height
             var movesize = height/3;
             for (int i = 0; i < bestmoves.Count(); ++i)
             {
                 var eval = lasteval;
-                if (currside == Side.Black)
+                if (hasturn == Side.Black)
                 {
                     if (eval[0] != '-')
                     {
@@ -189,7 +200,137 @@ namespace ChessApp
                 }
                 Color boxcolour = eval[0]=='-' ? Color.Black : Color.White;
                 g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0,0,width, 20));
-                g.DrawString(eval.ToString(), new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0,0));
+                
+                var move = bestmoves[0];
+                var copy = b.Copy();
+                foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King})
+                {
+                    var bb = copy.GetBitboard(piecetype, hasturn);
+                    if (((1ul<<move.last)&bb) != 0)
+                    {
+                        move.pieceType = piecetype;
+                        break;
+                    }
+                }
+
+                copy.SetupSquareAttacks();
+                List<int> possibleStartPositions = new List<int>();
+
+                foreach (var b_move in MoveGenerator.CalculateAll(copy, hasturn))
+                {
+                    if (b_move.pieceType == move.pieceType && b_move.current == move.current)
+                    {
+                        possibleStartPositions.Add(b_move.last);
+                    }
+                }
+                string movestring = "";
+                string rowcol = "";
+                possibleStartPositions = possibleStartPositions.Distinct().ToList();
+                if (possibleStartPositions.Count() >= 2)
+                {
+                    int startcol = move.last % 8;
+                    int startrow = move.last / 8;
+
+                    List<int> samecol = possibleStartPositions.Where(m => m % 8 == startcol).ToList();
+                    List<int> samerow = possibleStartPositions.Where(m => m / 8 == startrow).ToList();
+                    List<int> same = possibleStartPositions.Where(m => m / 8 == startrow && m % 8 == startcol).ToList();
+                    if (samecol.Count() == 1) //Just need to specify column?
+                    {
+                        rowcol = (samecol[0] / 8).GetFileLetter().ToString();
+                    }
+                    else if (samerow.Count() == 1) //Just need to specify column?
+                    {
+                        rowcol = ((samerow[0] % 8) + 1).ToString();
+                    }
+                    else if (same.Count() == 1) //Just need to specify column?
+                    {
+                        rowcol = (same[0] / 8).GetFileLetter().ToString() + ((same[0] % 8) + 1).ToString();
+                    }
+                }
+
+                var piecetypestring = "";
+                string endposition = (move.current % 8).GetFileLetter().ToString() + ((move.current / 8) + 1).ToString();
+                switch (move.pieceType)
+                {
+                    case PieceType.Pawn:
+                        piecetypestring = "";
+                        break;
+                    case PieceType.Rook:
+                        piecetypestring = "R";
+                        break;
+                    case PieceType.Knight:
+                        piecetypestring = "N";
+                        break;
+                    case PieceType.Bishop:
+                        piecetypestring = "B";
+                        break;
+                    case PieceType.Queen:
+                        piecetypestring = "Q";
+                        break;
+                    case PieceType.King:
+                        piecetypestring = "K";
+                        break;
+                }
+                string promotionstring = "";
+                if (move.pieceType == PieceType.Pawn && (move.current / 8 == 0 || move.current / 8 == 7))
+                {
+                    string promotionletter = "";
+                    switch (move.promotion)
+                    {
+                        case PieceType.Rook:
+                            promotionletter = "R";
+                            break;
+                        case PieceType.Knight:
+                            promotionletter = "N";
+                            break;
+                        case PieceType.Bishop:
+                            promotionletter = "B";
+                            break;
+                        case PieceType.Queen:
+                            promotionletter = "Q";
+                            break;
+                    }
+                    promotionstring = "=" + promotionletter;
+                }
+                string istaking = "";
+                if (hasturn == Side.White)
+                {
+                    if ((b.BlackPieces & (1ul << move.current)) != 0) //Taking a piece
+                    {
+                        istaking = "x";
+                    }
+                }
+                if (hasturn == Side.Black)
+                {
+                    if ((b.WhitePieces & (1ul << move.current)) != 0) //Taking a piece
+                    {
+                        istaking = "x";
+                    }
+                }
+                if (istaking == "x" && move.pieceType == PieceType.Pawn) //Pawn taking
+                {
+                    //We must specify row-col
+                    rowcol = (move.last % 8).GetFileLetter().ToString();
+                }
+                movestring = string.Format("{0}{1}{4}{2}{3}", piecetypestring, rowcol, endposition, promotionstring, istaking);
+                switch (movestring)
+                {
+                    case "Kg1":
+                        movestring = "O-O";
+                        break;
+                    case "Kg8":
+                        movestring = "O-O";
+                        break;
+                    case "Kc1":
+                        movestring = "O-O-O";
+                        break;
+                    case "Kc8":
+                        movestring = "O-O-O";
+                        break;
+                }
+
+
+                g.DrawString(eval.ToString() + " " + movestring, new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0,0));
             }
             return bmp;
         }
