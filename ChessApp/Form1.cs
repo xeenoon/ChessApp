@@ -46,6 +46,7 @@ namespace ChessApp
         List<Move> lastmoves = new List<Move>();
         public void DrawStockfish(List<Move> moves)
         {
+            //We have a list of the best moves
             if (moves.Count() == 3 && lastmoves.Count() == 3 && lastmoves[0] == moves[0] && lastmoves[1] == moves[1] && lastmoves[2] == moves[2])
             {
                 return;
@@ -347,6 +348,7 @@ namespace ChessApp
             }
             squares.UndoMove();
             this.chessboard = squares.board;
+            stockfish.UpdateFEN(squares.board);
             Invalidate();
         }
 

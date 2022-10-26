@@ -14,7 +14,7 @@ namespace ChessApp
     {
         public int depth;
         public Form1 mainform;
-        public List<Move> bestmoves = new List<Move>(20);
+        public List<Move> bestmoves = new List<Move>();
         public Bitmap data;
 
         Process process = new Process();
@@ -26,7 +26,7 @@ namespace ChessApp
 
         public void Start()
         {
-            bestmoves = new List<Move>(20);
+            bestmoves = new List<Move>();
 
             process = new Process();
             // Configure the process using the StartInfo properties.
@@ -58,7 +58,7 @@ namespace ChessApp
                     line = line.Substring(depth.ToString().Length + 1 + "currmove ".Length);
                     var movedata = line.Split(' ')[0];
                     var startcol = movedata[0].GetFileNum();
-                    var startrow = int.Parse(movedata[1].ToString())-1;
+                    var startrow = int.Parse(movedata[1].ToString()) - 1;
                     int startpos = startrow * 8 + startcol;
 
                     var endcol = movedata[2].GetFileNum();
@@ -132,10 +132,9 @@ namespace ChessApp
                     {
                         lasteval = "M" + s;
                     }
-
                 }
                 // do something with line
-            }   
+            }
         }
         string lastFEN = @"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         private void WriteData()
@@ -183,7 +182,7 @@ namespace ChessApp
             }
             Graphics g = Graphics.FromImage(bmp);
             //Draw top move at 1/3 of the height
-            var movesize = height/3;
+            var movesize = height / 3;
             for (int i = 0; i < bestmoves.Count(); ++i)
             {
                 var eval = lasteval;
@@ -191,22 +190,22 @@ namespace ChessApp
                 {
                     if (eval[0] != '-')
                     {
-                        eval = eval.Insert(0,"-");
+                        eval = eval.Insert(0, "-");
                     }
                     else
                     {
                         eval = eval.Substring(1);
                     }
                 }
-                Color boxcolour = eval[0]=='-' ? Color.Black : Color.White;
-                g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0,0,width, 20));
-                
+                Color boxcolour = eval[0] == '-' ? Color.Black : Color.White;
+                g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0, 0, width, 20));
+
                 var move = bestmoves[0];
                 var copy = b.Copy();
-                foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King})
+                foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King })
                 {
                     var bb = copy.GetBitboard(piecetype, hasturn);
-                    if (((1ul<<move.last)&bb) != 0)
+                    if (((1ul << move.last) & bb) != 0)
                     {
                         move.pieceType = piecetype;
                         break;
@@ -330,9 +329,76 @@ namespace ChessApp
                 }
 
 
-                g.DrawString(eval.ToString() + " " + movestring, new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0,0));
+                g.DrawString(eval.ToString() + " " + movestring, new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0, 0));
             }
             return bmp;
+        }
+    }
+    public class StockfishMove
+    {
+        public Move move;
+        public string movestring;
+        public string evaluation;
+        
+        Process stockfish;
+
+        public StockfishMove(string movedata)
+        {
+            this.movestring = movedata;
+
+            var startcol = movedata[0].GetFileNum();
+            var startrow = int.Parse(movedata[1].ToString()) - 1;
+            int startpos = startrow * 8 + startcol;
+
+            var endcol = movedata[2].GetFileNum();
+            var endrow = int.Parse(movedata[3].ToString()) - 1;
+            int endpos = endrow * 8 + endcol;
+
+            move = new Move((byte)startpos, (byte)endpos, PieceType.None);
+
+            //Start stockfish evaluation of the move
+            stockfish = new Process();
+            // Configure the process using the StartInfo properties.
+            stockfish.StartInfo.FileName = @"C:\Users\ccw10\Downloads\stockfish_15_win_x64\stockfish_15_x64.exe";
+            stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            stockfish.StartInfo.RedirectStandardInput = true;
+            stockfish.StartInfo.RedirectStandardOutput = true;
+            stockfish.StartInfo.UseShellExecute = false;
+            stockfish.StartInfo.CreateNoWindow = true;
+            stockfish.Start();
+
+            Thread asyncread = new Thread(new ThreadStart(ReadData));
+            asyncread.Start();
+        }
+        private void ReadData()
+        {
+            while (!stockfish.StandardOutput.EndOfStream)
+            {
+                string line = stockfish.StandardOutput.ReadLine();
+                if (line.Contains("score cp"))
+                {
+                    string s = line.Substring(line.IndexOf("score cp ") + 9).Split(' ')[0];
+                    if (s[0] == '+')
+                    {
+                        s = s.Substring(1);
+                    }
+                    var score = float.Parse(s);
+                    score = score / 100;
+                    evaluation = score.ToString();
+                }
+                else if (line.Contains("score mate "))
+                {
+                    string s = line.Substring(line.IndexOf("score mate ") + 11).Split(' ')[0];
+                    if (s[0] == '-')
+                    {
+                        evaluation = "-M" + s.Substring(1);
+                    }
+                    else
+                    {
+                        evaluation = "M" + s;
+                    }
+                }
+            }
         }
     }
 }
