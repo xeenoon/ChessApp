@@ -197,8 +197,8 @@ namespace ChessApp
         public struct PGNMove
         {
             public Move normalmove;
-            Move duckmove;
-            string comment;
+            public Move duckmove;
+            public string comment;
 
             public PGNMove(Move normalmove, Move duckmove, string comment)
             {

@@ -65,7 +65,7 @@ namespace ChessApp
                 else if (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck)
                 {
                     e.Graphics.DrawImage(placeIMG, 0, 0, Size.Width, Size.Height);
-                    e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+55, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE + 55, Size.Width, Size.Height);
                     e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 55, Size.Width, Size.Height);
                 }
                 else if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
@@ -529,12 +529,13 @@ namespace ChessApp
 
                 b_pgn = new PGN(pgn);
                 b_pgn.ToString();
+                int offset = 0;
                 for (int i = 0; i < b_pgn.strdata.Count(); ++i)
                 {
                     int x = 10;
-                    int y = 8 + (i / 2) * 30;
+                    int y = (8 + (i / 2) * 30) + offset;
 
-                    if (i%2 == 1) //White move?
+                    if (i%2 == 1) //Black move?
                     {
                         x = 160;
                     }
@@ -564,6 +565,23 @@ namespace ChessApp
                     button.Name = "PGN_Button:" + i.ToString();
                     button.Click += new EventHandler(PGN_ButtonClick);
                     button.TabStop = false;
+                    if (i < b_pgn.data.Count() && b_pgn.data[i].comment != "")
+                    {
+                        Label label = new Label();
+                        label.Location = new Point(35, y + button.Height+5);
+                        label.Font = new Font("Arial", 10, FontStyle.Italic);
+                        label.ForeColor = Color.White;
+                        label.Text = b_pgn.data[i].comment;
+                        label.MaximumSize = new Size(width * 2, 1000);
+                        label.AutoSize = true;
+                        panel2.Controls.Add(label);
+
+                        offset += label.Height;
+                        if (i%2 == 0) //White move comment
+                        {
+                            offset += button.Height+10;
+                        }
+                    }
                     panel2.Controls.Add(button);
                 }
 
