@@ -58,23 +58,27 @@ namespace ChessApp
                 if (squares.edit)
                 {
                     e.Graphics.DrawImage(editIMG, 0, 0, Size.Width, Size.Height);
-                    e.Graphics.DrawImage(boardIMG, 20 + SQUARESIZE, SQUARESIZE+10, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 20 + SQUARESIZE, SQUARESIZE + 10, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(arrowsIMG, SQUARESIZE+20, SQUARESIZE + 10, Size.Width, Size.Height);
+
                 }
                 else if (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck)
                 {
                     e.Graphics.DrawImage(placeIMG, 0, 0, Size.Width, Size.Height);
-                    e.Graphics.DrawImage(boardIMG, 15, Form1.SQUARESIZE+55, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+55, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 55, Size.Width, Size.Height);
                 }
                 else if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
                 {
                     e.Graphics.DrawImage(placeIMG, 0, 0, Size.Width, Size.Height);
                     e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 }
                 else
                 {
                     e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 }
-                e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
                 return;
@@ -168,23 +172,26 @@ namespace ChessApp
             if (squares.edit)
             {
                 e.Graphics.DrawImage(editIMG , 0, 0);
-                e.Graphics.DrawImage(boardIMG, 15 + SQUARESIZE + 5, 55);
+                e.Graphics.DrawImage(boardIMG, 20 + SQUARESIZE, 55);
+                e.Graphics.DrawImage(arrowsIMG, 20 + SQUARESIZE, 55);
             }
             else if (squares.gameType == GameType.Crazyhouse || squares.gameType == GameType.CrazyDuck)
             {
                 e.Graphics.DrawImage(placeIMG, 0, 0);
-                e.Graphics.DrawImage(boardIMG, 15, 55 + Form1.SQUARESIZE);
+                e.Graphics.DrawImage(boardIMG, 15, 55 + SQUARESIZE);
+                e.Graphics.DrawImage(arrowsIMG, 15, 55 + SQUARESIZE);
             }
             else if (squares.gameType == GameType.StandardDuck || squares.gameType == GameType.DuckDuckGoose)
             {
                 e.Graphics.DrawImage(placeIMG, 0, 0);
                 e.Graphics.DrawImage(boardIMG, 15, 55);
+                e.Graphics.DrawImage(arrowsIMG, 15, 55);
             }
             else
             {
                 e.Graphics.DrawImage(boardIMG, 15, 55);
+                e.Graphics.DrawImage(arrowsIMG, 15, 55);
             }
-            e.Graphics.DrawImage(arrowsIMG, 15, 55);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 
