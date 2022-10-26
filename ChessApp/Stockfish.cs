@@ -337,12 +337,15 @@ namespace ChessApp
     public class StockfishMove
     {
         public Move move;
+        public Chessboard board;
+        public Bitboard b;
+
         public string movestring;
         public string evaluation;
         
         Process stockfish;
 
-        public StockfishMove(string movedata)
+        public StockfishMove(string movedata, Chessboard board)
         {
             this.movestring = movedata;
 
@@ -355,6 +358,7 @@ namespace ChessApp
             int endpos = endrow * 8 + endcol;
 
             move = new Move((byte)startpos, (byte)endpos, PieceType.None);
+            b = board.bitboard;
 
             //Start stockfish evaluation of the move
             stockfish = new Process();
@@ -369,6 +373,9 @@ namespace ChessApp
 
             Thread asyncread = new Thread(new ThreadStart(ReadData));
             asyncread.Start();
+
+            stockfish.StandardInput.WriteLine("position fen " + board.GetFEN());
+            stockfish.StandardInput.WriteLine("go searchmoves " + movedata);
         }
         private void ReadData()
         {
@@ -398,6 +405,163 @@ namespace ChessApp
                         evaluation = "M" + s;
                     }
                 }
+            }
+        }
+        public override string ToString()
+        {
+            var copy = b.Copy();
+            foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King })
+            {
+                var bb = copy.GetBitboard(piecetype, board.hasturn);
+                if (((1ul << move.last) & bb) != 0)
+                {
+                    move.pieceType = piecetype;
+                    break;
+                }
+            }
+
+            copy.SetupSquareAttacks();
+            List<int> possibleStartPositions = new List<int>();
+
+            foreach (var b_move in MoveGenerator.CalculateAll(copy, board.hasturn))
+            {
+                if (b_move.pieceType == move.pieceType && b_move.current == move.current)
+                {
+                    possibleStartPositions.Add(b_move.last);
+                }
+            }
+            string movestring = "";
+            string rowcol = "";
+            possibleStartPositions = possibleStartPositions.Distinct().ToList();
+            if (possibleStartPositions.Count() >= 2)
+            {
+                int startcol = move.last % 8;
+                int startrow = move.last / 8;
+
+                List<int> samecol = possibleStartPositions.Where(m => m % 8 == startcol).ToList();
+                List<int> samerow = possibleStartPositions.Where(m => m / 8 == startrow).ToList();
+                List<int> same = possibleStartPositions.Where(m => m / 8 == startrow && m % 8 == startcol).ToList();
+                if (samecol.Count() == 1) //Just need to specify column?
+                {
+                    rowcol = (samecol[0] / 8).GetFileLetter().ToString();
+                }
+                else if (samerow.Count() == 1) //Just need to specify column?
+                {
+                    rowcol = ((samerow[0] % 8) + 1).ToString();
+                }
+                else if (same.Count() == 1) //Just need to specify column?
+                {
+                    rowcol = (same[0] / 8).GetFileLetter().ToString() + ((same[0] % 8) + 1).ToString();
+                }
+            }
+
+            var piecetypestring = "";
+            string endposition = (move.current % 8).GetFileLetter().ToString() + ((move.current / 8) + 1).ToString();
+            switch (move.pieceType)
+            {
+                case PieceType.Pawn:
+                    piecetypestring = "";
+                    break;
+                case PieceType.Rook:
+                    piecetypestring = "R";
+                    break;
+                case PieceType.Knight:
+                    piecetypestring = "N";
+                    break;
+                case PieceType.Bishop:
+                    piecetypestring = "B";
+                    break;
+                case PieceType.Queen:
+                    piecetypestring = "Q";
+                    break;
+                case PieceType.King:
+                    piecetypestring = "K";
+                    break;
+            }
+            string promotionstring = "";
+            if (move.pieceType == PieceType.Pawn && (move.current / 8 == 0 || move.current / 8 == 7))
+            {
+                string promotionletter = "";
+                switch (move.promotion)
+                {
+                    case PieceType.Rook:
+                        promotionletter = "R";
+                        break;
+                    case PieceType.Knight:
+                        promotionletter = "N";
+                        break;
+                    case PieceType.Bishop:
+                        promotionletter = "B";
+                        break;
+                    case PieceType.Queen:
+                        promotionletter = "Q";
+                        break;
+                }
+                promotionstring = "=" + promotionletter;
+            }
+            string istaking = "";
+            if (board.hasturn == Side.White)
+            {
+                if ((b.BlackPieces & (1ul << move.current)) != 0) //Taking a piece
+                {
+                    istaking = "x";
+                }
+            }
+            if (board.hasturn == Side.Black)
+            {
+                if ((b.WhitePieces & (1ul << move.current)) != 0) //Taking a piece
+                {
+                    istaking = "x";
+                }
+            }
+            if (istaking == "x" && move.pieceType == PieceType.Pawn) //Pawn taking
+            {
+                //We must specify row-col
+                rowcol = (move.last % 8).GetFileLetter().ToString();
+            }
+            movestring = string.Format("{0}{1}{4}{2}{3}", piecetypestring, rowcol, endposition, promotionstring, istaking);
+            switch (movestring)
+            {
+                case "Kg1":
+                    movestring = "O-O";
+                    break;
+                case "Kg8":
+                    movestring = "O-O";
+                    break;
+                case "Kc1":
+                    movestring = "O-O-O";
+                    break;
+                case "Kc8":
+                    movestring = "O-O-O";
+                    break;
+            }
+            return movestring;
+        }
+    }
+    public class StockfishMoveHandler
+    {
+        public List<StockfishMove> stockfishmoves = new List<StockfishMove>();
+        public Chessboard boardstate;
+        public StockfishMoveHandler(Chessboard boardstate)
+        {
+            this.boardstate = boardstate;
+        }
+        public void Add(string movedata, int idx)
+        {
+            if (stockfishmoves.Any(s=>s.movestring == movedata)) //Already in it?
+            {
+                if (stockfishmoves[idx].movestring != movedata) //Are we going to be swapping around moves
+                {
+                    StockfishMove move = stockfishmoves.FirstOrDefault(s => s.movestring == movedata);
+
+                    int oldidx = stockfishmoves.IndexOf(move);
+                    stockfishmoves.RemoveAt(oldidx);
+                    stockfishmoves.Insert(idx, move);
+                }
+            }
+            else
+            {
+                stockfishmoves.Add(new StockfishMove(movedata, boardstate));
             }
         }
     }
