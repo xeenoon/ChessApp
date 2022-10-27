@@ -24,7 +24,7 @@ namespace ChessApp
             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             chessboard = new Chessboard(FEN);
 
-            stockfish = new Stockfish(this);
+            stockfish = new Stockfish(this, chessboard);
             stockfish.b = chessboard.bitboard.Copy();
             stockfish.Start();
             FEN_TEXT.Text = FEN;
@@ -46,6 +46,10 @@ namespace ChessApp
         List<Move> lastmoves = new List<Move>();
         public void DrawStockfish(List<Move> moves)
         {
+            if (painting)
+            {
+                return;
+            }
             //We have a list of the best moves
             if (moves.Count() == 3 && lastmoves.Count() == 3 && lastmoves[0] == moves[0] && lastmoves[1] == moves[1] && lastmoves[2] == moves[2])
             {
@@ -77,8 +81,10 @@ namespace ChessApp
         Bitmap editIMG;
         Bitmap placeIMG;
         PGN_Analysis pNG_Analysis;
+        bool painting = false;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            painting = true;
             if (resizing)
             {
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
@@ -106,7 +112,7 @@ namespace ChessApp
                 e.Graphics.DrawImage(stockfish.Draw(100,100), 15, SQUARESIZE*10, 100, 100);
 
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-
+                painting = false;
                 return;
             }
 
@@ -220,6 +226,7 @@ namespace ChessApp
             e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
             e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 10, 100, 100);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+            painting = false;
         }
 
         private void CheckMateTick(object sender, System.Timers.ElapsedEventArgs e)

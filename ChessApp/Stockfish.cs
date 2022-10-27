@@ -14,19 +14,21 @@ namespace ChessApp
     {
         public int depth;
         public Form1 mainform;
-        public List<Move> bestmoves = new List<Move>();
+        public StockfishMoveHandler handler;
         public Bitmap data;
 
         Process process = new Process();
+        Chessboard board;
 
-        public Stockfish(Form1 mainform)
+        public Stockfish(Form1 mainform, Chessboard board)
         {
             this.mainform = mainform;
+            this.board = board;
         }
 
         public void Start()
         {
-            bestmoves = new List<Move>();
+            handler = new StockfishMoveHandler(board);
 
             process = new Process();
             // Configure the process using the StartInfo properties.
@@ -57,53 +59,21 @@ namespace ChessApp
                     int depth = int.Parse(line.Split(' ')[0]);
                     line = line.Substring(depth.ToString().Length + 1 + "currmove ".Length);
                     var movedata = line.Split(' ')[0];
-                    var startcol = movedata[0].GetFileNum();
-                    var startrow = int.Parse(movedata[1].ToString()) - 1;
-                    int startpos = startrow * 8 + startcol;
-
-                    var endcol = movedata[2].GetFileNum();
-                    var endrow = int.Parse(movedata[3].ToString()) - 1;
-                    int endpos = endrow * 8 + endcol;
-
-                    Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
                     int index = int.Parse(line.Split(' ').Last()) - 1;
-                    if (index >= 3)
-                    {
-                        mainform.DrawStockfish(bestmoves);
-                        continue;
-                    }
-                    if (bestmoves.Count() <= index)
-                    {
-                        bestmoves.Add(move);
-                    }
-                    else
-                    {
-                        bestmoves[index] = move;
-                    }
+
+                    mainform.DrawStockfish(handler.stockfishmoves.Select(m => m.move).ToList());
+                    handler.Add(movedata, index);
+
+                    continue;
                 }
                 if (line.StartsWith("bestmove "))
                 {
                     try
                     {
                         var movedata = line.Substring(9, 4);
-                        var startcol = movedata[0].GetFileNum();
-                        var startrow = int.Parse(movedata[1].ToString()) - 1;
-                        int startpos = startrow * 8 + startcol;
+                        handler.Add(movedata, 0);
 
-                        var endcol = movedata[2].GetFileNum();
-                        var endrow = int.Parse(movedata[3].ToString()) - 1;
-                        int endpos = endrow * 8 + endcol;
-                        Move move = new Move((byte)startpos, (byte)endpos, PieceType.None);
-
-                        if (bestmoves.Count() == 0)
-                        {
-                            bestmoves.Add(move);
-                        }
-                        else
-                        {
-                            bestmoves[0] = move;
-                        }
-                        mainform.DrawStockfish(bestmoves);
+                        mainform.DrawStockfish(handler.stockfishmoves.Select(m => m.move).ToList());
                     }
                     catch
                     {
@@ -165,7 +135,8 @@ namespace ChessApp
 
                 hasturn = board.hasturn;
                 b = board.bitboard.Copy();
-                bestmoves.Clear();
+                handler.Stop();
+                handler = new StockfishMoveHandler(board);
                 lastFEN = board.GetFEN();
 
                 Thread asyncwrite = new Thread(new ThreadStart(WriteData));
@@ -183,7 +154,7 @@ namespace ChessApp
             Graphics g = Graphics.FromImage(bmp);
             //Draw top move at 1/3 of the height
             var movesize = height / 3;
-            for (int i = 0; i < bestmoves.Count(); ++i)
+            for (int i = 0; i < handler.stockfishmoves.Count(); ++i)
             {
                 var eval = lasteval;
                 if (hasturn == Side.Black)
@@ -200,7 +171,7 @@ namespace ChessApp
                 Color boxcolour = eval[0] == '-' ? Color.Black : Color.White;
                 g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0, 0, width, 20));
 
-                var move = bestmoves[0];
+                var move = handler.stockfishmoves[0].move;
                 var copy = b.Copy();
                 foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King })
                 {
@@ -343,7 +314,7 @@ namespace ChessApp
         public string movestring;
         public string evaluation;
         
-        Process stockfish;
+        public Process stockfish;
 
         public StockfishMove(string movedata, Chessboard board)
         {
@@ -377,11 +348,21 @@ namespace ChessApp
             stockfish.StandardInput.WriteLine("position fen " + board.GetFEN());
             stockfish.StandardInput.WriteLine("go searchmoves " + movedata);
         }
+        public bool stop;
         private void ReadData()
         {
-            while (!stockfish.StandardOutput.EndOfStream)
+            while (!stop && !stockfish.StandardOutput.EndOfStream)
             {
-                string line = stockfish.StandardOutput.ReadLine();
+                string line = "";
+                try
+                {
+                    line = stockfish.StandardOutput.ReadLine();
+
+                }
+                catch
+                {
+                    return;
+                }
                 if (line.Contains("score cp"))
                 {
                     string s = line.Substring(line.IndexOf("score cp ") + 9).Split(' ')[0];
@@ -550,7 +531,7 @@ namespace ChessApp
         {
             if (stockfishmoves.Any(s=>s.movestring == movedata)) //Already in it?
             {
-                if (stockfishmoves[idx].movestring != movedata) //Are we going to be swapping around moves
+                if (idx <= stockfishmoves.Count() - 1 && stockfishmoves[idx].movestring != movedata) //Are we going to be swapping around moves
                 {
                     StockfishMove move = stockfishmoves.FirstOrDefault(s => s.movestring == movedata);
 
@@ -561,7 +542,30 @@ namespace ChessApp
             }
             else
             {
-                stockfishmoves.Add(new StockfishMove(movedata, boardstate));
+                if (idx <= stockfishmoves.Count() - 1)
+                {
+                    stockfishmoves.Insert(idx, new StockfishMove(movedata, boardstate));
+                }
+                else
+                {
+                    stockfishmoves.Add(new StockfishMove(movedata, boardstate));
+                }
+            }
+            while (stockfishmoves.Count() >= 6)
+            {
+                var s = stockfishmoves.Last();
+                s.stop = true;
+                s.stockfish.Close();
+                stockfishmoves.RemoveAt(stockfishmoves.Count()-1);
+            }
+        }
+
+        internal void Stop()
+        {
+            foreach (var move in stockfishmoves)
+            {
+                move.stop = true;
+                move.stockfish.Close();
             }
         }
     }
