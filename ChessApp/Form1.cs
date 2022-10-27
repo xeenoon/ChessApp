@@ -43,25 +43,20 @@ namespace ChessApp
         }
 
         Bitmap stockfisharrowsIMG;
-        List<Move> lastmoves = new List<Move>();
         public void DrawStockfish(List<Move> moves)
         {
             if (painting)
             {
                 return;
             }
-            //We have a list of the best moves
-            if (moves.Count() == 3 && lastmoves.Count() == 3 && lastmoves[0] == moves[0] && lastmoves[1] == moves[1] && lastmoves[2] == moves[2])
-            {
-                return;
-            }
-            lastmoves = moves.Copy();
+            
+            var first5 = moves.Take(5).ToList();
             stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
             var graphics = Graphics.FromImage(stockfisharrowsIMG);
-            for (int i = 0; i < moves.Count(); ++i)
+            for (int i = 0; i < first5.Count(); ++i)
             {
-                int endlocation = moves[i].current;
-                int startlocation = moves[i].last;
+                int endlocation = first5[i].current;
+                int startlocation = first5[i].last;
                 
                 Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), (Form1.SQUARESIZE / 5)*((3-i)/2f), Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
                 arrow.Draw(graphics);

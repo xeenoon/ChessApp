@@ -343,6 +343,7 @@ namespace ChessApp
             stockfish.Start();
 
             Thread asyncread = new Thread(new ThreadStart(ReadData));
+            asyncread.Priority = ThreadPriority.Lowest;
             asyncread.Start();
 
             stockfish.StandardInput.WriteLine("position fen " + board.GetFEN());
@@ -551,13 +552,6 @@ namespace ChessApp
                     stockfishmoves.Add(new StockfishMove(movedata, boardstate));
                 }
             }
-            while (stockfishmoves.Count() >= 6)
-            {
-                var s = stockfishmoves.Last();
-                s.stop = true;
-                s.stockfish.Close();
-                stockfishmoves.RemoveAt(stockfishmoves.Count()-1);
-            }
         }
 
         internal void Stop()
@@ -565,8 +559,9 @@ namespace ChessApp
             foreach (var move in stockfishmoves)
             {
                 move.stop = true;
-                move.stockfish.Close();
+                move.stockfish.Kill();
             }
+            stockfishmoves.Clear();
         }
     }
 }
