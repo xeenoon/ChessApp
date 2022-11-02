@@ -50,15 +50,14 @@ namespace ChessApp
                 return;
             }
             
-            var first5 = moves.Take(5).ToList();
             stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
             var graphics = Graphics.FromImage(stockfisharrowsIMG);
-            for (int i = 0; i < first5.Count(); ++i)
+            for (int i = 0; i < moves.Count(); ++i)
             {
-                int endlocation = first5[i].current;
-                int startlocation = first5[i].last;
+                int endlocation = moves[i].current;
+                int startlocation = moves[i].last;
                 
-                Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), (Form1.SQUARESIZE / 5)*((3-i)/2f), Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
+                Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), (Form1.SQUARESIZE / 5)*((5-i)/4f), Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
                 arrow.Draw(graphics);
             }
             Invalidate();
@@ -104,7 +103,7 @@ namespace ChessApp
                 }
                 e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
                 e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
-                e.Graphics.DrawImage(stockfish.Draw(100,100), 15, SQUARESIZE*10, 100, 100);
+                e.Graphics.DrawImage(stockfish.Draw(100,100), 15, SQUARESIZE*9.2f, 100, 100);
 
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 painting = false;
@@ -219,7 +218,7 @@ namespace ChessApp
             }
             e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE+10);
             e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
-            e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 10, 100, 100);
+            e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 9.2f, 100, 100);
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
             painting = false;
         }

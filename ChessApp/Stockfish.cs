@@ -61,8 +61,12 @@ namespace ChessApp
                     var movedata = line.Split(' ')[0];
                     int index = int.Parse(line.Split(' ').Last()) - 1;
 
-                    mainform.DrawStockfish(handler.stockfishmoves.Select(m => m.move).ToList());
                     handler.Add(movedata, index);
+
+                    if (index == 4)
+                    {
+                        mainform.DrawStockfish(handler.stockfishmoves.Select(m => m.move).ToList());
+                    }
 
                     continue;
                 }
@@ -71,8 +75,10 @@ namespace ChessApp
                     try
                     {
                         var movedata = line.Substring(9, 4);
-                        handler.Add(movedata, 0);
-
+                        if (handler.stockfishmoves[0].movestring == "")
+                        {
+                            handler.Add(movedata, 0);
+                        }
                         mainform.DrawStockfish(handler.stockfishmoves.Select(m => m.move).ToList());
                     }
                     catch
@@ -156,7 +162,11 @@ namespace ChessApp
             var movesize = height / 3;
             for (int i = 0; i < handler.stockfishmoves.Count(); ++i)
             {
-                var eval = lasteval;
+                var eval = handler.stockfishmoves[i].evaluation;
+                if (eval == null)
+                {
+                    continue;
+                }
                 if (hasturn == Side.Black)
                 {
                     if (eval[0] != '-')
@@ -169,9 +179,9 @@ namespace ChessApp
                     }
                 }
                 Color boxcolour = eval[0] == '-' ? Color.Black : Color.White;
-                g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0, 0, width, 20));
+                g.FillRectangle(new Pen(boxcolour).Brush, new Rectangle(0, i*20, width, 20));
 
-                var move = handler.stockfishmoves[0].move;
+                var move = handler.stockfishmoves[i].move;
                 var copy = b.Copy();
                 foreach (var piecetype in new List<PieceType>() { PieceType.Pawn, PieceType.Knight, PieceType.Rook, PieceType.Bishop, PieceType.Queen, PieceType.King })
                 {
@@ -300,7 +310,7 @@ namespace ChessApp
                 }
 
 
-                g.DrawString(eval.ToString() + " " + movestring, new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0, 0));
+                g.DrawString(eval.ToString() + " " + movestring, new Font("Arial", 10, FontStyle.Bold), new Pen(boxcolour == Color.White ? Color.Black : Color.White).Brush, new PointF(0, 20*i));
             }
             return bmp;
         }
@@ -309,14 +319,28 @@ namespace ChessApp
     {
         public Move move;
         public Chessboard board;
-        public Bitboard b;
+        Bitboard b;
 
         public string movestring;
         public string evaluation;
         
         public Process stockfish;
+        public StockfishMove(Chessboard board)
+        {
+            this.board = board;
+            this.b = board.bitboard;
 
-        public StockfishMove(string movedata, Chessboard board)
+            stockfish = new Process();
+            // Configure the process using the StartInfo properties.
+            stockfish.StartInfo.FileName = @"C:\Users\ccw10\Downloads\stockfish_15_win_x64\stockfish_15_x64.exe";
+            stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            stockfish.StartInfo.RedirectStandardInput = true;
+            stockfish.StartInfo.RedirectStandardOutput = true;
+            stockfish.StartInfo.UseShellExecute = false;
+            stockfish.StartInfo.CreateNoWindow = true;
+            stockfish.Start();
+        }
+        public void AnalyzeMove(string movedata)
         {
             this.movestring = movedata;
 
@@ -332,20 +356,11 @@ namespace ChessApp
             b = board.bitboard;
 
             //Start stockfish evaluation of the move
-            stockfish = new Process();
-            // Configure the process using the StartInfo properties.
-            stockfish.StartInfo.FileName = @"C:\Users\ccw10\Downloads\stockfish_15_win_x64\stockfish_15_x64.exe";
-            stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            stockfish.StartInfo.RedirectStandardInput = true;
-            stockfish.StartInfo.RedirectStandardOutput = true;
-            stockfish.StartInfo.UseShellExecute = false;
-            stockfish.StartInfo.CreateNoWindow = true;
-            stockfish.Start();
-
             Thread asyncread = new Thread(new ThreadStart(ReadData));
             asyncread.Priority = ThreadPriority.Lowest;
             asyncread.Start();
 
+            stockfish.StandardInput.WriteLine("stop");
             stockfish.StandardInput.WriteLine("position fen " + board.GetFEN());
             stockfish.StandardInput.WriteLine("go searchmoves " + movedata);
         }
@@ -522,10 +537,14 @@ namespace ChessApp
     }
     public class StockfishMoveHandler
     {
-        public List<StockfishMove> stockfishmoves = new List<StockfishMove>();
+        public List<StockfishMove> stockfishmoves = new List<StockfishMove>(5);
         public Chessboard boardstate;
         public StockfishMoveHandler(Chessboard boardstate)
         {
+            for (int i = 0; i < 5; ++i)
+            {
+                stockfishmoves.Add(new StockfishMove(boardstate));
+            }
             this.boardstate = boardstate;
         }
         public void Add(string movedata, int idx)
@@ -545,11 +564,7 @@ namespace ChessApp
             {
                 if (idx <= stockfishmoves.Count() - 1)
                 {
-                    stockfishmoves.Insert(idx, new StockfishMove(movedata, boardstate));
-                }
-                else
-                {
-                    stockfishmoves.Add(new StockfishMove(movedata, boardstate));
+                    stockfishmoves[idx].AnalyzeMove(movedata);
                 }
             }
         }
