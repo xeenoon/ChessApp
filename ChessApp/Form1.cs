@@ -43,23 +43,65 @@ namespace ChessApp
         }
 
         Bitmap stockfisharrowsIMG;
-        public void DrawStockfish(List<Move> moves)
+        bool drawing = false;
+        public void DrawStockfish(List<Move> moves, List<string> evaluations)
         {
-            if (painting)
+            if (drawing)
             {
                 return;
             }
+            drawing = true;
             
             stockfisharrowsIMG = new Bitmap(Size.Width, Size.Height);
+            double totalwidth = evaluations.Count()*10;
+            double totalevaluations = 0;
+            List<double> decimalevals = new List<double>();
+            foreach (var evaluation in evaluations)
+            {
+                if (evaluation == null)
+                {
+                    continue;
+                }
+                else if (evaluation[0] == 'M') //White has mate
+                {
+                    totalevaluations += 100;
+                    decimalevals.Add(100);
+                }
+                else if (evaluation[0] == '-' && evaluation[1] == 'M') //Black has mate
+                {
+                    totalevaluations -= 100;
+                    decimalevals.Add(-100);
+                }
+                else
+                {
+                    totalevaluations += float.Parse(evaluation);
+                    decimalevals.Add(float.Parse(evaluation));
+                }
+            }
+                var min = decimalevals.Min();
+                if (min <= 0)
+                {
+                    for (int i = 0; i < decimalevals.Count; i++)
+                    {
+                        decimalevals[i] += (Math.Abs(min) + 0.1);
+                    }
+                }
             var graphics = Graphics.FromImage(stockfisharrowsIMG);
-            for (int i = 0; i < moves.Count(); ++i)
+            for (int i = 0; i < decimalevals.Count(); ++i)
             {
                 int endlocation = moves[i].current;
                 int startlocation = moves[i].last;
-                
-                Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), (Form1.SQUARESIZE / 5)*((5-i)/4f), Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
+                if (endlocation == 0 && startlocation == 0)
+                {
+                    continue;
+                }
+
+                double percentageoftotal = (decimalevals[i] / decimalevals.Sum());
+                double width = Math.Min(25, totalwidth * percentageoftotal);
+                Arrow arrow = new Arrow(new Vector(squares[startlocation].realworld.Center(), squares[endlocation].realworld.Center()), width, Form1.SQUARESIZE / 2, new Pen(Color.FromArgb(200, Color.DarkGreen)).Brush, startlocation, endlocation);
                 arrow.Draw(graphics);
             }
+            drawing = false;
             Invalidate();
         }
 
