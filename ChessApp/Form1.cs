@@ -79,13 +79,13 @@ namespace ChessApp
                 }
             }
                 var min = decimalevals.Min();
-                if (min <= 0)
+            if (min <= 0)
+            {
+                for (int i = 0; i < decimalevals.Count; i++)
                 {
-                    for (int i = 0; i < decimalevals.Count; i++)
-                    {
-                        decimalevals[i] += (Math.Abs(min) + 0.1);
-                    }
+                    decimalevals[i] += (Math.Abs(min) + 0.1);
                 }
+            }
             var graphics = Graphics.FromImage(stockfisharrowsIMG);
             for (int i = 0; i < decimalevals.Count(); ++i)
             {
