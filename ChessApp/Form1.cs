@@ -144,9 +144,11 @@ namespace ChessApp
                     e.Graphics.DrawImage(boardIMG, 15, SQUARESIZE+10, Size.Width, Size.Height);
                 }
                 e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
-                e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
-                e.Graphics.DrawImage(stockfish.Draw(100,100), 15, SQUARESIZE*9.2f, 100, 100);
-
+                if (tabControl1.SelectedTab == tabControl1.TabPages[1])
+                {
+                    e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+                    e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 9.2f, 100, 100);
+                }
                 e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 painting = false;
                 return;
@@ -259,8 +261,11 @@ namespace ChessApp
                 e.Graphics.DrawImage(boardIMG, 15, 55);
             }
             e.Graphics.DrawImage(arrowsIMG, 15, SQUARESIZE+10);
-            e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
-            e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 9.2f, 100, 100);
+            if (tabControl1.SelectedTab == tabControl1.TabPages[1]) 
+            {
+                e.Graphics.DrawImage(stockfisharrowsIMG, 15, SQUARESIZE + 10, Size.Width, Size.Height);
+                e.Graphics.DrawImage(stockfish.Draw(100, 100), 15, SQUARESIZE * 9.2f, 100, 100);
+            }
             e.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
             painting = false;
         }

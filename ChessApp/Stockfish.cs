@@ -99,9 +99,12 @@ namespace ChessApp
                     {
                         s = s.Substring(1);
                     }
-                    var score = float.Parse(s);
-                    score = score / 100;
-                    lasteval = score.ToString();
+                    float score = 0;
+                    if (float.TryParse(s, out score))
+                    {
+                        score = score / 100;
+                        lasteval = score.ToString();
+                    }
                 }
                 else if (line.Contains("score mate "))
                 {
@@ -384,8 +387,14 @@ namespace ChessApp
             while (!stop)
             {
                 string line = "";
-                line = stockfish.StandardOutput.ReadLine();
-
+                try
+                {
+                    line = stockfish.StandardOutput.ReadLine();
+                }
+                catch
+                {
+                    continue;
+                }
                 if (line == null)
                 {
                     continue;
