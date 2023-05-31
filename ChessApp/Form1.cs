@@ -572,6 +572,11 @@ namespace ChessApp
                         label.Font = new Font("Arial", 10, FontStyle.Italic);
                         label.ForeColor = Color.White;
                         label.Text = b_pgn.data[i].comment;
+                        var variations = b_pgn.variations.Where(v=>v.startidx == i);
+                        foreach (var var in variations)
+                        {
+                            label1.Text += "\n" + var.ToString();
+                        }
                         label.MaximumSize = new Size(width * 2, 1000);
                         label.AutoSize = true;
                         panel2.Controls.Add(label);

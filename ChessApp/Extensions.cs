@@ -44,6 +44,7 @@ namespace ChessApp
         {
             string result = "";
             bool insidecomment = false;
+            bool insidevariation = false;
             for (int i = 0; i < s.Length; ++i)
             {
                 var c = s[i];
@@ -57,12 +58,22 @@ namespace ChessApp
                     insidecomment = false;
                     continue;
                 }
-                if (!insidecomment)
+                else if (c == '(')
+                {
+                    insidevariation = true;
+                    continue;
+                }
+                else if (c == ')')
+                {
+                    insidevariation = false;
+                    continue;
+                }
+                if (!insidecomment && !insidevariation)
                 {
                     result += c;
                     if (result.Contains(lookfor))
                     {
-                        return i-lookfor.Length;
+                        return i-lookfor.Length + 1;
                     }
                 }
             }

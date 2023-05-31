@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static ChessApp.Bitboard;
 
 namespace ChessApp
 {
@@ -34,7 +35,11 @@ namespace ChessApp
         public List<PGNMove> data = new List<PGNMove>();
         public List<string> strdata = new List<string>();
         public List<Bitboard> boards = new List<Bitboard>();
+        public List<PGN> variations = new List<PGN>();
         public Bitboard finalresult;
+        public Chessboard startposition;
+        public int startidx;
+        public Side firstmove = Side.White;
         public override string ToString()
         {
             strdata.Clear();
@@ -42,12 +47,18 @@ namespace ChessApp
             Bitboard b = startpos.bitboard;
 
             string pgn = "";
-            for (int i = 0; i< ((data.Count()+1)/2); ++i)
+            for (int i = startidx; i< ((data.Count()+1+startidx)/2); ++i)
             {
                 pgn += string.Format("{0}. ", i+1); //Add the indexer
 
                 for (int j = 0; j < 2; ++j) //switch the sides
                 {
+                    if (i == startidx && firstmove == Side.Black)
+                    {
+                        pgn = pgn.Substring(0,pgn.Length-1); //Trim the last space
+                        pgn += ".. "; //Add the rest of the dots
+                        continue; //Ignore the first iteration
+                    }
                     Side hasturn = j == 0 ? Side.White : Side.Black;
                     if (data.Count() == i*2+j)
                     {
@@ -226,8 +237,18 @@ namespace ChessApp
             }
         }
 
-        public PGN(string textparse)
+        public PGN(string textparse, Chessboard board = null, int start = 1, Side firstmove = Side.White)
         {
+            this.startidx = start;
+            this.firstmove = firstmove;
+            if (board == null)
+            {
+                startposition = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            }
+            else
+            {
+                this.startposition = new Chessboard(board.GetFEN());
+            }
             textparse = Regex.Replace(textparse, "\n", " ");
             textparse = Regex.Replace(textparse, "\r", "");
             this.textparse = textparse;
@@ -242,15 +263,22 @@ namespace ChessApp
             }
             else //Just a normal game?
             {
-                ParseNormal();
+                ParseNormal(start, board, firstmove);
             }
+        }
+        public PGN()
+        {
+
         }
         public bool failed;
         string gameresult = "";
-        public void ParseNormal()
+        public void ParseNormal(int startat = 1, Chessboard startpos = null, Side firstmove = Side.White)
         {
-            Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
+            BoardData old = new BoardData();
+            if (startpos == null)
+            {
+                startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            }
             textparse = textparse.RemoveChars('+');
             textparse = textparse.RemoveChars('#');
             textparse = textparse.RemoveChars('x');
@@ -261,37 +289,64 @@ namespace ChessApp
 
             textparse = textparse.RemovePromotions(out promotions);
 
-            string FEN = textparse.Substring(textparse.MovesIndexOf("1"));
+            string pgn = textparse.Substring(textparse.MovesIndexOf(startat.ToString()));
             Move normalMove = new Move();
 
-            var lastnumber = FEN.LastIndexor(); //Find the last number
-            for (int i = 1; i < lastnumber + 1; ++i)
+            var lastnumber = pgn.LastIndexor(); //Find the last number
+            int i = startat-1;
+            while (i < lastnumber)
             {
-                if (i==7)
+                ++i;
+                if (i==14)
                 {
+
                 }
-                int nextidx = FEN.MovesIndexOf((i+1).ToString() + ".");
+                int nextidx = pgn.MovesIndexOf((i+1).ToString() + ".");
                 if (nextidx == -1)
                 {
-                    nextidx = FEN.Length;
+                    nextidx = pgn.Length;
                 }
-                int curridx = FEN.MovesIndexOf(i.ToString() + ".");
-                string FEN_data = FEN.Substring(curridx, nextidx - curridx);
+                int curridx = pgn.MovesIndexOf(i.ToString() + ".");
+                string pgn_data = pgn.Substring(curridx, nextidx - curridx);
 
                 bool secondmove = false;
+                
                 bool readingcomment = false;
                 string comment = "";
 
                 string normalData = "";
                 Side currmove = Side.White;
-                for (int idx = 0; idx < FEN_data.Length; ++idx)
+                if (firstmove == Side.Black) //Skipping first move?
                 {
-                    if (FEN_data[idx] == '{')
+                    secondmove = true;
+                    currmove = Side.Black;
+                }
+                int idx = -1;
+                while (idx < pgn_data.Length-1)
+                {
+                    ++idx;
+                    var c = pgn_data[idx];
+                    if (pgn_data[idx] == '{')
                     {
                         readingcomment = true;
                         continue;
                     }
-                    else if (FEN_data[idx] == '}')
+                    else if (pgn_data[idx] == '(') //Reading variation
+                    {
+                        Bitboard copy = startpos.bitboard.Copy();
+                        copy.UndoMove(old); //Dont include the last move in the variation
+                        var newboard = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                        newboard.bitboard = copy;
+                        newboard.Reload();
+                        CreateVariation(pgn_data, idx+1, newboard); //TODO make copy method
+                        idx = pgn_data.IndexOf(')',idx);
+                        if (!secondmove && pgn_data[idx+2] != '(') //Halfway between moves?
+                        {
+                            idx = pgn_data.IndexOf('.', idx) + 4;
+                        }
+                        continue;
+                    }
+                    else if (pgn_data[idx] == '}')
                     {
                         readingcomment = false;
                         PGNMove m = new PGNMove(normalMove, comment);
@@ -321,17 +376,21 @@ namespace ChessApp
                     }
                     else if (readingcomment)
                     {
-                        comment += FEN_data[idx];
+                        comment += pgn_data[idx];
                         continue;
                     }
                     else
                     {
-                        if ((idx >= FEN_data.Length - 2 || !(FEN_data[idx + 1] == '.')) && FEN_data[idx] != '.' && FEN_data[idx] != ' ') //Just a normal move?
+                        if ((idx >= pgn_data.Length - 2 || !(pgn_data[idx + 1] == '.')) && pgn_data[idx] != '.' && pgn_data[idx] != ' ') //Just a normal move?
                         {
-                            normalData += FEN_data[idx];
+                            normalData += pgn_data[idx];
+                            if (normalData.Contains("Bd5"))
+                            {
+
+                            }
                         }
 
-                        if (char.IsNumber(FEN_data[idx]) && (idx >= FEN_data.Length - 2 || FEN_data[idx + 1] == ' ')) //End of move?
+                        if (char.IsNumber(pgn_data[idx]) && (idx >= pgn_data.Length - 2 || pgn_data[idx + 1] == ' ')) //End of move?
                         {
                             while (char.IsNumber(normalData[0]))
                             {
@@ -394,7 +453,8 @@ namespace ChessApp
 
                             var copy = startpos.bitboard.Copy();
                             copy.SetupSquareAttacks();
-                            foreach (var _move in MoveGenerator.CalculateAll(copy, currmove))
+                            List<Move> _moves = MoveGenerator.CalculateAll(copy, currmove);
+                            foreach (var _move in _moves)
                             {
                                 if (_move.pieceType == pieceType && _move.current == endposition) //Is this the right move?
                                 {
@@ -431,14 +491,14 @@ namespace ChessApp
                             {
 
                             }
-                            if ((idx + 3 <= FEN_data.Length && FEN_data[idx + 2] == '{')) //Have we missed a comment?
+                            if ((idx + 3 <= pgn_data.Length && pgn_data[idx + 2] == '{')) //Have we missed a comment?
                             {
                                 continue;
                             }
                             PGNMove move = new PGNMove(normalMove, comment);
-                            bool contains = FEN_data.Substring(idx).Contains('{');
+                            bool contains = pgn_data.Substring(idx).Contains('{');
                             currmove = currmove == Side.White ? Side.Black : Side.White;
-                            if (idx + 2 >= FEN_data.Length || char.IsLetter(FEN_data[idx + 2])) //Is there another move?
+                            if (idx + 2 >= pgn_data.Length || char.IsLetter(pgn_data[idx + 2]) || (pgn_data[idx + 2] == '(')) //Is there another move?
                             {
                                 comment = "";
                                 secondmove = true;
@@ -453,20 +513,20 @@ namespace ChessApp
                                     move.normalmove.promotion = promotion;
                                 }
                                 data.Add(move);
-                                startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
+                                old = startpos.bitboard.Move(normalMove.last, normalMove.current, 1ul << normalMove.last, 1ul << normalMove.current, normalMove.pieceType, currmove == Side.White ? Side.Black : Side.White, promotion);
 
                                 startpos.Reload();
                             }
                             else
                             {
                                 data.Add(move);
-                                if ((FEN_data[idx + 2] == '{'))
+                                if ((pgn_data[idx + 2] == '{' || pgn_data[idx + 2] == '('))
                                 {
                                     continue;
                                 }
                                 else
                                 {
-                                    gameresult = FEN_data.Substring(idx+2);
+                                    gameresult = pgn_data.Substring(idx+2);
                                     return;
                                 }
                             }
@@ -475,6 +535,28 @@ namespace ChessApp
                 }
             }
         }
+
+        private void CreateVariation(string FEN_data, int bracketidx, Chessboard boardstate)
+        {
+            int endidx = FEN_data.IndexOf(')',bracketidx); //Find the end of the variation
+            string data = FEN_data.Substring(bracketidx,endidx-bracketidx);
+            //Read through the moves
+            string numstr = data.Substring(0, data.IndexOf('.'));
+            int firstmoveno = int.Parse(numstr); //Find the number at the start of the PGN, parse that in
+            Side firstmove;
+            if (data.StartsWith("..")) //Are we starting with black instead of starting with white?
+            {
+                firstmove = Side.Black;
+                data = firstmoveno.ToString() + ". " + data.Substring(2);
+            }
+            else
+            {
+                firstmove = Side.White;
+            }
+            PGN variation = new PGN(data,boardstate, firstmoveno, firstmove);
+            variations.Add(variation);
+        }
+
         public void ParseNormalDuck()
         {
             Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
