@@ -565,17 +565,22 @@ namespace ChessApp
                     button.Name = "PGN_Button:" + i.ToString();
                     button.Click += new EventHandler(PGN_ButtonClick);
                     button.TabStop = false;
-                    if (i < b_pgn.data.Count() && b_pgn.data[i].comment != "")
+
+                    var variations = b_pgn.variations.Where(v => v.startidx-1 == i/2).ToList();
+                    
+                    if ((i < b_pgn.data.Count() && b_pgn.data[i].comment != "") || variations.Count() != 0)
                     {
                         Label label = new Label();
                         label.Location = new Point(35, y + button.Height+5);
                         label.Font = new Font("Arial", 10, FontStyle.Italic);
                         label.ForeColor = Color.White;
                         label.Text = b_pgn.data[i].comment;
-                        var variations = b_pgn.variations.Where(v=>v.startidx == i);
                         foreach (var var in variations)
                         {
-                            label1.Text += "\n" + var.ToString();
+                            if (var.firstmove == (i % 2 == 0 ? Side.White : Side.Black))
+                            {
+                                label.Text += "\n" + var.ToString();
+                            }
                         }
                         label.MaximumSize = new Size(width * 2, 1000);
                         label.AutoSize = true;

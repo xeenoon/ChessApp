@@ -38,22 +38,25 @@ namespace ChessApp
         public List<PGN> variations = new List<PGN>();
         public Bitboard finalresult;
         public Chessboard startposition;
-        public int startidx;
+        public int startidx = 1;
         public Side firstmove = Side.White;
         public override string ToString()
         {
             strdata.Clear();
-            Chessboard startpos = new Chessboard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Chessboard startpos = startposition; //TODO: Simplify
             Bitboard b = startpos.bitboard;
 
             string pgn = "";
-            for (int i = startidx; i< ((data.Count()+1+startidx)/2); ++i)
+            for (int i = startidx; i< (data.Count()/2)+startidx; ++i)
             {
-                pgn += string.Format("{0}. ", i+1); //Add the indexer
+                pgn += string.Format("{0}. ", i); //Add the indexer
+                if (pgn.Contains("Bxc4"))
+                {
 
+                }
                 for (int j = 0; j < 2; ++j) //switch the sides
                 {
-                    if (i == startidx && firstmove == Side.Black)
+                    if (i == startidx/2 && firstmove == Side.Black)
                     {
                         pgn = pgn.Substring(0,pgn.Length-1); //Trim the last space
                         pgn += ".. "; //Add the rest of the dots
@@ -64,7 +67,7 @@ namespace ChessApp
                     {
                         break;
                     }
-                    var move = data[i * 2 + j];
+                    var move = data[(i * 2 + j) - startidx*2]; //Moves array is 0 based, pgn move numbers are not
                     var copy = b.Copy();
                     copy.SetupSquareAttacks();
                     List<int> possibleStartPositions = new List<int>();
@@ -166,21 +169,23 @@ namespace ChessApp
                         rowcol = (move.normalmove.last % 8).GetFileLetter().ToString();
                     }
                     movestring = string.Format("{0}{1}{4}{2}{3}", piecetypestring, rowcol, endposition, promotionstring, istaking);
-                    switch (movestring)
+                    if (movestring == "Kg1" && b.W_KingsideCastle)
                     {
-                        case "Kg1":
-                            movestring = "O-O";
-                            break;
-                        case "Kg8":
-                            movestring = "O-O";
-                            break;
-                        case "Kc1":
-                            movestring = "O-O-O";
-                            break;
-                        case "Kc8":
-                            movestring = "O-O-O";
-                            break;
+                        movestring = "O-O";
                     }
+                    if (movestring == "Kg8" && b.B_KingsideCastle)
+                    {
+                        movestring = "O-O";
+                    }
+                    if (movestring == "Kc1" && b.W_QueensideCastle)
+                    {
+                        movestring = "O-O-O";
+                    }
+                    if (movestring == "Kc8" && b.B_QueensideCastle)
+                    {
+                        movestring = "O-O-O";
+                    }
+                    
                     b.Move(move.normalmove.last, move.normalmove.current, 1ul << move.normalmove.last, 1ul << move.normalmove.current, move.normalmove.pieceType, hasturn, move.normalmove.promotion);
                     Bitboard b_copy = b.Copy();
                     boards.Add(b_copy);
@@ -297,7 +302,7 @@ namespace ChessApp
             while (i < lastnumber)
             {
                 ++i;
-                if (i==14)
+                if (i == 12)
                 {
 
                 }
@@ -316,7 +321,7 @@ namespace ChessApp
 
                 string normalData = "";
                 Side currmove = Side.White;
-                if (firstmove == Side.Black) //Skipping first move?
+                if (firstmove == Side.Black && i == startat) //Skipping first move?
                 {
                     secondmove = true;
                     currmove = Side.Black;
@@ -381,7 +386,7 @@ namespace ChessApp
                     }
                     else
                     {
-                        if ((idx >= pgn_data.Length - 2 || !(pgn_data[idx + 1] == '.')) && pgn_data[idx] != '.' && pgn_data[idx] != ' ') //Just a normal move?
+                        if ((idx >= pgn_data.Length - 2 || !(pgn_data[idx + 1] == '.' || (char.IsDigit(pgn_data[idx+1])) && char.IsDigit(pgn_data[idx]))) && pgn_data[idx] != '.' && pgn_data[idx] != ' ') //Just a normal move?
                         {
                             normalData += pgn_data[idx];
                             if (normalData.Contains("Bd5"))
@@ -544,10 +549,10 @@ namespace ChessApp
             string numstr = data.Substring(0, data.IndexOf('.'));
             int firstmoveno = int.Parse(numstr); //Find the number at the start of the PGN, parse that in
             Side firstmove;
-            if (data.StartsWith("..")) //Are we starting with black instead of starting with white?
+            if (data.Contains("...")) //Are we starting with black instead of starting with white?
             {
                 firstmove = Side.Black;
-                data = firstmoveno.ToString() + ". " + data.Substring(2);
+                //data = firstmoveno.ToString() + ". " + data.Substring(firstmoveno.ToString().Length+1);
             }
             else
             {

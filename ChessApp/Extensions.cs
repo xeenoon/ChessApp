@@ -260,7 +260,8 @@ namespace ChessApp
                 if (!insidecomment)
                 {
                     nocomment += s[i];
-                    if (i<= s.Length-1 && s[i] == '.' && s[i+1] != ' ')
+                    if (i<= s.Length-1 && s[i] == '.' && s[i+1] != ' ' && s[i+1] != '.') //Add a space after the dot if there is not already
+                        //Check if it is a variation starting with black first
                     {
                         result += ' ';
                         nocomment += ' ';
